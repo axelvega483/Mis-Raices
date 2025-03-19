@@ -53,19 +53,6 @@ public class UsuarioController {
         }
     }
 
-    @PostMapping
-    public ResponseEntity<Map<String, Object>> crearUsuario(@RequestBody Usuario usuario) {
-        try {
-            response = new HashMap<>();
-            Usuario user = usuarioService.guardar(usuario);
-            response.put("usuario Guardado", user);
-            return new ResponseEntity<>(response, HttpStatus.CREATED);
-        } catch (Exception e) {
-            response.put("error al crear usuario", e.getMessage());
-            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
     @PutMapping("{id}")
     public ResponseEntity<Map<String, Object>> modificarUsuario(@RequestBody Usuario usuario, @PathVariable Integer id) {
         try {
@@ -117,15 +104,6 @@ public class UsuarioController {
         if (nuevo.getImgUri() != null) {
             viejo.setImgUri(nuevo.getImgUri());
         }
-        if (nuevo.getPassword() != null) {
-            viejo.setPassword(nuevo.getPassword());
-        }    
-        if(nuevo.getCorreo()==null){
-            viejo.setCorreo(viejo.getCorreo());
-        }else{
-            viejo.setCorreo(nuevo.getCorreo());
-        }
-        
     }
 
 }

@@ -46,4 +46,15 @@ public class UsuarioService implements UsuarioInterfaz {
         return repo.findAll();
     }
 
+    public Optional<Usuario> findByCorreoAndPassword(String correo, String password) {
+        return repo.findByCorreoAndPassword(correo, password);
+    }
+
+    public Optional<Usuario> findByCorreo(String correo) {
+        return repo.findByCorreo(correo);
+    }
+
+    public Optional<Usuario> findByToken(String token) {
+        return repo.findByToken(token);
+    }
 }
