@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.MisRaices.demo.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +40,7 @@ public class EmailService {
         text.append("Recibimos una solicitud para restablecer la contraseña de tu cuenta en Vivero Mis Raíces.\n\n");
         text.append("Para continuar, utiliza el siguiente código de activación para restablecer tu contraseña:\n\n");
         text.append("Código de restablecimiento: ").append(resetToken).append("\n\n");
-        text.append("Este código es válido por 1 horas. Si no solicitaste el restablecimiento de tu contraseña, por favor ignora este mensaje.\n\n");
+        text.append("Este código es válido por 1 hora. Si no solicitaste el restablecimiento de tu contraseña, por favor ignora este mensaje.\n\n");
         text.append("Si necesitas ayuda, no dudes en contactarnos. Estamos aquí para ayudarte.\n\n");
         text.append("Saludos cordiales,\n");
         text.append("El equipo de Vivero Mis Raíces");
