@@ -49,7 +49,7 @@ public class CategoriaController {
             Categoria categoria = categoriaService.obtener(id).orElse(null);
             if (categoria != null) {
                 String imgUrl = "http://localhost:8080/categoria/imagenes/" + categoria.getImg();
-                categoria.setImg(imgUrl); 
+                categoria.setImg(imgUrl);
                 response.put("categoria", categoria);
                 return new ResponseEntity<>(response, HttpStatus.OK);
             } else {
@@ -64,29 +64,31 @@ public class CategoriaController {
 
     @GetMapping("/imagenes/{imgName}")
     public ResponseEntity<Resource> verImagene(@PathVariable String imgName) {
-        try {      
+        try {
             Path imgPath = Paths.get(RUTA_IMAGENES).resolve(imgName);
             Resource resource = new UrlResource(imgPath.toUri());
-            
+
             if (resource.exists() || resource.isReadable()) {
                 return ResponseEntity.ok()
-                        .contentType(MediaType.IMAGE_JPEG) 
+                        .contentType(MediaType.IMAGE_JPEG)
                         .body(resource);
             } else {
-                return ResponseEntity.notFound().build();  
+                return ResponseEntity.notFound().build();
             }
         } catch (Exception e) {
             return ResponseEntity.internalServerError().build();
         }
     }
 
-    @PostMapping("")
-    public ResponseEntity<Map<String,Object>> crearCategoria(@RequestParam("nombreCategoria") String nombreCategoria,
+    @PostMapping()
+    public ResponseEntity<Map<String, Object>> crearCategoria(@RequestParam("nombreCategoria") String nombreCategoria,
             @RequestParam("img") MultipartFile imgFile) {
         try {
-
+            Path directorioPath = Paths.get(RUTA_IMAGENES);
+            if (!Files.exists(directorioPath)) {
+                Files.createDirectories(directorioPath);
+            }
             String imgFileName = generarNombreUnico(imgFile.getOriginalFilename());
-
             Path imgPath = Paths.get(RUTA_IMAGENES, imgFileName);
             Files.copy(imgFile.getInputStream(), imgPath, StandardCopyOption.REPLACE_EXISTING);
 
@@ -95,11 +97,11 @@ public class CategoriaController {
             categoria.setImg(imgFileName);
 
             categoriaService.guardar(categoria);
-            
-            return new ResponseEntity<>(response,HttpStatus.CREATED);
+
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (IOException e) {
             e.printStackTrace();
-            return new ResponseEntity<>(response,HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

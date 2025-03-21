@@ -64,7 +64,7 @@ public class ProductoController {
             Producto producto = productoService.obtener(id).orElse(null);
             if (producto != null) {
                 String imgUrl = "http://localhost:8080/categoria/imagenes/" + producto.getImg();
-                producto.setImg(imgUrl); 
+                producto.setImg(imgUrl);
                 response.put("producto", producto);
                 return new ResponseEntity<>(response, HttpStatus.OK);
             } else {
@@ -79,13 +79,16 @@ public class ProductoController {
 
     @PostMapping()
     public ResponseEntity<Map<String, Object>> crearProducto(@RequestParam("producto") String producto,
-            @RequestParam("img") MultipartFile imgFile, 
+            @RequestParam("img") MultipartFile imgFile,
             @RequestParam("categoria") Integer id,
-            @RequestParam("descripcion")String descripcion,
+            @RequestParam("descripcion") String descripcion,
             @RequestParam("precio") Double precio,
             @RequestParam("stock") Integer stock) {
         try {
-
+            Path directorioPath = Paths.get(RUTA_IMAGENES);
+            if (!Files.exists(directorioPath)) {
+                Files.createDirectories(directorioPath);
+            }
             String imgFileName = generarNombreUnico(imgFile.getOriginalFilename());
 
             Path imgPath = Paths.get(RUTA_IMAGENES, imgFileName);
@@ -116,12 +119,12 @@ public class ProductoController {
             response = new HashMap<>();
             Producto producto = productoService.obtener(id).orElse(null);
             if (producto == null) {
-                response.put("data", "No se encontró producto");
+                response.put("producto", "No se encontró producto");
                 return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
             }
 
             productoService.eliminar(producto.getId());
-            response.put("data", "Se eliminó el producto id " + id);
+            response.put("producto", "Se eliminó el producto id " + id);
             return new ResponseEntity<>(response, HttpStatus.NO_CONTENT);
         } catch (Exception e) {
             response.put("error", e.getMessage());
@@ -136,12 +139,12 @@ public class ProductoController {
             response = new HashMap<>();
             Producto productoBD = productoService.obtener(id).orElse(null);
             if (productoBD == null) {
-                response.put("data", "No se encontró producto");
+                response.put("producto", "No se encontró producto");
                 return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
             }
             actualizar(productoBD, producto);
 
-            response.put("data", productoService.guardar(productoBD));
+            response.put("producto", productoService.guardar(productoBD));
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (HibernateException e) {
             response.put("error", e.getMessage());
