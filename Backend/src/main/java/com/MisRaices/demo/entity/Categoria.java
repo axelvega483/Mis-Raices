@@ -2,6 +2,7 @@ package com.MisRaices.demo.entity;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
+import java.io.Serializable;
 import lombok.*;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -11,7 +12,7 @@ import lombok.*;
 @NoArgsConstructor
 @Entity
 @Table(name = "categoria")
-public class Categoria {
+public class Categoria implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

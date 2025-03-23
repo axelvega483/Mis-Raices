@@ -1,9 +1,15 @@
 package com.MisRaices.demo.service;
 
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+
+import java.io.File;
 
 @Service
 public class EmailService {
@@ -49,4 +55,17 @@ public class EmailService {
         emailSender.send(message);
     }
 
+    public void enviarFacturaConAdjunto(String destinatario, String rutaArchivoPDF) throws MessagingException {
+        MimeMessage mensaje = emailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(mensaje, true);
+
+        helper.setTo(destinatario);
+        helper.setSubject("Factura de Compra");
+        helper.setText("Gracias por su compra. Adjuntamos la factura.");
+
+        FileSystemResource archivo = new FileSystemResource(new File(rutaArchivoPDF));
+        helper.addAttachment("factura.pdf", archivo);
+
+        emailSender.send(mensaje);
+    }
 }

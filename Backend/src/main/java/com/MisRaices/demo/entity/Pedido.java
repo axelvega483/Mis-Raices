@@ -1,5 +1,6 @@
 package com.MisRaices.demo.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.CascadeType;
@@ -9,9 +10,12 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import java.time.LocalDate;
+import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,22 +29,27 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Table(name = "pedido")
-public class Pedido {
+public class Pedido implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
-
-    private String cliente;
     private String direccion;
-    private LocalDate fechaPedido;
+    private LocalDateTime fechaPedido;
+    private String estado;
 
-    // Relación con PedidoDetalle
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JsonManagedReference // Esta es la parte de la relación que se serializa
+    @JsonManagedReference
     private List<PedidoDetalle> detalle;
 
     @Column(name = "total")
     private Double total;
+
+    @ManyToOne
+    @JoinColumn(name = "usuario_id")
+    @JsonBackReference("usuario-pedidos") 
+    private Usuario usuario;
+
+
 }

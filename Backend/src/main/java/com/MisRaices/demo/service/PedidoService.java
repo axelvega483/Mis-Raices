@@ -26,7 +26,6 @@ public class PedidoService implements PedidoInterfaz {
 
     @Override
     public Pedido guardar(Pedido pedido) {
-        // Crear y asociar los detalles del pedido
         if (pedido.getDetalle() != null && !pedido.getDetalle().isEmpty()) {
             for (PedidoDetalle detalle : pedido.getDetalle()) {
                 Producto producto = detalle.getProducto();

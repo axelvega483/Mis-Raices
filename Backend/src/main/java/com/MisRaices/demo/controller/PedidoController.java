@@ -1,11 +1,17 @@
 package com.MisRaices.demo.controller;
 
+import com.MisRaices.demo.PDF.PdfGenerator;
 import com.MisRaices.demo.entity.Pedido;
 import com.MisRaices.demo.entity.PedidoDetalle;
 import com.MisRaices.demo.entity.Producto;
+import com.MisRaices.demo.entity.TarjetaCredito;
+import com.MisRaices.demo.entity.Usuario;
+import com.MisRaices.demo.service.EmailService;
 import com.MisRaices.demo.service.PedidoService;
 import com.MisRaices.demo.service.ProductoService;
-import java.time.LocalDate;
+import com.MisRaices.demo.service.TarjetaCreditoService;
+import com.MisRaices.demo.service.UsuarioService;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,7 +39,16 @@ public class PedidoController {
     private PedidoService pedidoService;
 
     @Autowired
-    ProductoService productoService;
+    private ProductoService productoService;
+
+    @Autowired
+    private UsuarioService usuarioService;
+
+    @Autowired
+    private TarjetaCreditoService tarjetaCreditoService;
+
+    @Autowired
+    private EmailService emailService;
 
     private Map<String, Object> response;
 
@@ -71,43 +86,58 @@ public class PedidoController {
     public ResponseEntity<Map<String, Object>> crear(@RequestBody Pedido pedido) {
         try {
             response = new HashMap<>();
-            // Crear los detalles del pedido
+            Usuario cliente = usuarioService.obtener(pedido.getUsuario().getId()).orElse(null);
+            if (cliente == null) {
+                response.put("error", "cliente no válido.");
+                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+            }
+            pedido.setUsuario(cliente);
             int nuevoStock, stock, cant;
             Double precio = 0.0;
             List<PedidoDetalle> detalles = new ArrayList<>();
+
             for (PedidoDetalle detalle : pedido.getDetalle()) {
                 PedidoDetalle deta = new PedidoDetalle();
                 Optional<Producto> productoOptional = productoService.obtener(detalle.getProducto().getId());
+
                 if (!productoOptional.isPresent()) {
                     response.put("error", "Producto no encontrado con ID: " + detalle.getProducto().getId());
                     return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
                 }
+
                 Producto producto = productoOptional.get();
                 producto.setId(detalle.getProducto().getId());
+
                 deta.setCantidad(detalle.getCantidad());
                 deta.setProducto(producto);
                 deta.setPedido(pedido);
+
                 detalles.add(deta);
+
                 precio += producto.getPrecio() * detalle.getCantidad();
-                pedido.setTotal(precio);
+
                 stock = producto.getStock();
                 cant = detalle.getCantidad();
                 nuevoStock = stock - cant;
+
                 if (nuevoStock >= 0) {
                     producto.setStock(nuevoStock);
                 } else {
-                    response.put("error", "el stock no puede ser negativo");
+                    response.put("error", "El stock no puede ser negativo para el producto: " + producto.getNombre());
                     return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
                 }
-
             }
+
             pedido.setDetalle(detalles);
             pedido.setTotal(precio);
-            pedido.setFechaPedido(LocalDate.now());
+            pedido.setFechaPedido(LocalDateTime.now());
+            pedido.setEstado("EN PREPARACIÓN");
 
-            Pedido ped = pedidoService.guardar(pedido);
-            response.put("pedido", ped);
+            Pedido pedidoGuardado = pedidoService.guardar(pedido);
+            response.put("pedido", pedidoGuardado);
+
             return new ResponseEntity<>(response, HttpStatus.CREATED);
+
         } catch (Exception e) {
             response.put("error", e.getMessage());
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -152,6 +182,50 @@ public class PedidoController {
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
+    }
+
+    @PostMapping("/finalizarCompra/{pedidoId}/{tarjetaId}")
+    public ResponseEntity<Map<String, Object>> finalizarCompra(@PathVariable Integer pedidoId, @PathVariable Integer tarjetaId) {
+        try {
+            response = new HashMap<>();
+
+            Pedido pedido = pedidoService.obtener(pedidoId).orElse(null);
+            if (pedido == null) {
+                response.put("error", "pedido no encontrado");
+                return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+            }
+
+            TarjetaCredito tarjeta = tarjetaCreditoService.obtener(tarjetaId).orElse(null);
+            if (tarjeta == null) {
+                response.put("error", "tarjeta no encontrada");
+                return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+            }
+            if (tarjeta.getSaldo() < pedido.getTotal()) {
+                response.put("Tarjeta", "Saldo insuficiente en la tarjeta");
+                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+            }
+
+            tarjeta.setSaldo(tarjeta.getSaldo() - pedido.getTotal());
+           
+            tarjetaCreditoService.guardar(tarjeta);
+
+            pedido.setFechaPedido(LocalDateTime.now());
+            pedido.setEstado("EN CAMINO");
+            pedidoService.guardar(pedido);
+
+            String rutaPDF = PdfGenerator.generarFacturaPDF(pedido);
+
+            String emailCliente = pedido.getUsuario().getCorreo();
+            emailService.enviarFacturaConAdjunto(emailCliente, rutaPDF);
+
+            response.put("mensaje", "Compra finalizada con éxito y factura enviada al correo");
+            response.put("pedido", pedido);
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            response.put("error aca", e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     public void actualizar(Pedido viejo, Pedido nuevo) {
