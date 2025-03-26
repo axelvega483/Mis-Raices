@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.fragment.loginFragment">
+    tools:context=".view.fragment.LoginFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -15,9 +15,7 @@
             android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="176dp"
-            android:layout_marginTop="91dp"
-            android:layout_marginEnd="151dp"
+            android:layout_marginTop="90dp"
             android:fontFamily="sans-serif"
             android:text="Iniciar Sesión"
             android:textColor="@color/green"
@@ -91,16 +89,15 @@
             app:layout_constraintTop_toBottomOf="@+id/passwordTextInputLayout" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/loginButton"
+            android:id="@+id/btnIniciarSesion"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginTop="40dp"
             android:layout_marginEnd="20dp"
-            android:text="Iniciar Sesión"
+            android:text="INICIAR SESÍON"
             android:textColor="@color/white"
             android:textSize="20sp"
-            android:textStyle="normal"
             app:backgroundTint="@color/green"
             app:cornerRadius="50dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -113,24 +110,24 @@
             android:id="@+id/textView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:layout_marginEnd="5dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="10dp"
             android:text="No tiene cuenta?"
             android:textSize="15sp"
             app:layout_constraintEnd_toStartOf="@+id/textRegistrarse"
-            app:layout_constraintTop_toBottomOf="@+id/loginButton" />
+            app:layout_constraintTop_toBottomOf="@+id/btnIniciarSesion" />
 
         <TextView
             android:id="@+id/textRegistrarse"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:layout_marginEnd="72dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="88dp"
             android:text="Registrarse"
             android:textColor="@color/green"
             android:textSize="15sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/loginButton" />
+            app:layout_constraintTop_toBottomOf="@+id/btnIniciarSesion" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

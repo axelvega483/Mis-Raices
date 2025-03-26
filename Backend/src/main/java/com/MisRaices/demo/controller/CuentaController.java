@@ -86,10 +86,13 @@ public class CuentaController {
         try {
             response = new HashMap<>();
             Usuario existingUser = usuarioService.findByCorreo(usuario.getCorreo()).orElse(null);
-
             if (existingUser == null) {
                 response.put("error", "Usuario no encontrado");
                 return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+            }
+            if (existingUser.isActivo()) {
+                response.put("error", "La cuenta ya está activada");
+                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             }
 
             if (existingUser.getCodigo().equals(usuario.getCodigo())) {
@@ -108,7 +111,8 @@ public class CuentaController {
     }
 
     @PostMapping("/solicitarToken")
-    public ResponseEntity<Map<String, Object>> solicitarRestablecerContraseña(@RequestParam String correo) {
+    public ResponseEntity<Map<String, Object>> solicitarRestablecerContraseña(@RequestParam String correo
+    ) {
         response = new HashMap<>();
         try {
             Usuario usuario = usuarioService.findByCorreo(correo).orElse(null);
@@ -134,7 +138,8 @@ public class CuentaController {
     }
 
     @PostMapping("/restablecerContraseña")
-    public ResponseEntity<Map<String, Object>> restablecerContraseña(@RequestParam String token, @RequestParam String password) {
+    public ResponseEntity<Map<String, Object>> restablecerContraseña(@RequestParam String token, @RequestParam String password
+    ) {
         try {
             response = new HashMap<>();
             Usuario usuario = usuarioService.findByToken(token).orElse(null);

@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">MisRaices</string>
     <string name="BASE_URL">http://192.168.0.17:8080/</string>
+    <string name="email_recuperar">Por favor ingrese su dirección de correo electrónico. Recibirá un código para crear una nueva contraseña.</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="codigoCuenta">Por favor ingrese el codigo recibido para activar su cuenta.</string>
+
+
 </resources>

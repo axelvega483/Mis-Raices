@@ -33,5 +33,9 @@ public class CategoriaService implements CategoriaInterfaz {
     public List<Categoria> listar() {
         return repo.findAll();
     }
+    
+    public Optional<Categoria>obtenerNombre(String nombre){
+        return  repo.findByNombre(nombre);
+    }
 
 }
