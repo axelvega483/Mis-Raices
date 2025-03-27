@@ -3,6 +3,7 @@ package com.example.misraices.view.fragment;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.util.Log;
@@ -12,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.misraices.R;
+import com.example.misraices.data.api.ApiRetrofit;
 import com.example.misraices.data.model.Usuario;
 import com.example.misraices.databinding.FragmentLoginBinding;
 import com.example.misraices.viewModel.UsuarioViewModel;
@@ -20,6 +22,7 @@ import com.example.misraices.viewModel.UsuarioViewModel;
 public class LoginFragment extends Fragment {
     private FragmentLoginBinding binding;
     private UsuarioViewModel usuarioViewModel;
+    private Usuario usuario;
 
     public LoginFragment() {
         // Required empty public constructor
@@ -40,8 +43,7 @@ public class LoginFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentLoginBinding.inflate(inflater, container, false);
         init();
         initlistener();
@@ -50,15 +52,9 @@ public class LoginFragment extends Fragment {
     }
 
     public void init() {
-        usuarioViewModel = new ViewModelProvider(requireActivity()).get(UsuarioViewModel.class); // Inicializa el ViewModel aquí
+        usuarioViewModel = new ViewModelProvider(requireActivity()).get(UsuarioViewModel.class);
 
-        usuarioViewModel.getUsuarioLiveData().observe(getViewLifecycleOwner(), user -> {
-            if (user != null) {
-                Log.e("usuario ", user.getCorreo());
-            } else {
-                Log.e("usuario", "usuario es null");
-            }
-        });
+        Log.e("usuarioViewModel", usuarioViewModel.toString());
     }
 
     public void initlistener() {
@@ -66,43 +62,52 @@ public class LoginFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 RecuperarPasswordFragment fragment = new RecuperarPasswordFragment();
-                getActivity().getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.fragmentContainerView, fragment)
-                        .addToBackStack(null)
-                        .commit();
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainerView, fragment).addToBackStack(null).commit();
             }
         });
         binding.textRegistrarse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 RegistrarFragment fragment = new RegistrarFragment();
-                getActivity().getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.fragmentContainerView, fragment)
-                        .addToBackStack(null)
-                        .commit();
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainerView, fragment).addToBackStack(null).commit();
             }
         });
-        binding.btnIniciarSesion.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Usuario user = usuarioViewModel.getUsuarioLiveData().getValue();
-                if (user != null) {
-                    usuarioViewModel.login(user);
+        binding.btnIniciarSesion.setOnClickListener(view -> {
+
+            String email = binding.emailEditText.getText().toString().trim();
+            String password = binding.passwordEditText.getText().toString().trim();
+
+            if (email.isEmpty() || password.isEmpty()) {
+                Toast.makeText(getContext(), "Por favor ingrese ambos campos", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            Usuario usuario = new Usuario();
+            usuario.setCorreo(email);
+            usuario.setPassword(password);
+
+            usuarioViewModel.login(usuario).observe(getViewLifecycleOwner(), result -> {
+                Log.e("result login", result.getData().toString());
+                if (result.getData() != null) {
                     Toast.makeText(getContext(), "Inicio de sesión exitoso", Toast.LENGTH_SHORT).show();
-                }else{
-                    Toast.makeText(getContext(), "Error al iniciar sesión", Toast.LENGTH_SHORT).show();
+                    usuarioViewModel.setUsuarioLiveData(result.getData());
                 }
-            }
+
+            });
+
+
         });
 
+        usuarioViewModel.getUsuarioLiveData().observe(getViewLifecycleOwner(), user ->{
+            if (user == null) {
+                Toast.makeText(getContext(), "Error al obtener el usuario", Toast.LENGTH_SHORT).show();
+                Log.e("usuario login nulo", user.toString());
+                return;
+            }
 
+            Log.e("usuario login", user.toString());
+        });
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
-    }
+
 }

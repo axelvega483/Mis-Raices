@@ -1,8 +1,11 @@
 package com.example.misraices.view.fragment;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.util.Log;
@@ -12,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.misraices.R;
+import com.example.misraices.data.api.ApiRetrofit;
 import com.example.misraices.data.model.Usuario;
 import com.example.misraices.databinding.FragmentRegistrarBinding;
 import com.example.misraices.viewModel.UsuarioViewModel;
@@ -49,7 +53,7 @@ public class RegistrarFragment extends Fragment {
     }
 
     public void init() {
-        usuarioViewModel = new ViewModelProvider(this).get(UsuarioViewModel.class);
+        usuarioViewModel = new ViewModelProvider(requireActivity()).get(UsuarioViewModel.class);
 
     }
 
@@ -57,6 +61,7 @@ public class RegistrarFragment extends Fragment {
         binding.btnRegistrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 Usuario usuario = new Usuario();
                 usuario.setNombre(binding.nombreEditText.getText().toString());
                 usuario.setApellido(binding.apellidoEditText.getText().toString());
@@ -64,14 +69,23 @@ public class RegistrarFragment extends Fragment {
                 usuario.setCorreo(binding.CorreoEditText.getText().toString());
                 String password = binding.passwordEditText.getText().toString();
                 String confirmPassword = binding.confirPassEditText.getText().toString();
+
                 if (!password.equals(confirmPassword)) {
                     Toast.makeText(getContext(), "Las contraseñas no coinciden", Toast.LENGTH_SHORT).show();
                     return;
                 }
+
                 usuario.setPassword(binding.passwordEditText.getText().toString());
 
                 usuarioViewModel.crearUsuario(usuario);
 
+                Log.e("usuario registro", usuario.toString());
+
+                usuarioViewModel.setUsuarioLiveData(usuario);
+
+                Log.e("usuario registro actualizado", usuario.toString());
+
+                Log.i("usuario", usuario.toString());
 
                 Toast.makeText(getContext(), "Usuario registrado con éxito", Toast.LENGTH_SHORT).show();
 
@@ -81,12 +95,6 @@ public class RegistrarFragment extends Fragment {
                         .replace(R.id.fragmentContainerView, codigoCuenta)
                         .addToBackStack(null)
                         .commit();
-
-
-                usuarioViewModel.getErrorLiveData().observe(getViewLifecycleOwner(), error -> {
-                    Log.e("Error Registrar ", error);
-                    Toast.makeText(getContext(), "Error: " + error, Toast.LENGTH_SHORT).show();
-                });
 
             }
         });

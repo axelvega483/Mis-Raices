@@ -2,8 +2,6 @@ package com.example.misraices.data.service;
 
 import com.example.misraices.data.model.Usuario;
 
-import java.util.Map;
-
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;

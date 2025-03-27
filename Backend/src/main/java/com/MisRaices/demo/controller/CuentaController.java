@@ -7,11 +7,12 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+@Slf4j
 @CrossOrigin("*")
 @RestController
 @RequestMapping("autenticacion")
@@ -24,7 +25,7 @@ public class CuentaController {
     private EmailService emailService;
 
     @PostMapping("/login")
-    public ResponseEntity<Map<String, Object>> IniciarSesion(@RequestBody Usuario usuario) {
+    public ResponseEntity<?> IniciarSesion(@RequestBody Usuario usuario) {
         try {
             response = new HashMap<>();
             usuario = usuarioService.findByCorreoAndPassword(usuario.getCorreo(), usuario.getPassword()).orElse(null);
@@ -32,8 +33,8 @@ public class CuentaController {
                 response.put("error", "credenciales incorrectos");
                 return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
             }
-            response.put("login exitos", usuario);
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            response.put("data", usuario);
+            return new ResponseEntity<>(usuario, HttpStatus.OK);
         } catch (Exception e) {
             response.put("usuario", usuario);
             response.put("error", e.getMessage());
