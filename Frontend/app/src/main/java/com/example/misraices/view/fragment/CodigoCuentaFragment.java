@@ -42,8 +42,6 @@ public class CodigoCuentaFragment extends Fragment {
 
     public void initListener() {
         binding.btnCodigoCuenta.setOnClickListener(view -> {
-
-            Log.e("entraBtn", "entra");
             String codigo = binding.codigoTxt.getText().toString().toUpperCase();
             if (codigo.isEmpty()) {
                 Toast.makeText(getContext(), "Por favor ingrese el código de cuenta", Toast.LENGTH_SHORT).show();
@@ -54,32 +52,18 @@ public class CodigoCuentaFragment extends Fragment {
                     Toast.makeText(getContext(), "Error al obtener el usuario", Toast.LENGTH_SHORT).show();
                     return;
                 }
-
                 usuario.setCodigo(codigo);
-                Log.e("usuario con código", usuario.toString());
+                usuarioViewModel.activarCuenta(usuario);
+                Toast.makeText(getContext(), "Cuenta activada con éxito", Toast.LENGTH_SHORT).show();
+                usuarioViewModel.setUsuarioLiveData(usuario);
+                Log.e("usuario activado actualizado", usuario.toString());
+                // Navegar a LoginFragment
+                LoginFragment login = new LoginFragment();
+                getActivity().getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.fragmentContainerView, login)
+                        .commit();
 
-
-                usuarioViewModel.getUsuarioLiveData().observe(getViewLifecycleOwner(), user -> {
-                    if (user == null) {
-                        Toast.makeText(getContext(), "Error al obtener el usuario", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    usuarioViewModel.activarCuenta(user);
-
-
-                    Toast.makeText(getContext(), "Cuenta activada con éxito", Toast.LENGTH_SHORT).show();
-                    Log.e("usuario activado", user.toString());
-
-                    usuarioViewModel.setUsuarioLiveData(user);
-                    Log.e("usuario activado actualizado", user.toString());
-                    // Navegar a LoginFragment
-                    LoginFragment login = new LoginFragment();
-                    getActivity().getSupportFragmentManager()
-                            .beginTransaction()
-                            .replace(R.id.fragmentContainerView, login)
-                            .commit();
-
-                });
             });
         });
     }

@@ -20,11 +20,10 @@ public class UsuarioController {
     Map<String, Object> response;
 
     @GetMapping()
-    public ResponseEntity<Map<String, Object>> listarTodos() {
+    public ResponseEntity<?> listarTodos() {
         try {
             response = new HashMap<>();
-            response.put("Usuarios", usuarioService.listar());
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            return new ResponseEntity<>(usuarioService.listar(), HttpStatus.OK);
         } catch (Exception e) {
             response.put("sin Usuario", e.getMessage());
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -32,13 +31,12 @@ public class UsuarioController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Map<String, Object>> obtenerUsuario(@PathVariable Integer id) {
+    public ResponseEntity<?> obtenerUsuario(@PathVariable Integer id) {
         try {
             response = new HashMap<>();
             Usuario user = usuarioService.obtener(id).orElse(null);
             if (user != null) {
-                response.put("Usuario", user);
-                return new ResponseEntity<>(response, HttpStatus.OK);
+                return new ResponseEntity<>(user, HttpStatus.OK);
             } else {
                 response.put("Usuario no encontrado", user);
                 return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
@@ -50,14 +48,13 @@ public class UsuarioController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Map<String, Object>> modificarUsuario(@RequestBody Usuario usuario, @PathVariable Integer id) {
+    public ResponseEntity<?> modificarUsuario(@RequestBody Usuario usuario, @PathVariable Integer id) {
         try {
             response = new HashMap<>();
             Usuario user = usuarioService.obtener(id).orElse(null);
             if (user != null) {
                 actualizar(user, usuario);
-                response.put("usuario actualizado", usuarioService.guardar(user));
-                return new ResponseEntity<>(response, HttpStatus.OK);
+                return new ResponseEntity<>(usuarioService.guardar(user), HttpStatus.OK);
             } else {
                 response.put("usuario no encontrado", user);
                 return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
@@ -70,7 +67,7 @@ public class UsuarioController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<Map<String, Object>> eliminarUsuario(@PathVariable Integer id) {
+    public ResponseEntity<?> eliminarUsuario(@PathVariable Integer id) {
         try {
             response = new HashMap<>();
             Usuario user = usuarioService.obtener(id).orElse(null);

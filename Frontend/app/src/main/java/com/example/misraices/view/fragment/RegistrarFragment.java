@@ -74,18 +74,11 @@ public class RegistrarFragment extends Fragment {
                     Toast.makeText(getContext(), "Las contraseñas no coinciden", Toast.LENGTH_SHORT).show();
                     return;
                 }
-
                 usuario.setPassword(binding.passwordEditText.getText().toString());
 
                 usuarioViewModel.crearUsuario(usuario);
-
-                Log.e("usuario registro", usuario.toString());
-
                 usuarioViewModel.setUsuarioLiveData(usuario);
-
-                Log.e("usuario registro actualizado", usuario.toString());
-
-                Log.i("usuario", usuario.toString());
+                Log.e("usuario", usuario.toString());
 
                 Toast.makeText(getContext(), "Usuario registrado con éxito", Toast.LENGTH_SHORT).show();
 

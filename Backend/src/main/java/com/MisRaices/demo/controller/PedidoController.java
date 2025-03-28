@@ -53,11 +53,10 @@ public class PedidoController {
     private Map<String, Object> response;
 
     @GetMapping
-    public ResponseEntity<Map<String, Object>> listar() {
+    public ResponseEntity<?> listar() {
         try {
             response = new HashMap<>();
-            response.put("Pedidos", pedidoService.listar());
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            return new ResponseEntity<>(pedidoService.listar(), HttpStatus.OK);
         } catch (Exception e) {
             response.put("error al listar los pedidos", e.getMessage());
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -65,13 +64,12 @@ public class PedidoController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Map<String, Object>> obtener(@PathVariable Integer id) {
+    public ResponseEntity<?> obtener(@PathVariable Integer id) {
         try {
             response = new HashMap<>();
             Pedido pedido = pedidoService.obtener(id).orElse(null);
             if (pedido != null) {
-                response.put("pedido", pedido);
-                return new ResponseEntity<>(response, HttpStatus.OK);
+                return new ResponseEntity<>(pedido, HttpStatus.OK);
             } else {
                 response.put("error", "pedido no existe");
                 return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
@@ -83,7 +81,7 @@ public class PedidoController {
     }
 
     @PostMapping
-    public ResponseEntity<Map<String, Object>> crear(@RequestBody Pedido pedido) {
+    public ResponseEntity<?> crear(@RequestBody Pedido pedido) {
         try {
             response = new HashMap<>();
             Usuario cliente = usuarioService.obtener(pedido.getUsuario().getId()).orElse(null);
@@ -131,12 +129,8 @@ public class PedidoController {
             pedido.setDetalle(detalles);
             pedido.setTotal(precio);
             pedido.setFechaPedido(LocalDateTime.now());
-            pedido.setEstado("EN PREPARACIÓN");
-
-            Pedido pedidoGuardado = pedidoService.guardar(pedido);
-            response.put("pedido", pedidoGuardado);
-
-            return new ResponseEntity<>(response, HttpStatus.CREATED);
+            pedido.setEstado("EN PREPARACIÓN");         
+            return new ResponseEntity<>(pedidoService.guardar(pedido), HttpStatus.CREATED);
 
         } catch (Exception e) {
             response.put("error", e.getMessage());
@@ -145,7 +139,7 @@ public class PedidoController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Map<String, Object>> actualizar(@RequestBody Pedido pedido,
+    public ResponseEntity<?> actualizar(@RequestBody Pedido pedido,
             @PathVariable(required = true) Integer id) {
         try {
             response = new HashMap<>();
@@ -155,8 +149,7 @@ public class PedidoController {
                 return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
             }
             actualizar(pedidoBD, pedido);
-            response.put("pedido", pedidoService.guardar(pedidoBD));
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            return new ResponseEntity<>(pedidoService.guardar(pedidoBD), HttpStatus.OK);
         } catch (Exception e) {
             response.put("error", e.getMessage());
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -164,7 +157,7 @@ public class PedidoController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<Map<String, Object>> eliminar(@PathVariable Integer id) {
+    public ResponseEntity<?> eliminar(@PathVariable Integer id) {
         try {
             response = new HashMap<>();
             Pedido pe = pedidoService.obtener(id).orElse(null);
@@ -185,7 +178,7 @@ public class PedidoController {
     }
 
     @PostMapping("/finalizarCompra/{pedidoId}/{tarjetaId}")
-    public ResponseEntity<Map<String, Object>> finalizarCompra(@PathVariable Integer pedidoId, @PathVariable Integer tarjetaId) {
+    public ResponseEntity<?> finalizarCompra(@PathVariable Integer pedidoId, @PathVariable Integer tarjetaId) {
         try {
             response = new HashMap<>();
 
@@ -219,9 +212,9 @@ public class PedidoController {
             emailService.enviarFacturaConAdjunto(emailCliente, rutaPDF);
 
             response.put("mensaje", "Compra finalizada con éxito y factura enviada al correo");
-            response.put("pedido", pedido);
+            
 
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            return new ResponseEntity<>(pedido, HttpStatus.OK);
         } catch (Exception e) {
             response.put("error aca", e.getMessage());
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);

@@ -27,11 +27,10 @@ public class ProductoController {
 
 
     @GetMapping
-    public ResponseEntity<Map<String, Object>> listar() {
+    public ResponseEntity<?> listar() {
         try {
             response = new HashMap<>();
-            response.put("productos", productoService.listar());
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            return new ResponseEntity<>( productoService.listar(), HttpStatus.OK);
         } catch (Exception e) {
             response.put("error al listar productos", e.getMessage());
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -39,13 +38,12 @@ public class ProductoController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Map<String, Object>> obtenerCategoria(@PathVariable Integer id) {
+    public ResponseEntity<?> obtenerCategoria(@PathVariable Integer id) {
         try {
             response = new HashMap<>();
             Producto producto = productoService.obtener(id).orElse(null);
             if (producto != null) {
-                response.put("producto", producto);
-                return new ResponseEntity<>(response, HttpStatus.OK);
+                return new ResponseEntity<>(producto, HttpStatus.OK);
             } else {
                 response.put("producto", "No encontrada");
                 return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);

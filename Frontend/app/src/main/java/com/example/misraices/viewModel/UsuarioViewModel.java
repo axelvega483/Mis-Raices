@@ -46,7 +46,6 @@ public class UsuarioViewModel extends ViewModel {
     }
 
     public MutableLiveData<Result<Usuario>> login(Usuario usuario) {
-        Log.e("MutableLiveDatausuario", usuario.toString());
         return repo.login(usuario);
     }
 }

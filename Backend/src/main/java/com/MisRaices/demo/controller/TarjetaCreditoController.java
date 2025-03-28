@@ -31,11 +31,10 @@ public class TarjetaCreditoController {
     private UsuarioService UsuarioService;
 
     @GetMapping()
-    public ResponseEntity<Map<String, Object>> listar() {
+    public ResponseEntity<?> listar() {
         try {
             response = new HashMap<>();
-            response.put("tarjetas", creditoService.listar());
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            return new ResponseEntity<>(creditoService.listar(), HttpStatus.OK);
         } catch (Exception e) {
             response.put("error", e.getMessage());
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -43,12 +42,11 @@ public class TarjetaCreditoController {
     }
 
     @PostMapping()
-    public ResponseEntity<Map<String, Object>> crearTarjeta(@RequestBody TarjetaCredito tarjetaCredito) {
+    public ResponseEntity<?> crearTarjeta(@RequestBody TarjetaCredito tarjetaCredito) {
         try {
             response = new HashMap<>();
             tarjetaCredito.setSaldo(20000.00);
-            response.put("tarjeta", creditoService.guardar(tarjetaCredito));
-            return new ResponseEntity<>(response, HttpStatus.CREATED);
+            return new ResponseEntity<>(creditoService.guardar(tarjetaCredito), HttpStatus.CREATED);
         } catch (Exception e) {
             response.put("error", e.getMessage());
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -56,15 +54,14 @@ public class TarjetaCreditoController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Map<String, Object>> editar(@RequestBody TarjetaCredito tarjetaCredito,
+    public ResponseEntity<?> editar(@RequestBody TarjetaCredito tarjetaCredito,
             @PathVariable(required = true) Integer id) {
         try {
             response = new HashMap<>();
             TarjetaCredito tarjeta = creditoService.obtener(id).orElse(null);
             if (tarjeta != null) {
                 actualizar(tarjeta, tarjetaCredito);
-                response.put("tarjeta", creditoService.guardar(tarjeta));
-                return new ResponseEntity<>(response, HttpStatus.OK);
+                return new ResponseEntity<>(creditoService.guardar(tarjeta), HttpStatus.OK);
             } else {
                 response.put("Tarjeta", "no se encontro tarjeta");
                 return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
@@ -76,7 +73,7 @@ public class TarjetaCreditoController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<Map<String, Object>> eliminar(@PathVariable Integer id) {
+    public ResponseEntity<?> eliminar(@PathVariable Integer id) {
         try {
             response = new HashMap<>();
             TarjetaCredito tarjeta = creditoService.obtener(id).orElse(null);
