@@ -46,6 +46,15 @@ public class UsuarioViewModel extends ViewModel {
     }
 
     public MutableLiveData<Result<Usuario>> login(Usuario usuario) {
+        Log.e("MutableLiveDatausuario", usuario.toString());
         return repo.login(usuario);
+    }
+    public MutableLiveData<Result<Usuario>> solicitarToken(Usuario usuario) {
+        Log.e("MutableLiveDatausuarioToken", usuario.toString());
+        return repo.solicitarToken(usuario);
+    }
+    public MutableLiveData<Result<Usuario>> restablecerPassword(Usuario usuario) {
+        Log.e("MutableLiveDatausuarioPassword", usuario.toString());
+        return repo.restablecerPassword(usuario);
     }
 }

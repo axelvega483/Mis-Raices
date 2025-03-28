@@ -23,8 +23,8 @@ public interface UsuarioService {
     @POST("/autenticacion/solicitarToken")
     Call<Usuario> solicitarToken(@Body Usuario usuario);
 
-    @POST("/autenticacion/restablecerContraseña")
-    Call<Usuario>restablecerContraseña(@Body Usuario usuario);
+    @POST("/autenticacion/restablecerPassword")
+    Call<Usuario>restablecerPassword(@Body Usuario usuario);
 
     @GET("/usuario")
     Call<Usuario> obtenerUsuario();

@@ -12,21 +12,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 @Slf4j
 @CrossOrigin("*")
 @RestController
 @RequestMapping("autenticacion")
 public class CuentaController {
-    
+
     private Map<String, Object> response;
-    
+
     @Autowired
     private UsuarioService usuarioService;
     @Autowired
     private EmailService emailService;
 
     @PostMapping("/login")
-     public ResponseEntity<?> IniciarSesion(@RequestBody Usuario usuario) {
+    public ResponseEntity<?> IniciarSesion(@RequestBody Usuario usuario) {
         try {
             response = new HashMap<>();
             usuario = usuarioService.findByCorreoAndPassword(usuario.getCorreo(), usuario.getPassword()).orElse(null);
@@ -34,6 +35,7 @@ public class CuentaController {
                 response.put("error", "credenciales incorrectos");
                 return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
             }
+            response.put("data", usuario);
             return new ResponseEntity<>(usuario, HttpStatus.OK);
         } catch (Exception e) {
             response.put("error", e.getMessage());
@@ -46,12 +48,14 @@ public class CuentaController {
         try {
             response = new HashMap<>();
             String activationCode = generateActivationCode();
+
             usuario.setCodigo(activationCode);
             usuario.setActivo(false);
-            usuarioService.guardar(usuario);
 
             emailService.sendActivationEmail(usuario.getCorreo(), activationCode);
-            return new ResponseEntity<>(usuario, HttpStatus.OK);
+
+            response.put("message", "Usuario registrado. Revisa tu correo para activar la cuenta.");
+            return new ResponseEntity<>(usuarioService.guardar(usuario), HttpStatus.OK);
         } catch (Exception e) {
             response.put("error", e.getMessage());
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -81,73 +85,70 @@ public class CuentaController {
     @PostMapping("/activarCuenta")
     public ResponseEntity<?> activarCuenta(@RequestBody Usuario usuario) {
         try {
-            response= new HashMap<>();
+            response = new HashMap<>();
             Usuario existingUser = usuarioService.findByCorreo(usuario.getCorreo()).orElse(null);
             if (existingUser == null) {
-                response.put("error","Usuario no encontrado");
+                response.put("error", "Usuario no encontrado");
                 return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
             }
             if (existingUser.isActivo()) {
-                response.put("data","La cuenta ya está activada");
+                response.put("error", "La cuenta ya está activada");
                 return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             }
 
             if (existingUser.getCodigo().equals(usuario.getCodigo())) {
                 existingUser.setActivo(true);
-                usuarioService.guardar(existingUser);
-                return new ResponseEntity<>(existingUser, HttpStatus.OK);
+                return new ResponseEntity<>(usuarioService.guardar(existingUser), HttpStatus.OK);
             } else {
-               response.put("error","Código de activación incorrecto");
+                response.put("error", "Código de activación incorrecto");
                 return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             }
         } catch (Exception e) {
-            response.put("",e.getMessage());
+            response.put("error", e.getMessage());
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @PostMapping("/solicitarToken")
-    public ResponseEntity<?> solicitarRestablecerContraseña(@RequestParam String correo) {
+    public ResponseEntity<?> solicitarRestablecerContraseña(@RequestBody Usuario usuario) {
+        response = new HashMap<>();
         try {
-            response= new HashMap<>();
-            Usuario usuario = usuarioService.findByCorreo(correo).orElse(null);
-            if (usuario == null) {
-               response.put("error", "Correo no encontrado");
+            Usuario existeUser = usuarioService.findByCorreo(usuario.getCorreo()).orElse(null);
+            if (existeUser == null) {
+                response.put("error", "Usuario no encontrado con ese correo");
                 return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
             }
 
             String resetToken = generateActivationCode();
 
-            usuario.setToken(resetToken);
-            usuario.setTokenLimite(LocalDateTime.now().plusHours(1));
-            usuarioService.guardar(usuario);
+            existeUser.setToken(resetToken);
+            existeUser.setTokenLimite(LocalDateTime.now().plusHours(1));
+            emailService.sendResetPasswordEmail(existeUser.getCorreo(), resetToken);
 
-            emailService.sendResetPasswordEmail(usuario.getCorreo(), resetToken);
-
-            return new ResponseEntity<>(usuario, HttpStatus.OK);
+            return new ResponseEntity<>(usuarioService.guardar(existeUser), HttpStatus.OK);
         } catch (Exception e) {
-            response.put("",e.getMessage());
+            response.put("error", "no se pudo mandar token" + e.getMessage());
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @PostMapping("/restablecerContraseña")
-    public ResponseEntity<?> restablecerContraseña(@RequestParam String token, @RequestParam String password
-    ) {
+    @PostMapping("/restablecerPassword")
+    public ResponseEntity<?> restablecerContraseña(@RequestBody Usuario usuario) {
         try {
-            response= new HashMap<>();
-            Usuario usuario = usuarioService.findByToken(token).orElse(null);
-            if (usuario == null || usuario.getTokenLimite().isBefore(LocalDateTime.now())) {
-                response.put("erro", "token expirado");
+            response = new HashMap<>();
+            Usuario existeUser = usuarioService.findByToken(usuario.getToken()).orElse(null);
+            if (existeUser == null || existeUser.getTokenLimite().isBefore(LocalDateTime.now())) {
+                response.put("error", "El token es inválido o ha expirado");
                 return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             }
-            usuario.setPassword(password);
-            usuario.setToken(null);
-            usuario.setTokenLimite(null);
-            usuarioService.guardar(usuario);
-            return new ResponseEntity<>(usuario, HttpStatus.OK);
+
+            existeUser.setPassword(usuario.getPassword());
+            existeUser.setToken(null);
+            existeUser.setTokenLimite(null);
+
+            return new ResponseEntity<>(usuarioService.guardar(existeUser), HttpStatus.OK);
         } catch (Exception e) {
-            response.put("",e.getMessage());
+            response.put("error", e.getMessage());
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

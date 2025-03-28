@@ -56,5 +56,10 @@ public class UsuarioRepository {
     public MutableLiveData<Result<Usuario>> login(Usuario usuario) {
         return ejecutarPeticion(usuarioService.login(usuario));
     }
-
+    public MutableLiveData<Result<Usuario>> solicitarToken(Usuario usuario) {
+        return ejecutarPeticion(usuarioService.solicitarToken(usuario));
+    }
+    public MutableLiveData<Result<Usuario>> restablecerPassword(Usuario usuario) {
+        return ejecutarPeticion(usuarioService.restablecerPassword(usuario));
+    }
 }

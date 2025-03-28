@@ -54,22 +54,28 @@ public class LoginFragment extends Fragment {
     public void init() {
         usuarioViewModel = new ViewModelProvider(requireActivity()).get(UsuarioViewModel.class);
 
-        Log.e("usuarioViewModel", usuarioViewModel.toString());
     }
 
     public void initlistener() {
-        binding.textPassword.setOnClickListener(new View.OnClickListener() {
+        binding.textCambiarPass.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 RecuperarPasswordFragment fragment = new RecuperarPasswordFragment();
-                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainerView, fragment).addToBackStack(null).commit();
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragmentContainerView, fragment)
+                        .addToBackStack(null)
+                        .commit();
             }
         });
         binding.textRegistrarse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 RegistrarFragment fragment = new RegistrarFragment();
-                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainerView, fragment).addToBackStack(null).commit();
+                getActivity().getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.fragmentContainerView, fragment)
+                        .addToBackStack(null)
+                        .commit();
             }
         });
         binding.btnIniciarSesion.setOnClickListener(view -> {
@@ -97,7 +103,6 @@ public class LoginFragment extends Fragment {
 
 
         });
-
         usuarioViewModel.getUsuarioLiveData().observe(getViewLifecycleOwner(), user ->{
             if (user == null) {
                 Toast.makeText(getContext(), "Error al obtener el usuario", Toast.LENGTH_SHORT).show();
