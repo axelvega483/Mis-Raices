@@ -51,4 +51,8 @@ dependencies {
     implementation ("com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.2")
     implementation ("com.facebook.stetho:stetho:1.5.1")
     implementation ("com.facebook.stetho:stetho-okhttp3:1.5.1")
+
+    //glide
+    implementation ("com.github.bumptech.glide:glide:4.15.1")
+    annotationProcessor ("com.github.bumptech.glide:compiler:4.15.1")
 }

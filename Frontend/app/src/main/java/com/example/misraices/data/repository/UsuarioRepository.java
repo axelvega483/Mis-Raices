@@ -1,15 +1,17 @@
 package com.example.misraices.data.repository;
 
-import android.content.Context;
 import android.util.Log;
 
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.misraices.data.api.ApiRetrofit;
+import com.example.misraices.data.model.Categoria;
 import com.example.misraices.data.model.Result;
 import com.example.misraices.data.model.Usuario;
 import com.example.misraices.data.service.UsuarioService;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -44,7 +46,29 @@ public class UsuarioRepository {
         return mdl;
     }
 
+    public MutableLiveData<List<Usuario>> ejecutarPeticionLista(Call<List<Usuario>> call) {
+        final MutableLiveData<List<Usuario>> mdl = new MutableLiveData<>();
+        call.enqueue(new Callback<List<Usuario>>() {
+            @Override
+            public void onResponse(Call<List<Usuario>> call, Response<List<Usuario>> response) {
+                if (response.isSuccessful()) {
+                    mdl.setValue(response.body());
+                } else {
+                    mdl.setValue(new ArrayList<>());
+                }
+            }
 
+            @Override
+            public void onFailure(Call<List<Usuario>> call, Throwable t) {
+                mdl.setValue(new ArrayList<>());
+            }
+        });
+        return mdl;
+    }
+
+    public MutableLiveData<List<Usuario>>obtenerUsuario(){
+        return ejecutarPeticionLista(usuarioService.obtenerUsuario());
+    }
     public MutableLiveData<Result<Usuario>> crearUsuario(Usuario usuario) {
         return ejecutarPeticion(usuarioService.crearUsuario(usuario));
     }

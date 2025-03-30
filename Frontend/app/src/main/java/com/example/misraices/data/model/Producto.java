@@ -9,18 +9,18 @@ public class Producto implements Serializable {
     private Integer stock;
     private Double precio;
     private Categoria categoria;
-    private String imgUri;
+    private String img;
 
     public Producto() {
     }
 
-    public Producto(String nombre, String descripcion, Integer stock, Double precio, Categoria categoria, String imgUri) {
+    public Producto(String nombre, String descripcion, Integer stock, Double precio, Categoria categoria, String img) {
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.stock = stock;
         this.precio = precio;
         this.categoria = categoria;
-        this.imgUri = imgUri;
+        this.img = img;
     }
 
     public Integer getId() {
@@ -71,12 +71,12 @@ public class Producto implements Serializable {
         this.categoria = categoria;
     }
 
-    public String getImgUri() {
-        return imgUri;
+    public String getImg() {
+        return img;
     }
 
-    public void setImgUri(String imgUri) {
-        this.imgUri = imgUri;
+    public void setImg(String img) {
+        this.img = img;
     }
 
     @Override
@@ -88,7 +88,7 @@ public class Producto implements Serializable {
                 ", stock=" + stock +
                 ", precio=" + precio +
                 ", categoria=" + categoria +
-                ", imgUri='" + imgUri + '\'' +
+                ", imgUri='" + img + '\'' +
                 '}';
     }
 }

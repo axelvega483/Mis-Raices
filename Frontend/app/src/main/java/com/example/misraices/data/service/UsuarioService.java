@@ -2,6 +2,8 @@ package com.example.misraices.data.service;
 
 import com.example.misraices.data.model.Usuario;
 
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
@@ -27,7 +29,7 @@ public interface UsuarioService {
     Call<Usuario>restablecerPassword(@Body Usuario usuario);
 
     @GET("/usuario")
-    Call<Usuario> obtenerUsuario();
+    Call<List<Usuario>> obtenerUsuario();
 
     @GET("/usuario/{id}")
     Call<Usuario> obtenerUsuarioPorId(@Path("id") Integer id);

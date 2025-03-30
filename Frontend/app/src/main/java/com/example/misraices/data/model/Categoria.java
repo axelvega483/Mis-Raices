@@ -5,14 +5,14 @@ import java.io.Serializable;
 public class Categoria implements Serializable {
     private Integer id;
     private String nombre;
-    private String imgUri;
+    private String img;
 
     public Categoria() {
     }
 
-    public Categoria(String nombre, String imgUri) {
+    public Categoria(String nombre, String img) {
         this.nombre = nombre;
-        this.imgUri = imgUri;
+        this.img = img;
     }
 
     public Integer getId() {
@@ -31,16 +31,16 @@ public class Categoria implements Serializable {
         this.nombre = nombre;
     }
 
-    public String getImgUri() {
-        return imgUri;
+    public String getImg() {
+        return img;
     }
 
-    public void setImgUri(String imgUri) {
-        this.imgUri = imgUri;
+    public void setImg(String img) {
+        this.img = img;
     }
 
     @Override
     public String toString() {
-        return "Categoria{" + "id=" + id + ", nombre=" + nombre + ", imgUri=" + imgUri + '}';
+        return "Categoria{" + "id=" + id + ", nombre=" + nombre + ", img=" + img + '}';
     }
 }

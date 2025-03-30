@@ -1,10 +1,7 @@
 package com.example.misraices.viewModel;
 
-import android.app.Application;
-import android.content.Context;
 import android.util.Log;
 
-import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -13,6 +10,7 @@ import com.example.misraices.data.model.Result;
 import com.example.misraices.data.model.Usuario;
 import com.example.misraices.data.repository.UsuarioRepository;
 
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -35,7 +33,9 @@ public class UsuarioViewModel extends ViewModel {
     public LiveData<Usuario> getUsuarioLiveData() {
         return usuarioMutableLiveData;
     }
-
+public MutableLiveData<List<Usuario>>obtenerUsuario(){
+        return repo.obtenerUsuario();
+}
 
     public MutableLiveData<Result<Usuario>> crearUsuario(Usuario usuario) {
         return repo.crearUsuario(usuario);

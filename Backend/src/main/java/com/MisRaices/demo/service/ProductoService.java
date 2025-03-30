@@ -1,5 +1,6 @@
 package com.MisRaices.demo.service;
 
+import com.MisRaices.demo.entity.Categoria;
 import com.MisRaices.demo.entity.Producto;
 import com.MisRaices.demo.interfaz.ProductoInterfaz;
 import com.MisRaices.demo.repository.ProductoRepository;
@@ -32,5 +33,12 @@ public class ProductoService implements ProductoInterfaz {
     @Override
     public List<Producto> listar() {
         return repo.findAll();
+    }
+     public List<Producto> listarPorCategoria(Categoria categoria) {
+        return repo.findByCategoria(categoria);
+    }
+    
+      public List<Producto>obtenerNombre(String nombre){
+        return  repo.findByNombre(nombre);
     }
 }

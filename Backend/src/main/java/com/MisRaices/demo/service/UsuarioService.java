@@ -30,7 +30,7 @@ public class UsuarioService implements UsuarioInterfaz {
     public Optional<Usuario> obtener(Integer id) {
         return repo.findById(id);
     }
-
+    
     @Override
     public List<Usuario> listar() {
         return repo.findAll();

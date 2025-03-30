@@ -1,5 +1,6 @@
 package com.example.misraices.view.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -16,6 +17,7 @@ import com.example.misraices.R;
 import com.example.misraices.data.api.ApiRetrofit;
 import com.example.misraices.data.model.Usuario;
 import com.example.misraices.databinding.FragmentLoginBinding;
+import com.example.misraices.view.activity.PrincipalActivity;
 import com.example.misraices.viewModel.UsuarioViewModel;
 
 
@@ -93,12 +95,15 @@ public class LoginFragment extends Fragment {
             usuario.setPassword(password);
 
             usuarioViewModel.login(usuario).observe(getViewLifecycleOwner(), result -> {
-                Log.e("result login", result.getData().toString());
                 if (result.getData() != null) {
+                    Log.e("result login", result.getData().toString());
                     Toast.makeText(getContext(), "Inicio de sesión exitoso", Toast.LENGTH_SHORT).show();
                     usuarioViewModel.setUsuarioLiveData(result.getData());
+                    Intent intent = new Intent(getContext(), PrincipalActivity.class);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(getContext(), "Error al iniciar sesión", Toast.LENGTH_SHORT).show();
                 }
-
             });
 
 
