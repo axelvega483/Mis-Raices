@@ -1,5 +1,10 @@
 package com.example.misraices.data.model;
+import lombok.*;
 
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Result<T> {
     private T data;
     private String error;
@@ -10,13 +15,5 @@ public class Result<T> {
 
     public Result(String errorMessage) {
         this.error = errorMessage;
-    }
-
-    public T getData() {
-        return data;
-    }
-
-    public String getError() {
-        return error;
     }
 }

@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.misraices.R;
 import com.example.misraices.data.model.Categoria;
 import com.example.misraices.data.model.Producto;
 import com.example.misraices.databinding.FragmentHomeBinding;
@@ -65,8 +66,11 @@ public class HomeFragment extends Fragment {
 
         productoViewModel.obtenerProductos().observe(getViewLifecycleOwner(), result -> {
             if (result != null) {
+                Log.e("result producto",result.toString());
                 binding.recyclerViewProducto.setLayoutManager(new LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false));
-                binding.recyclerViewProducto.setAdapter(new AdaptadorProductos((List<Producto>) result, getContext()));
+                binding.recyclerViewProducto.setAdapter(new AdaptadorProductos((List<Producto>) result, getContext(),producto -> {
+                    abrirDetalleProducto(producto);
+                }));
                 productoViewModel.setProductoMutableLiveData(result);
 
             }
@@ -86,7 +90,9 @@ public class HomeFragment extends Fragment {
             productoViewModel.obtenerProductos().observe(getViewLifecycleOwner(), result -> {
                 if (result != null) {
                     binding.recyclerViewProducto.setLayoutManager(new LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false));
-                    binding.recyclerViewProducto.setAdapter(new AdaptadorProductos((List<Producto>) result, getContext()));
+                    binding.recyclerViewProducto.setAdapter(new AdaptadorProductos((List<Producto>) result, getContext(),producto -> {
+                        abrirDetalleProducto(producto);
+                    }));
                     productoViewModel.setProductoMutableLiveData(result);
 
                 }
@@ -117,30 +123,53 @@ public class HomeFragment extends Fragment {
         productoViewModel.obtenerProductosPorCategoria(categoria.getId()).observe(getViewLifecycleOwner(), productos -> {
             if (productos != null) {
                 binding.recyclerViewProducto.setLayoutManager(new LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false));
-                binding.recyclerViewProducto.setAdapter(new AdaptadorProductos((List<Producto>) productos, getContext()));
+                binding.recyclerViewProducto.setAdapter(new AdaptadorProductos((List<Producto>) productos, getContext(),producto -> {
+                    abrirDetalleProducto(producto);
+                }));
             }
         });
     }
 
     private void filtrarProductos(String query) {
         productoViewModel.obtenerProductosPorNombre(query).observe(getViewLifecycleOwner(), producto -> {
-            Log.e("productoXnombre", producto.toString()  );
             if (producto != null) {
+                Log.e("productoXnombre", producto.toString());
                 binding.recyclerViewProducto.setLayoutManager(new LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false));
-                binding.recyclerViewProducto.setAdapter(new AdaptadorProductos(producto, getContext()));
+                binding.recyclerViewProducto.setAdapter(new AdaptadorProductos(producto, getContext(),producto1 -> {
+                    abrirDetalleProducto(producto1);
+                }));
             } else {
                 Toast.makeText(getContext(), "No se encontraron productos que coincidan con: " + query, Toast.LENGTH_SHORT).show();
             }
         });
     }
-    private void cargarTodosLosProductos(){
+
+    private void cargarTodosLosProductos() {
         productoViewModel.obtenerProductos().observe(getViewLifecycleOwner(), result -> {
             if (result != null) {
                 binding.recyclerViewProducto.setLayoutManager(new LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false));
-                binding.recyclerViewProducto.setAdapter(new AdaptadorProductos((List<Producto>) result, getContext()));
+                binding.recyclerViewProducto.setAdapter(new AdaptadorProductos((List<Producto>) result, getContext(),producto -> {
+                    abrirDetalleProducto(producto);
+                }));
                 productoViewModel.setProductoMutableLiveData(result);
 
             }
         });
+    }
+    private void abrirDetalleProducto(Producto producto) {
+        ProductoDetalleFragment fragment = new ProductoDetalleFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("nombre", producto.getNombre());
+        bundle.putString("descripcion", producto.getDescripcion());
+        bundle.putDouble("precio", producto.getPrecio());
+        bundle.putInt("stock", producto.getStock());
+        bundle.putString("imagen", producto.getImg());
+        bundle.putSerializable("producto",producto);
+        fragment.setArguments(bundle);
+
+        getParentFragmentManager().beginTransaction()
+                .replace(R.id.frameContainer, fragment)
+                .addToBackStack(null)
+                .commit();
     }
 }

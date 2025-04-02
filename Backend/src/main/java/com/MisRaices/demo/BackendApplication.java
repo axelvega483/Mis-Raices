@@ -23,27 +23,27 @@ public class BackendApplication {
             if (categoriaService.listar().isEmpty()) {
                 Categoria arbol = new Categoria();
                 arbol.setNombre("Árbol");
-                arbol.setImg("https://drive.google.com/uc?export=view&id=1oTZIu4m1jOQrIrUVozqhkyAwikKp7oBH");
+                arbol.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743356344/vqrgka5kb4xjr3mxdbeh.jpg");
 
                 Categoria aromatica = new Categoria();
                 aromatica.setNombre("Aromaticas");
-                aromatica.setImg("https://drive.google.com/uc?export=view&id=1KfTNa_axTFHjWvMvHtkV43F7RQnG-oP9");
+                aromatica.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743356344/cvvf1j4usladzfcg0nrn.jpg");
 
                 Categoria cactus = new Categoria();
                 cactus.setNombre("Cactus");
-                cactus.setImg("https://drive.google.com/uc?export=view&id=1J7eZM04Q-RR8SDUXkppXyHDw7BwgCJST");
+                cactus.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743356344/haobplq9xncxrhmmw9oq.jpg");
 
                 Categoria exterior = new Categoria();
                 exterior.setNombre("Exterior");
-                exterior.setImg("https://drive.google.com/uc?export=view&id=1zIP63l_xwy0U71YpMU-nmqDViXJ23Hmu");
+                exterior.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743356344/wqbz6qaksegw6c9vjrdd.jpg");
 
                 Categoria interior = new Categoria();
                 interior.setNombre("Interior");
-                interior.setImg("https://drive.google.com/uc?export=view&id=1eHXg0K3hGcc2ZCgIvWFeRsROGFsJRQJp");
+                interior.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743356344/t3vu1pp2g5pxxxpfiefy.jpg");
 
                 Categoria suculenta = new Categoria();
                 suculenta.setNombre("Suculenta");
-                suculenta.setImg("https://drive.google.com/uc?export=view&id=1os_VWMI-XhJ_dkgKxB3UhxV5NLoeGHnI");
+                suculenta.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743356344/nqcoux5ujrrqkhjgv6bo.jpg");
                
 
                 categoriaService.guardar(arbol);
@@ -68,7 +68,7 @@ public class BackendApplication {
                 bracho.setDescripcion("40cm, bolsa 1L");
                 bracho.setPrecio(1000.0);
                 bracho.setStock(8);
-                bracho.setImg("https://drive.google.com/uc?export=view&id=19WLuhGby3ECODil4U1SVMVLg2Mt25O2U");
+                bracho.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743618906/bracho-40cm-bolsa_1l-_1000_tsglxb.jpg");
 
                 Producto chivato = new Producto();
                 chivato.setCategoria(arbol.get());
@@ -76,7 +76,7 @@ public class BackendApplication {
                 chivato.setDescripcion("50cm bolsa 5L");
                 chivato.setPrecio(3000.0);
                 chivato.setStock(7);
-                chivato.setImg("https://drive.google.com/uc?export=view&id=1j1pNMKseYDJW_1OYNJYIPGfVcfCKzb3-");
+                chivato.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743618964/chivato-bolsa_5l-_3000_lyfoep.jpg");
 
                 Producto guayacan = new Producto();
                 guayacan.setCategoria(arbol.get());
@@ -84,7 +84,7 @@ public class BackendApplication {
                 guayacan.setDescripcion("80cm bolsa 5L");
                 guayacan.setPrecio(1800.0);
                 guayacan.setStock(5);
-                guayacan.setImg("https://drive.google.com/uc?export=view&id=1Z-v15tzfXwIrnJZlqyydKIB9Pn4SaVmX");
+                guayacan.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743619016/Guayac%C3%A1n-bolsa_5l-_80cm-_1800_os7byl.jpg");
 
                 Producto thevetia = new Producto();
                 thevetia.setCategoria(arbol.get());
@@ -92,7 +92,7 @@ public class BackendApplication {
                 thevetia.setDescripcion("Recipiente descartable 1m");
                 thevetia.setPrecio(2800.0);
                 thevetia.setStock(9);
-                thevetia.setImg("https://drive.google.com/uc?export=view&id=1Qic2SVw5LOPmglfcmK_sxWm3MQqmibOy");
+                thevetia.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743619047/thevetia-_recipiente_descartable-_1m-_2800_oxevqi.jpg");
 
                 Producto boldo = new Producto();
                 boldo.setCategoria(aromaticas.get());
@@ -100,7 +100,7 @@ public class BackendApplication {
                 boldo.setDescripcion("Maceta N°12");
                 boldo.setPrecio(1200.0);
                 boldo.setStock(5);
-                boldo.setImg("https://drive.google.com/uc?export=view&id=1GcVwIjJ7dlnHSprmEOm28RYJN0Tqm0CK");
+                boldo.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743619143/boldo_paraguayo-_maceta_n12-_1200_w1ady2.jpg");
 
                 Producto incienso = new Producto();
                 incienso.setCategoria(aromaticas.get());
@@ -108,7 +108,7 @@ public class BackendApplication {
                 incienso.setDescripcion("Maceta N°12");
                 incienso.setPrecio(1500.0);
                 incienso.setStock(10);
-                incienso.setImg("https://drive.google.com/uc?export=view&id=1ROO2l4dxEwhUqSAOHY9b0kT86fUTbDX1");
+                incienso.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743619185/incienso-_maceta_n12-_1500_d2srrf.jpg");
 
                 Producto romero = new Producto();
                 romero.setCategoria(aromaticas.get());
@@ -124,7 +124,7 @@ public class BackendApplication {
                 mammillaria.setDescripcion("Maceta N°6");
                 mammillaria.setPrecio(500.0);
                 mammillaria.setStock(15);
-                mammillaria.setImg("https://drive.google.com/uc?export=view&id=1VFXXfFW_wZzFYSQnGCZui78RHYecsUrU");
+                mammillaria.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743619340/mammillaria_elongata-_maceta_n6-_500_w3nj5f.jpg");
 
                 Producto gracilis = new Producto();
                 gracilis.setCategoria(cactus.get());
@@ -132,7 +132,7 @@ public class BackendApplication {
                 gracilis.setDescripcion("Maceta N°8");
                 gracilis.setPrecio(700.0);
                 gracilis.setStock(13);
-                gracilis.setImg("https://drive.google.com/uc?export=view&id=1skTlxpDKG5NieskR4Jk2WFNP9vK0zEFT");
+                gracilis.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743619393/mammillaria_gracilis-_maceta_n8-_700_taopo0.jpg");
 
                 Producto plumosa = new Producto();
                 plumosa.setCategoria(cactus.get());
@@ -140,7 +140,7 @@ public class BackendApplication {
                 plumosa.setDescripcion("Maceta N°6");
                 plumosa.setPrecio(500.0);
                 plumosa.setStock(8);
-                plumosa.setImg("https://drive.google.com/uc?export=view&id=1u-N2fQTreyGBe1MUSURkijsiM2cqLv_g");
+                plumosa.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743619439/mammillaria_plumosa-_maceta_n6-_500_lbgxtf.jpg");
 
                 Producto prolifera = new Producto();
                 prolifera.setCategoria(cactus.get());
@@ -148,7 +148,7 @@ public class BackendApplication {
                 prolifera.setDescripcion("Maceta N°8");
                 prolifera.setPrecio(700.0);
                 prolifera.setStock(7);
-                prolifera.setImg("https://drive.google.com/uc?export=view&id=1tVErbO-o3bLUHngSf0TPRVRC3agOhBMY");
+                prolifera.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743619494/mammillaria_prolifera-_maceta_n8-_700_cfke52.jpg");
 
                 Producto opuntia = new Producto();
                 opuntia.setCategoria(cactus.get());
@@ -156,15 +156,15 @@ public class BackendApplication {
                 opuntia.setDescripcion("Maceta soplada N°12");
                 opuntia.setPrecio(700.0);
                 opuntia.setStock(8);
-                opuntia.setImg("https://drive.google.com/uc?export=view&id=1AfXo3RhrHJ07sVTUqrOL7gCSXaellj3o");
+                opuntia.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743619530/opuntia_humifusa-_maceta_soplada_n12-_700_ylpa71.jpg");
 
-                Producto asparagus = new Producto();
-                asparagus.setCategoria(exterior.get());
-                asparagus.setNombre("Asparagus");
-                asparagus.setDescripcion("Maceta bols N°18 + colgate");
-                asparagus.setPrecio(3600.0);
-                asparagus.setStock(5);
-                asparagus.setImg("https://drive.google.com/uc?export=view&id=1fQOQuXMscXLJcnvxSP48ddcvo-pyvHmw");
+                Producto albuca = new Producto();
+                albuca.setCategoria(exterior.get());
+                albuca.setNombre("Albuca Bracteata");
+                albuca.setDescripcion("Maceta N°18");
+                albuca.setPrecio(3500.0);
+                albuca.setStock(5);
+                albuca.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743619756/albuca_bracteata-_maceta_n18-_3500_d0udxv.jpg");
 
                 Producto euphorbia = new Producto();
                 euphorbia.setCategoria(exterior.get());
@@ -172,15 +172,15 @@ public class BackendApplication {
                 euphorbia.setDescripcion("Maceta soplada N°16");
                 euphorbia.setPrecio(2100.0);
                 euphorbia.setStock(4);
-                euphorbia.setImg("https://drive.google.com/uc?export=view&id=1Ftc4vXRSsbP3-t2XNYjZVv8UqEWrxWsV");
+                euphorbia.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743619853/euphorbia_umbellata-_maceta_soplada_n16-_2100_gzwrte.jpg");
 
-                Producto hippeastrum = new Producto();
-                hippeastrum.setCategoria(exterior.get());
-                hippeastrum.setNombre("Hippeastrum Puniceum");
-                hippeastrum.setDescripcion("Maceta N°15");
-                hippeastrum.setPrecio(3500.0);
-                hippeastrum.setStock(4);
-                hippeastrum.setImg("https://drive.google.com/uc?export=view&id=17qFmSpFl_V6Jp9Dbn23JQMDoH8IzJsVx");
+                Producto rayito = new Producto();
+                rayito.setCategoria(exterior.get());
+                rayito.setNombre("Rayito de Sol");
+                rayito.setDescripcion("Maceta Bols N°8");
+                rayito.setPrecio(2800.0);
+                rayito.setStock(4);
+                rayito.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743619961/Rayito_de_sol-_maceta_bolsa_n18_colgante-_2800_j2nuky.jpg");
 
                 Producto tradescantia = new Producto();
                 tradescantia.setCategoria(exterior.get());
@@ -188,15 +188,15 @@ public class BackendApplication {
                 tradescantia.setDescripcion("Bolsa 5L");
                 tradescantia.setPrecio(2300.0);
                 tradescantia.setStock(6);
-                tradescantia.setImg("https://drive.google.com/uc?export=view&id=10M3MQMQ-XQoT1oMtfx9FyzrfdMqNURv-");
+                tradescantia.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743620079/tradescantia_pallida-bolsa_5l-_2300_yzytcp.jpg");
 
-                Producto adam = new Producto();
-                adam.setCategoria(interior.get());
-                adam.setNombre("Costilla de Adam");
-                adam.setDescripcion("Maceta N°21");
-                adam.setPrecio(7000.0);
-                adam.setStock(4);
-                adam.setImg("https://drive.google.com/uc?export=view&id=1-s21py9QUL4yD_JGZw-0hDObBoHdvExU");
+                Producto helecho = new Producto();
+                helecho.setCategoria(interior.get());
+                helecho.setNombre("Helecho Serrucho");
+                helecho.setDescripcion("Maceta N°15");
+                helecho.setPrecio(400.0);
+                helecho.setStock(4);
+                helecho.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743620139/helecho_serrucho-_maceta_n15-_4000_eol1jv.jpg");
 
                 Producto brasil = new Producto();
                 brasil.setCategoria(interior.get());
@@ -204,7 +204,7 @@ public class BackendApplication {
                 brasil.setDescripcion("Maceta soplada N°12");
                 brasil.setPrecio(2000.0);
                 brasil.setStock(6);
-                brasil.setImg("https://drive.google.com/uc?export=view&id=1eZy67ydu4Y8i_yN6j6ZrDuEnSCT7-8iL");
+                brasil.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743620217/philodendron_brasil-_maceta_soplada_n12-_2000_jcmt0w.jpg");
         
                 Producto plateado = new Producto();
                 plateado.setCategoria(interior.get());
@@ -212,7 +212,7 @@ public class BackendApplication {
                 plateado.setDescripcion("Maceta N°14");
                 plateado.setPrecio(3000.0);
                 plateado.setStock(3);
-                plateado.setImg("https://drive.google.com/uc?export=view&id=193hW9OeNots7cUkyB3sZ0t_XUzkziYW2");
+                plateado.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743620289/philodendron_plateado-maceta_n14-_3000_whoxet.jpg");
 
                 Producto sanseviera = new Producto();
                 sanseviera.setCategoria(interior.get());
@@ -220,15 +220,15 @@ public class BackendApplication {
                 sanseviera.setDescripcion("Maceta N°15");
                 sanseviera.setPrecio(2800.0);
                 sanseviera.setStock(7);
-                sanseviera.setImg("https://drive.google.com/uc?export=view&id=1NaITsMA_33Og269Yh0GIVkm-KCHPGPpm");
+                sanseviera.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743620336/Sansevieria_enana-_maceta_n15-_2800_m7qdqi.jpg");
 
-                Producto aloe = new Producto();
-                aloe.setCategoria(suculenta.get());
-                aloe.setNombre("Aloe Aristata");
-                aloe.setDescripcion("Maceta soplada N°12");
-                aloe.setPrecio(2000.0);
-                aloe.setStock(9);
-                aloe.setImg("https://drive.google.com/uc?export=view&id=1phP8H_wwQ3hm2aSPPTgIz8kgCPkzUrlW");
+                Producto crassula = new Producto();
+                crassula.setCategoria(suculenta.get());
+                crassula.setNombre("Creassula");
+                crassula.setDescripcion("Maceta soplada N°12");
+                crassula.setPrecio(1600.0);
+                crassula.setStock(9);
+                crassula.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743620423/crassula_-_maceta_soplada_n12_-_1600_njcgd7.jpg");
 
                 Producto echeveria = new Producto();
                 echeveria.setCategoria(suculenta.get());
@@ -236,7 +236,7 @@ public class BackendApplication {
                 echeveria.setDescripcion("Maceta soplada N°12");
                 echeveria.setPrecio(3000.0);
                 echeveria.setStock(7);
-                echeveria.setImg("https://drive.google.com/uc?export=view&id=159unr1rwTV-WSpiGVwjYjEqAjknTUIWd");
+                echeveria.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743620491/echeveria_elegans_-_maceta_soplada_n12-_3000_g2xinr.jpg");
 
                 Producto haworthia = new Producto();
                 haworthia.setCategoria(suculenta.get());
@@ -244,7 +244,7 @@ public class BackendApplication {
                 haworthia.setDescripcion("Maceta N°12");
                 haworthia.setPrecio(2300.0);
                 haworthia.setStock(5);
-                haworthia.setImg("https://drive.google.com/uc?export=view&id=163Gyfp8MYNr53YF5LbZ9otBKKFY1iPtp");
+                haworthia.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743620541/haworthia_cymbiformis-_maceta_n12-_2300_zmk42j.jpg");
 
                 Producto kalanchoe = new Producto();
                 kalanchoe.setCategoria(suculenta.get());
@@ -252,7 +252,7 @@ public class BackendApplication {
                 kalanchoe.setDescripcion("Maceta soplada N°12");
                 kalanchoe.setPrecio(1500.0);
                 kalanchoe.setStock(9);
-                kalanchoe.setImg("https://drive.google.com/uc?export=view&id=1VbE2S-nHsVehJTgUn-TZAMh9DirdfD8G");
+                kalanchoe.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743620589/kalanchoe_humilis._maceta_soplada_n12-_1500_cnaz9d.jpg");
 
                 productoService.guardar(bracho);
                 productoService.guardar(chivato);
@@ -266,15 +266,15 @@ public class BackendApplication {
                 productoService.guardar(plumosa);
                 productoService.guardar(prolifera);
                 productoService.guardar(opuntia);
-                productoService.guardar(asparagus);
+                productoService.guardar(albuca);
                 productoService.guardar(euphorbia);
-                productoService.guardar(hippeastrum);
+                productoService.guardar(rayito);
                 productoService.guardar(tradescantia);
-                productoService.guardar(adam);
+                productoService.guardar(helecho);
                 productoService.guardar(brasil);
                 productoService.guardar(plateado);
                 productoService.guardar(sanseviera);
-                productoService.guardar(aloe);
+                productoService.guardar(crassula);
                 productoService.guardar(echeveria);
                 productoService.guardar(haworthia);
                 productoService.guardar(kalanchoe);

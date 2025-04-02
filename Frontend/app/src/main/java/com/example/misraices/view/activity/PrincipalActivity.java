@@ -36,7 +36,7 @@ public class PrincipalActivity extends AppCompatActivity {
                 if (itemId == R.id.nav_home) {
                     openFragment(HomeFragment.newInstance());
                 }/* else if (itemId == R.id.nav_carrito) {
-                    openFragment();
+                    openFragment(CarritoFragment.newInstance());
 
                 } else if (itemId == R.id.nav_pedido) {
                     openFragment();

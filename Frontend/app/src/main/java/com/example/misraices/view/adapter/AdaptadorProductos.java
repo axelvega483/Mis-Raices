@@ -15,10 +15,16 @@ import java.util.List;
 public class AdaptadorProductos extends RecyclerView.Adapter<AdaptadorProductos.ViewHolder> {
     private List<Producto> productos;
     private Context context;
+    private OnProductoClickListener listener;
 
-    public AdaptadorProductos(List<Producto> productos, Context context) {
+    public interface OnProductoClickListener {
+        void onProductoClick(Producto producto);
+    }
+
+    public AdaptadorProductos(List<Producto> productos, Context context, OnProductoClickListener listener) {
         this.productos = productos;
-        this.context=context;
+        this.context = context;
+        this.listener = listener;
     }
 
     @NonNull
@@ -38,7 +44,11 @@ public class AdaptadorProductos extends RecyclerView.Adapter<AdaptadorProductos.
         Glide.with(context)
                 .load(producto.getImg())
                 .into(holder.binding.imgProducto);
-
+        holder.binding.getRoot().setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onProductoClick(producto);
+            }
+        });
     }
 
     @Override

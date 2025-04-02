@@ -98,6 +98,7 @@ public class CuentaController {
 
             if (existingUser.getCodigo().equals(usuario.getCodigo())) {
                 existingUser.setActivo(true);
+                existingUser.setCodigo(null);
                 return new ResponseEntity<>(usuarioService.guardar(existingUser), HttpStatus.OK);
             } else {
                 response.put("error", "Código de activación incorrecto");
