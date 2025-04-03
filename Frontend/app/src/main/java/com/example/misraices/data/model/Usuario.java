@@ -13,12 +13,12 @@ public class Usuario implements Serializable {
     private String nombre;
     private String apellido;
     private Long telefono;
+    private String direccion;
     private String correo;
     private String password;
     private boolean activo;
-    private String codigo;//codigo de activacion de cuenta
-    private String token;//token para restablecer contraceña
-    private String imgUri;
+    private String codigo;
+    private String token;
     private List<Pedido> pedidos;
 
     @Override
@@ -33,7 +33,7 @@ public class Usuario implements Serializable {
                 ", activo=" + activo +
                 ", codigo='" + codigo + '\'' +
                 ", token='" + token + '\'' +
-                ", imgUri='" + imgUri + '\'' +
+                ", direccion='" + direccion + '\''+
                 ", pedidos=" + pedidos +
                 '}';
     }

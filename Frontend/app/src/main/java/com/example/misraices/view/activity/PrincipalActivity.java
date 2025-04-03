@@ -4,10 +4,12 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.misraices.R;
 import com.example.misraices.databinding.ActivityPrincipalBinding;
+import com.example.misraices.view.fragment.CarritoFragment;
 import com.example.misraices.view.fragment.HomeFragment;
 import com.google.android.material.navigation.NavigationBarView;
 
@@ -31,14 +33,15 @@ public class PrincipalActivity extends AppCompatActivity {
         binding.btnNav.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem item) {
+
                 int itemId = item.getItemId();
 
                 if (itemId == R.id.nav_home) {
                     openFragment(HomeFragment.newInstance());
-                }/* else if (itemId == R.id.nav_carrito) {
+                } else if (itemId == R.id.nav_carrito) {
                     openFragment(CarritoFragment.newInstance());
 
-                } else if (itemId == R.id.nav_pedido) {
+                } /*else if (itemId == R.id.nav_pedido) {
                     openFragment();
                 } else if (itemId==R.id.nav_perfil) {
                     openFragment();

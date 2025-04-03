@@ -25,6 +25,7 @@ public class Usuario implements Serializable {
 
     private String nombre;
     private String apellido;
+    private String direccion;
     private Long telefono;
     @Email
     @Column(unique = true)
@@ -36,7 +37,6 @@ public class Usuario implements Serializable {
     private String codigo;//codigo de activacion de cuenta
     private String token;//token para restablecer contraceña
     private LocalDateTime tokenLimite; //tiempo de token
-    private String imgUri;
 
     
     @JsonManagedReference("usuario-pedidos")

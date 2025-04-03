@@ -94,8 +94,11 @@ public class UsuarioController {
         if (nuevo.getTelefono() != null) {
             viejo.setTelefono(nuevo.getTelefono());
         }
-        if (nuevo.getImgUri() != null) {
-            viejo.setImgUri(nuevo.getImgUri());
+        if (nuevo.getDireccion()!= null) {
+            viejo.setDireccion(nuevo.getDireccion());
+        }
+        if(nuevo.getPassword()!=null){
+            viejo.setPassword(nuevo.getPassword());
         }
     }
 

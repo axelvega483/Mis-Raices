@@ -3,8 +3,7 @@
     <string name="email_recuperar">Por favor ingrese su dirección de correo electrónico. Recibirá un código para crear una nueva contraseña.</string>
 
     <string name="codigoCuenta">Por favor ingrese el codigo recibido para activar su cuenta.</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 
 
 </resources>

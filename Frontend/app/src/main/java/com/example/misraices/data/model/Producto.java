@@ -27,7 +27,7 @@ public class Producto implements Serializable {
                 ", stock=" + stock +
                 ", precio=" + precio +
                 ", categoria=" + categoria +
-                ", imgUri='" + img + '\'' +
+                ", img='" + img + '\'' +
                 '}';
     }
 }

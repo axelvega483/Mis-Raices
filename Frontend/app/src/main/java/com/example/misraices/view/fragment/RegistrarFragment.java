@@ -67,14 +67,16 @@ public class RegistrarFragment extends Fragment {
                 usuario.setApellido(binding.apellidoEditText.getText().toString());
                 usuario.setTelefono(Long.valueOf(binding.telefonoEditText.getText().toString()));
                 usuario.setCorreo(binding.CorreoEditText.getText().toString());
+                usuario.setDireccion(binding.direccionEditText.getText().toString());
                 String password = binding.passwordEditText.getText().toString();
-                String confirmPassword = binding.confirPassEditText.getText().toString();
-
-                if (!password.equals(confirmPassword)) {
+                String confirPass = binding.confirPassEditText.getText().toString();
+                if (!password.equals(confirPass)) {
                     Toast.makeText(getContext(), "Las contraseñas no coinciden", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                usuario.setPassword(binding.passwordEditText.getText().toString());
+                usuario.setPassword(password);
+
+
 
                 usuarioViewModel.crearUsuario(usuario);
                 usuarioViewModel.setUsuarioLiveData(usuario);

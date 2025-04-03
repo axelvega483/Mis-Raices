@@ -23,27 +23,27 @@ public class BackendApplication {
             if (categoriaService.listar().isEmpty()) {
                 Categoria arbol = new Categoria();
                 arbol.setNombre("Árbol");
-                arbol.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743356344/vqrgka5kb4xjr3mxdbeh.jpg");
+                arbol.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743705130/yohoqios9yl91zqlqoyp.jpg");
 
                 Categoria aromatica = new Categoria();
                 aromatica.setNombre("Aromaticas");
-                aromatica.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743356344/cvvf1j4usladzfcg0nrn.jpg");
+                aromatica.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743705125/r1pa7ljr4t7r4rf4gemc.jpg");
 
                 Categoria cactus = new Categoria();
                 cactus.setNombre("Cactus");
-                cactus.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743356344/haobplq9xncxrhmmw9oq.jpg");
+                cactus.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743705383/iqbibvg2sylpgddp2bxu.jpg");
 
                 Categoria exterior = new Categoria();
                 exterior.setNombre("Exterior");
-                exterior.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743356344/wqbz6qaksegw6c9vjrdd.jpg");
+                exterior.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743705124/tkppzqmoxhoziiwikvr7.jpg");
 
                 Categoria interior = new Categoria();
                 interior.setNombre("Interior");
-                interior.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743356344/t3vu1pp2g5pxxxpfiefy.jpg");
+                interior.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743705125/qalc8jafkaq0ld84jxat.jpg");
 
                 Categoria suculenta = new Categoria();
                 suculenta.setNombre("Suculenta");
-                suculenta.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743356344/nqcoux5ujrrqkhjgv6bo.jpg");
+                suculenta.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743705123/c1jqssmi4xcrbtm10csk.jpg");
                
 
                 categoriaService.guardar(arbol);
@@ -110,13 +110,6 @@ public class BackendApplication {
                 incienso.setStock(10);
                 incienso.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743619185/incienso-_maceta_n12-_1500_d2srrf.jpg");
 
-                Producto romero = new Producto();
-                romero.setCategoria(aromaticas.get());
-                romero.setNombre("Romero");
-                romero.setDescripcion("Maceta soplada N°12");
-                romero.setPrecio(800.0);
-                romero.setStock(9);
-                romero.setImg("https://drive.google.com/uc?export=view&id=1kNiOhx5I0quXcf2g1zVvFKjlGzJS-MtV");
 
                 Producto mammillaria = new Producto();
                 mammillaria.setCategoria(cactus.get());
@@ -260,7 +253,6 @@ public class BackendApplication {
                 productoService.guardar(thevetia);
                 productoService.guardar(boldo);
                 productoService.guardar(incienso);
-                productoService.guardar(romero);
                 productoService.guardar(mammillaria);
                 productoService.guardar(gracilis);
                 productoService.guardar(plumosa);

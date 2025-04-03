@@ -1,7 +1,7 @@
 <androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/cardProducto"
+    android:id="@+id/cardProductoDetalle"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
@@ -9,89 +9,93 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="160dp"
+        android:background="@drawable/rectangulo_bg"
         android:padding="8dp">
 
-        <!-- Imagen del Producto -->
+
         <ImageView
             android:id="@+id/imgProducto"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="100dp"
+            android:layout_height="150dp"
             android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <!-- Nombre del Producto -->
+
         <TextView
             android:id="@+id/NombreTxt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="24dp"
             android:text="Pecosa"
-            android:textSize="14sp"
             android:textColor="@color/black"
+            android:textSize="14sp"
             app:layout_constraintStart_toEndOf="@+id/imgProducto"
-            app:layout_constraintTop_toTopOf="@+id/imgProducto"
-            app:layout_constraintBottom_toBottomOf="@+id/PrecioTxt"
-            android:layout_marginStart="10dp"/>
+            app:layout_constraintTop_toTopOf="@+id/imgProducto" />
 
-        <!-- Precio del Producto -->
+
         <TextView
             android:id="@+id/PrecioTxt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="20dp"
             android:text="$2.500"
+            android:textColor="@color/black"
             android:textSize="14sp"
             android:textStyle="bold"
-            android:textColor="@color/black"
             app:layout_constraintStart_toEndOf="@+id/imgProducto"
-            app:layout_constraintBottom_toBottomOf="@+id/imgProducto"
-            android:layout_marginStart="10dp"/>
+            app:layout_constraintTop_toBottomOf="@+id/NombreTxt" />
 
-        <!-- Contenedor de los botones de cantidad -->
         <androidx.cardview.widget.CardView
             android:id="@+id/cardCantidad"
-            android:layout_width="40dp"
-            android:layout_height="80dp"
+            android:layout_width="63dp"
+            android:layout_height="121dp"
+            android:layout_marginEnd="10dp"
             app:cardCornerRadius="20dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginEnd="10dp">
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="70dp"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
+                android:background="@color/greenligth"
                 android:gravity="center"
+                android:orientation="vertical"
                 android:padding="5dp">
 
                 <Button
                     android:id="@+id/btnSumar"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:text="+"
-                    android:textSize="16sp"
+                    android:layout_width="58dp"
+                    android:layout_height="wrap_content"
                     android:backgroundTint="@android:color/transparent"
-                    android:textColor="@color/white"/>
+                    android:gravity="start"
+                    android:text="+"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/txtCantidad"
-                    android:layout_width="wrap_content"
+                    android:layout_width="21dp"
                     android:layout_height="wrap_content"
+                    android:gravity="center"
                     android:text="1"
-                    android:textSize="16sp"
-                    android:textColor="@color/white"
-                    android:gravity="center"/>
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
 
                 <Button
                     android:id="@+id/btnRestar"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:text="-"
-                    android:textSize="16sp"
+                    android:layout_width="58dp"
+                    android:layout_height="wrap_content"
                     android:backgroundTint="@android:color/transparent"
-                    android:textColor="@color/white"/>
+                    android:gravity="start"
+                    android:text="-"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 

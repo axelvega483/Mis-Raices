@@ -14,6 +14,12 @@ public class PedidoDetalle implements Serializable {
     private Producto producto;
     private Pedido pedido;
 
+    public PedidoDetalle( Producto producto,String nombre, Double precio, Integer stock) {
+        this.producto = producto;
+        this.producto.setNombre(nombre);
+        this.producto.setPrecio(precio);
+        this.producto.setStock(stock);
+    }
     @Override
     public String toString() {
         return "PedidoDetalle{" +

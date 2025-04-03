@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".view.fragment.RegistrarFragment">
 
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -29,7 +30,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="20dp"
             android:layout_marginEnd="32dp"
             android:hint="Nombre"
             android:textColor="@color/black"
@@ -75,6 +76,31 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/direccionTextInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="32dp"
+            android:hint="Direccíon"
+            android:textColor="@color/black"
+            app:endIconDrawable="@drawable/ic_check"
+            app:endIconMode="custom"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/apellidoTextInputLayout">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/direccionEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/radius_txt"
+                android:inputType="text"
+                android:padding="16dp"
+                android:textColor="@color/black" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/telefonoTextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -87,7 +113,7 @@
             app:endIconMode="custom"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/apellidoTextInputLayout">
+            app:layout_constraintTop_toBottomOf="@+id/direccionTextInputLayout">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/telefonoEditText"
@@ -126,7 +152,6 @@
         </com.google.android.material.textfield.TextInputLayout>
 
 
-
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/passwordTextInputLayout"
             android:layout_width="match_parent"
@@ -136,11 +161,11 @@
             android:layout_marginEnd="32dp"
             android:hint="Contraseña"
             android:textColor="@color/black"
-            app:passwordToggleTint="@color/black"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/CorreoTextInputLayout"
-            app:passwordToggleEnabled="true">
+            app:passwordToggleEnabled="true"
+            app:passwordToggleTint="@color/black">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/passwordEditText"
@@ -151,6 +176,7 @@
                 android:padding="16dp"
                 android:textColor="@color/black" />
         </com.google.android.material.textfield.TextInputLayout>
+
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/confirPassTextInputLayout"
             android:layout_width="match_parent"
@@ -160,11 +186,12 @@
             android:layout_marginEnd="32dp"
             android:hint="Confirmar contraseña"
             android:textColor="@color/black"
-            app:passwordToggleTint="@color/black"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/passwordTextInputLayout"
-            app:passwordToggleEnabled="true">
+            app:passwordToggleEnabled="true"
+            app:passwordToggleTint="@color/black">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/confirPassEditText"
@@ -181,7 +208,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="30dp"
             android:layout_marginEnd="20dp"
             android:text="REGISTARSE"
             android:textColor="@color/white"
@@ -189,6 +216,7 @@
             app:backgroundTint="@color/green"
             app:cornerRadius="50dp"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/confirPassTextInputLayout"
             app:strokeColor="@color/green"
@@ -218,4 +246,5 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/btnRegistrar" />
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </FrameLayout>
