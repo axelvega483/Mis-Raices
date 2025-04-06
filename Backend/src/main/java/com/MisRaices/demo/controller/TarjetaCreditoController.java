@@ -1,10 +1,12 @@
 package com.MisRaices.demo.controller;
 
 import com.MisRaices.demo.entity.TarjetaCredito;
+import com.MisRaices.demo.entity.Usuario;
 import com.MisRaices.demo.service.TarjetaCreditoService;
 import com.MisRaices.demo.service.UsuarioService;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -45,6 +47,12 @@ public class TarjetaCreditoController {
     public ResponseEntity<?> crearTarjeta(@RequestBody TarjetaCredito tarjetaCredito) {
         try {
             response = new HashMap<>();
+            Usuario user = UsuarioService.obtener(tarjetaCredito.getUsuario().getId()).orElse(null);
+             if (user == null) {
+                response.put("error", "cliente no válido.");
+                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+            }
+            tarjetaCredito.setUsuario(user);
             tarjetaCredito.setSaldo(20000.00);
             return new ResponseEntity<>(creditoService.guardar(tarjetaCredito), HttpStatus.CREATED);
         } catch (Exception e) {

@@ -20,7 +20,7 @@ public class Usuario implements Serializable {
     private String codigo;
     private String token;
     private List<Pedido> pedidos;
-
+    private List<TarjetaCredito> tarjetas;
     @Override
     public String toString() {
         return "Usuario{" +

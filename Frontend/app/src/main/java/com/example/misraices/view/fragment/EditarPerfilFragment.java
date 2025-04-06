@@ -1,5 +1,7 @@
 package com.example.misraices.view.fragment;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -23,6 +25,7 @@ import javax.xml.transform.Result;
 public class EditarPerfilFragment extends Fragment {
     private FragmentEditarPerfilBinding binding;
     private UsuarioViewModel usuarioViewModel;
+    private int usuarioId;
     private Usuario usuarioActual;
 
     public EditarPerfilFragment() {
@@ -46,6 +49,9 @@ public class EditarPerfilFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentEditarPerfilBinding.inflate(inflater, container, false);
+        SharedPreferences prefs = requireActivity().getSharedPreferences("MiAppPrefs", Context.MODE_PRIVATE);
+        usuarioId = prefs.getInt("usuarioId", -1);
+
         init();
         initListener();
         return binding.getRoot();
@@ -54,17 +60,19 @@ public class EditarPerfilFragment extends Fragment {
 
     private void init() {
         usuarioViewModel = new ViewModelProvider(requireActivity()).get(UsuarioViewModel.class);
-        usuarioViewModel.obtenerUsuario().observe(getViewLifecycleOwner(), usuarioList -> {
-            if (usuarioList != null && !usuarioList.isEmpty()) {
-                usuarioActual = usuarioList.get(0);
-
-                binding.nombreEditText.setText(usuarioActual.getNombre());
-                binding.apellidoEditText.setText(usuarioActual.getApellido());
-                binding.direccionEditText.setText(usuarioActual.getDireccion());
-                binding.telefonoEditText.setText(String.valueOf(usuarioActual.getTelefono()));
+        usuarioViewModel.obtenerId(usuarioId).observe(getViewLifecycleOwner(), usuario -> {
+            if (usuario!= null ) {
+                binding.nombreEditText.setText(usuario.getData().getNombre());
+                binding.apellidoEditText.setText(usuario.getData().getApellido());
+                binding.direccionEditText.setText(usuario.getData().getDireccion());
+                binding.telefonoEditText.setText(String.valueOf(usuario.getData().getTelefono()));
+                usuarioActual = usuario.getData();
+            } else {
+                Toast.makeText(getContext(), "Error al cargar el perfil", Toast.LENGTH_SHORT).show();
             }
         });
     }
+
     private void initListener() {
         binding.btnActualizar.setOnClickListener(view -> {
             if (usuarioActual != null) {

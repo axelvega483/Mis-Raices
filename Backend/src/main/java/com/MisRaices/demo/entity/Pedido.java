@@ -1,6 +1,7 @@
 package com.MisRaices.demo.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.CascadeType;
@@ -48,8 +49,7 @@ public class Pedido implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "usuario_id")
-    @JsonBackReference("usuario-pedidos") 
+    @JsonIgnoreProperties("pedidos")
     private Usuario usuario;
-
 
 }

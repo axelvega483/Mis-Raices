@@ -1,5 +1,6 @@
 package com.MisRaices.demo.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -37,12 +38,13 @@ public class Usuario implements Serializable {
     private String codigo;//codigo de activacion de cuenta
     private String token;//token para restablecer contraceña
     private LocalDateTime tokenLimite; //tiempo de token
-    
-    
-    @JsonManagedReference("usuario-pedidos")
+
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Pedido> pedidos;
 
- 
-
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<TarjetaCredito> tarjetas;
 
 }

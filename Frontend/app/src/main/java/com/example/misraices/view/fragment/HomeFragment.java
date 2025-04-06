@@ -126,7 +126,7 @@ public class HomeFragment extends Fragment {
     private void filtrarProductos(String query) {
         productoViewModel.obtenerProductosPorNombre(query).observe(getViewLifecycleOwner(), productos -> {
             if (productos != null && !productos.isEmpty()) {
-                mostrarProductos(productos, false); // se muestran todos, incluso sin stock
+                mostrarProductos(productos, true); // se muestran todos, incluso sin stock
             } else {
                 Toast.makeText(requireContext(), "No se encontraron productos para: " + query, Toast.LENGTH_SHORT).show();
             }

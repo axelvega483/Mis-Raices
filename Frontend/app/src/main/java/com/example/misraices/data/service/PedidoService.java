@@ -17,6 +17,7 @@ public interface PedidoService {
 
     @GET("/pedido")
     Call<List<Pedido>>obtener();
+
     @POST("/pedido/finalizarCompra/{pedidoId}/{tarjetaId}")
     Call<Pedido>finalizarCompra(@Path("pedidoId") int pedidoId, @Path("tarjetaId") int tarjetaId);
 }

@@ -64,4 +64,7 @@ public class UsuarioViewModel extends ViewModel {
     public MutableLiveData<Result<Usuario>> editarUsuario(Integer id, Usuario usuario) {
         return repo.editarUsuario(id, usuario);
     }
+    public MutableLiveData<Result<Usuario>> obtenerId(Integer id) {
+        return repo.obtenerId(id);
+    }
 }

@@ -2,13 +2,11 @@ package com.example.misraices.view.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.misraices.data.model.Producto;
 import com.example.misraices.data.model.TarjetaCredito;
 import com.example.misraices.databinding.ItemTarjetaBinding;
 
@@ -42,7 +40,7 @@ public class AdapterTarjetaDetalle extends RecyclerView.Adapter<AdapterTarjetaDe
         TarjetaCredito tarjeta = listaTarjetas.get(position);
 
         // Mostrar datos
-        holder.binding.NumeroTxt.setText("Numero: " + tarjeta.getNumero());
+        holder.binding.NumeroTxt.setText("Número: " + tarjeta.getNumero());
         holder.binding.TitularTxt.setText("Titular: " + tarjeta.getTitular());
         holder.binding.VencimientoTxt.setText("Vencimiento: " + tarjeta.getFechaVencimiento());
         holder.binding.TipoTxt.setText("Tipo: " + tarjeta.getTipo());

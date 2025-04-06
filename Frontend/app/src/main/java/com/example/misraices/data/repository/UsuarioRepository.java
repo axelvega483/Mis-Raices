@@ -89,4 +89,7 @@ public class UsuarioRepository {
     public MutableLiveData<Result<Usuario>> editarUsuario(Integer id,Usuario usuario) {
         return ejecutarPeticion(usuarioService.actualizarUsuario(id,usuario));
     }
+    public MutableLiveData<Result<Usuario>> obtenerId(Integer id) {
+        return ejecutarPeticion(usuarioService.obtenerUsuarioPorId(id));
+    }
 }

@@ -129,7 +129,7 @@ public class PedidoController {
             pedido.setDetalle(detalles);
             pedido.setTotal(precio);
             pedido.setFechaPedido(LocalDateTime.now());
-            pedido.setEstado("EN PREPARACIÓN");         
+            pedido.setEstado("PENDIENTE");         
             return new ResponseEntity<>(pedidoService.guardar(pedido), HttpStatus.CREATED);
 
         } catch (Exception e) {
@@ -203,7 +203,7 @@ public class PedidoController {
             tarjetaCreditoService.guardar(tarjeta);
 
             pedido.setFechaPedido(LocalDateTime.now());
-            pedido.setEstado("EN CAMINO");
+            pedido.setEstado("EN PREPARACIÓN");
             pedidoService.guardar(pedido);
 
             String rutaPDF = PdfGenerator.generarFacturaPDF(pedido);

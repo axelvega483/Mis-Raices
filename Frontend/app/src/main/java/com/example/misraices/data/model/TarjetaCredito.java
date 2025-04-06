@@ -16,6 +16,7 @@ public class TarjetaCredito implements Serializable {
     private String codigoSeguridad;
     private String tipo;
     private Double saldo;
+    private Usuario usuario;
 
     @Override
     public String toString() {
@@ -27,6 +28,7 @@ public class TarjetaCredito implements Serializable {
                 ", codigoSeguridad='" + codigoSeguridad + '\'' +
                 ", tipo='" + tipo + '\'' +
                 ", saldo=" + saldo +
+                ", usuario=" + usuario +
                 '}';
     }
 }

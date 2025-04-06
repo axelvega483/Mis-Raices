@@ -1,5 +1,7 @@
 package com.example.misraices.view.fragment;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -15,6 +17,7 @@ import com.example.misraices.data.model.Pedido;
 import com.example.misraices.databinding.FragmentPedidoRealizadoBinding;
 import com.example.misraices.view.adapter.AdapterPedido;
 import com.example.misraices.viewModel.PedidoViewModel;
+import com.example.misraices.viewModel.UsuarioViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +25,8 @@ import java.util.List;
 public class PedidoRealizadoFragment extends Fragment {
     private FragmentPedidoRealizadoBinding binding;
     private PedidoViewModel pedidoViewModel;
+    private UsuarioViewModel usuarioViewModel;
+    private int usuarioId;
 
     public PedidoRealizadoFragment() {
         // Required empty public constructor
@@ -44,6 +49,8 @@ public class PedidoRealizadoFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentPedidoRealizadoBinding.inflate(inflater, container, false);
+        SharedPreferences prefs = requireActivity().getSharedPreferences("MiAppPrefs", Context.MODE_PRIVATE);
+        usuarioId = prefs.getInt("usuarioId", -1);
         init();
         initListener();
         return binding.getRoot();
@@ -51,25 +58,29 @@ public class PedidoRealizadoFragment extends Fragment {
 
     private void init() {
         pedidoViewModel = new ViewModelProvider(requireActivity()).get(PedidoViewModel.class);
+        usuarioViewModel = new ViewModelProvider(requireActivity()).get(UsuarioViewModel.class);
     }
 
     private void initListener() {
-        pedidoViewModel.obtenerPedidos().observe(getViewLifecycleOwner(), pedidos -> {
-            if (pedidos != null) {
-                List<Pedido> pedidosEnCamino = new ArrayList<>();
+        usuarioViewModel.obtenerId(usuarioId).observe(getViewLifecycleOwner(), usuario -> {
+            pedidoViewModel.obtenerPedidos().observe(getViewLifecycleOwner(), pedidos -> {
+                if (pedidos != null) {
+                    List<Pedido> pedidosEnPreparacion = new ArrayList<>();
 
-                for (Pedido pedido : pedidos) {
-                    if ("EN CAMINO".equals(pedido.getEstado())) {
-                        pedidosEnCamino.add(pedido);
+                    for (Pedido pedido : pedidos) {
+                        if ("EN PREPARACIÓN".equals(pedido.getEstado())) {
+                            if (pedido.getUsuario().getId() == usuario.getData().getId()) {
+                                pedidosEnPreparacion.add(pedido);
+                            }
+                        }
+                    }
+                    if (!pedidosEnPreparacion.isEmpty()) {
+                        binding.recyclerViewPedidos.setLayoutManager(new LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false));
+                        binding.recyclerViewPedidos.setAdapter(new AdapterPedido(pedidosEnPreparacion, getContext()));
+                        pedidoViewModel.setPedidoMutableLiveData(pedidosEnPreparacion.get(0));
                     }
                 }
-                if (!pedidosEnCamino.isEmpty()) {
-                    binding.recyclerViewPedidos.setLayoutManager(new LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false));
-                    binding.recyclerViewPedidos.setAdapter(new AdapterPedido(pedidosEnCamino, getContext()));
-                    pedidoViewModel.setPedidoMutableLiveData(pedidosEnCamino.get(0));
-                }
-            }
+            });
         });
-
     }
 }

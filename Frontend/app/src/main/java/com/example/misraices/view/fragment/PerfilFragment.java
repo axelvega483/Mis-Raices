@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.misraices.R;
@@ -34,6 +35,7 @@ public class PerfilFragment extends Fragment {
     private UsuarioViewModel usuarioViewModel;
     private ActivityResultLauncher<PickVisualMediaRequest> pickMedia;
     private Uri imgUri;
+    private int usuarioId;
 
     public PerfilFragment() {
         // Required empty public constructor
@@ -56,6 +58,8 @@ public class PerfilFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentPerfilBinding.inflate(inflater, container, false);
+        SharedPreferences prefs = requireActivity().getSharedPreferences("MiAppPrefs", Context.MODE_PRIVATE);
+        usuarioId = prefs.getInt("usuarioId", -1);
         init();
         initListener();
         return binding.getRoot();
@@ -63,26 +67,33 @@ public class PerfilFragment extends Fragment {
 
     private void init() {
         usuarioViewModel = new ViewModelProvider(requireActivity()).get(UsuarioViewModel.class);
-        File file = new File(requireContext().getFilesDir(), "foto_perfil.jpg");
-        if (file.exists()) {
-            Glide.with(this).load(file).into(binding.ImgPerfil);
+        if (usuarioId != -1) {
+            File file = new File(requireContext().getFilesDir(), "foto_perfil_" + usuarioId + ".jpg");
+            if (file.exists()) {
+                Glide.with(this).load(file).into(binding.ImgPerfil);
+            }
         }
 
     }
 
     private void initListener() {
-        usuarioViewModel.obtenerUsuario().observe(getViewLifecycleOwner(), usuario -> {
+        usuarioViewModel.obtenerId(usuarioId).observe(getViewLifecycleOwner(), usuario -> {
             Log.e("usuarioPerfil", usuario.toString());
-            if (usuario != null) {
-                for (Usuario user : usuario) {
-                    Log.e("usuarioPerfilentra", user.toString());
-                    binding.NombrePerfilTxt.setText(user.getNombre() + " " + user.getApellido());
-                    binding.CorreoPerfilTxt.setText("Correo: " + user.getCorreo().toLowerCase());
-                    binding.TelefonoPerfilTxt.setText("Telefono: " + user.getTelefono().toString().toLowerCase());
-                    binding.DireccionPerfilTxt.setText("Direccion: " + user.getDireccion().toLowerCase());
-                }
+            if (usuario != null && usuario.getData() != null) {
+                Log.e("usuarioPerfil", usuario.getData().toString());
+
+                binding.NombrePerfilTxt.setText(usuario.getData().getNombre() + " " + usuario.getData().getApellido());
+                binding.CorreoPerfilTxt.setText("Correo: " + usuario.getData().getCorreo().toLowerCase());
+                binding.TelefonoPerfilTxt.setText("Telefono: " + usuario.getData().getTelefono().toString());
+                binding.DireccionPerfilTxt.setText("Direccion: " + usuario.getData().getDireccion().toLowerCase());
+
+            } else {
+                Log.e("usuarioPerfil", "Usuario o data es null");
+                Toast.makeText(getContext(), "No se pudo cargar el perfil", Toast.LENGTH_SHORT).show();
             }
         });
+
+
         binding.btnCerrarSesion.setOnClickListener(view -> cerrarSesion());
         binding.ImgPerfil.setOnClickListener(view -> {
             pickMedia.launch(new PickVisualMediaRequest.Builder().setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE).build());
@@ -114,10 +125,9 @@ public class PerfilFragment extends Fragment {
                 Glide.with(this).load(uri).into(binding.ImgPerfil);
                 imgUri = uri;
 
-                // Guardar imagen localmente (opcional pero recomendado)
                 try {
                     InputStream inputStream = requireContext().getContentResolver().openInputStream(uri);
-                    File file = new File(requireContext().getFilesDir(), "foto_perfil.jpg");
+                    File file = new File(requireContext().getFilesDir(), "foto_perfil_" + usuarioId + ".jpg");
                     FileOutputStream outputStream = new FileOutputStream(file);
 
                     byte[] buffer = new byte[1024];
@@ -138,6 +148,6 @@ public class PerfilFragment extends Fragment {
                 Log.d("Media Picker", "No se seleccionó ninguna imagen");
             }
         });
-
     }
+
 }
