@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.fragment.RegistrarFragment">
+    tools:context=".view.fragment.EditarPerfilFragment">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -17,7 +17,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
-            android:text="Registrar"
+            android:text="Perfil"
             android:textColor="@color/green"
             android:textSize="30sp"
             android:textStyle="bold"
@@ -126,31 +126,29 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/CorreoTextInputLayout"
+            android:id="@+id/passwordBDTextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
             android:layout_marginTop="20dp"
             android:layout_marginEnd="32dp"
-            android:hint="correo"
+            android:hint="Contraseña Actual"
             android:textColor="@color/black"
-            app:endIconDrawable="@drawable/ic_check"
-            app:endIconMode="custom"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/telefonoTextInputLayout">
+            app:layout_constraintTop_toBottomOf="@+id/telefonoTextInputLayout"
+            app:passwordToggleEnabled="true"
+            app:passwordToggleTint="@color/black">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/CorreoEditText"
+                android:id="@+id/passwordBDEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/radius_txt"
-                android:inputType="textEmailAddress"
+                android:inputType="textPassword"
                 android:padding="16dp"
                 android:textColor="@color/black" />
         </com.google.android.material.textfield.TextInputLayout>
-
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/passwordTextInputLayout"
@@ -159,11 +157,11 @@
             android:layout_marginStart="32dp"
             android:layout_marginTop="20dp"
             android:layout_marginEnd="32dp"
-            android:hint="Contraseña"
+            android:hint="Nueva contraseña"
             android:textColor="@color/black"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/CorreoTextInputLayout"
+            app:layout_constraintTop_toBottomOf="@+id/passwordBDTextInputLayout"
             app:passwordToggleEnabled="true"
             app:passwordToggleTint="@color/black">
 
@@ -204,13 +202,13 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnRegistrar"
+            android:id="@+id/btnActualizar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="30dp"
-            android:layout_marginEnd="20dp"
-            android:text="REGISTARSE"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="32dp"
+            android:text="Actualizar"
             android:textColor="@color/green"
             android:textSize="20sp"
             app:backgroundTint="@color/white"
@@ -222,29 +220,6 @@
             app:strokeColor="@color/green"
             app:strokeWidth="1dp" />
 
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="10dp"
-            android:text="Ya tienes una cuenta?"
-            android:textSize="15sp"
-            app:layout_constraintEnd_toStartOf="@+id/textLogin"
-            app:layout_constraintTop_toBottomOf="@+id/btnRegistrar" />
-
-        <TextView
-            android:id="@+id/textLogin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="44dp"
-            android:text="Iniciar Sesíon"
-            android:textColor="@color/green"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btnRegistrar" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+          </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

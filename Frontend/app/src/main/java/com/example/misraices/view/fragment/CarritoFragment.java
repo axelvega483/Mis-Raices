@@ -9,15 +9,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.misraices.R;
-import com.example.misraices.data.model.Producto;
 import com.example.misraices.databinding.FragmentCarritoBinding;
-import com.example.misraices.view.adapter.AdapterPedido;
+import com.example.misraices.view.adapter.AdapterPedidoDetalle;
 import com.example.misraices.viewModel.PedidoViewModel;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class CarritoFragment extends Fragment {
@@ -53,18 +50,33 @@ public class CarritoFragment extends Fragment {
 
     private void init() {
         pedidoViewModel = new ViewModelProvider(requireActivity()).get(PedidoViewModel.class);
-
+        pedidoViewModel.init(requireContext());
     }
 
     private void initListener() {
         pedidoViewModel.getDetallesLiveData().observe(getViewLifecycleOwner(), detalles -> {
             if (detalles != null && !detalles.isEmpty()) {
                 binding.recyclerViewProducto.setLayoutManager(new LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false));
-                binding.recyclerViewProducto.setAdapter(new AdapterPedido(detalles, getContext(),pedidoViewModel));
+                binding.recyclerViewProducto.setAdapter(new AdapterPedidoDetalle(detalles, getContext(), pedidoViewModel));
                 binding.totalTxt.setText(String.format("Total $ %.2f", pedidoViewModel.calcularTotal()));
-            }else{
+
+            } else {
                 binding.totalTxt.setText("Total $ 0.00");
             }
+        });
+
+        binding.btnCompra.setOnClickListener(view -> {
+            pedidoViewModel.getDetallesLiveData().observe(getViewLifecycleOwner(), detalles -> {
+                if (detalles != null && !detalles.isEmpty()) {
+                    requireActivity().getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.frameContainer, FinalizarCompraFragment.newInstance())
+                            .addToBackStack(null)
+                            .commit();
+                }else{
+                    Toast.makeText(getContext(), "No hay productos en el carrito", Toast.LENGTH_SHORT).show();
+                }
+            });
+
         });
 
     }

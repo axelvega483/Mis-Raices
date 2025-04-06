@@ -33,9 +33,10 @@ public class UsuarioViewModel extends ViewModel {
     public LiveData<Usuario> getUsuarioLiveData() {
         return usuarioMutableLiveData;
     }
-public MutableLiveData<List<Usuario>>obtenerUsuario(){
+
+    public MutableLiveData<List<Usuario>> obtenerUsuario() {
         return repo.obtenerUsuario();
-}
+    }
 
     public MutableLiveData<Result<Usuario>> crearUsuario(Usuario usuario) {
         return repo.crearUsuario(usuario);
@@ -49,12 +50,18 @@ public MutableLiveData<List<Usuario>>obtenerUsuario(){
         Log.e("MutableLiveDatausuario", usuario.toString());
         return repo.login(usuario);
     }
+
     public MutableLiveData<Result<Usuario>> solicitarToken(Usuario usuario) {
         Log.e("MutableLiveDatausuarioToken", usuario.toString());
         return repo.solicitarToken(usuario);
     }
+
     public MutableLiveData<Result<Usuario>> restablecerPassword(Usuario usuario) {
         Log.e("MutableLiveDatausuarioPassword", usuario.toString());
         return repo.restablecerPassword(usuario);
+    }
+
+    public MutableLiveData<Result<Usuario>> editarUsuario(Integer id, Usuario usuario) {
+        return repo.editarUsuario(id, usuario);
     }
 }

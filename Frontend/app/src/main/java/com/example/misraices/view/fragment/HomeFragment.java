@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +22,7 @@ import com.example.misraices.view.adapter.AdaptadorProductos;
 import com.example.misraices.viewModel.CategoriaViewModel;
 import com.example.misraices.viewModel.ProductoViewModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -28,6 +30,8 @@ public class HomeFragment extends Fragment {
     private FragmentHomeBinding binding;
     private ProductoViewModel productoViewModel;
     private CategoriaViewModel categoriaViewModel;
+    private Handler handler = new Handler();
+    private Runnable searchRunnable;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -60,111 +64,89 @@ public class HomeFragment extends Fragment {
         categoriaViewModel = new ViewModelProvider(requireActivity()).get(CategoriaViewModel.class);
 
     }
-
-    public void initlistener() {
-
-
-        productoViewModel.obtenerProductos().observe(getViewLifecycleOwner(), result -> {
-            if (result != null) {
-                Log.e("result producto",result.toString());
-                binding.recyclerViewProducto.setLayoutManager(new LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false));
-                binding.recyclerViewProducto.setAdapter(new AdaptadorProductos((List<Producto>) result, getContext(),producto -> {
-                    abrirDetalleProducto(producto);
-                }));
-                productoViewModel.setProductoMutableLiveData(result);
-
+    private void initlistener() {
+        productoViewModel.obtenerProductos().observe(getViewLifecycleOwner(), productos -> {
+            if (productos != null) {
+                productoViewModel.setProductoMutableLiveData(productos);
+                mostrarProductos(productos, true); // solo productos con stock
             }
         });
-
 
         categoriaViewModel.obtenerCategorias().observe(getViewLifecycleOwner(), categorias -> {
             if (categorias != null) {
-                binding.recyclerViewCategoria.setLayoutManager(new LinearLayoutManager(requireActivity(), LinearLayoutManager.HORIZONTAL, false));
-                binding.recyclerViewCategoria.setAdapter(new AdaptadorCategorias(categorias, getContext(), categoria -> {
-                    mostrarProductosPorCategoria(categoria);
-                }));
                 categoriaViewModel.setCategoriaMutableLiveData(categorias);
+                binding.recyclerViewCategoria.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
+                binding.recyclerViewCategoria.setAdapter(new AdaptadorCategorias(categorias, requireContext(), this::mostrarProductosPorCategoria));
             }
         });
-        binding.seeAllTxt.setOnClickListener(v -> {
-            productoViewModel.obtenerProductos().observe(getViewLifecycleOwner(), result -> {
-                if (result != null) {
-                    binding.recyclerViewProducto.setLayoutManager(new LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false));
-                    binding.recyclerViewProducto.setAdapter(new AdaptadorProductos((List<Producto>) result, getContext(),producto -> {
-                        abrirDetalleProducto(producto);
-                    }));
-                    productoViewModel.setProductoMutableLiveData(result);
 
-                }
-            });
+        binding.seeAllTxt.setOnClickListener(v -> {
+            List<Producto> productos = productoViewModel.obtenerProductos().getValue();
+            if (productos != null) mostrarProductos(productos, true);
         });
 
         binding.searchView.setOnQueryTextListener(new androidx.appcompat.widget.SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 filtrarProductos(query);
-                return false;
+                return true;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                if (newText.isEmpty()) {
-                    cargarTodosLosProductos();
-                } else {
-                    filtrarProductos(newText);
-                }
-                return false;
+                handler.removeCallbacks(searchRunnable);
+                searchRunnable = () -> {
+                    if (newText.isEmpty()) {
+                        cargarTodosLosProductos();
+                    } else {
+                        filtrarProductos(newText);
+                    }
+                };
+                handler.postDelayed(searchRunnable, 300);
+                return true;
             }
         });
+    }
 
+    private void mostrarProductos(List<Producto> productos, boolean filtrarStock) {
+        List<Producto> listaFiltrada = new ArrayList<>();
+        for (Producto p : productos) {
+            if (!filtrarStock || p.getStock() > 0) listaFiltrada.add(p);
+        }
+        binding.recyclerViewProducto.setLayoutManager(new LinearLayoutManager(requireContext()));
+        binding.recyclerViewProducto.setAdapter(new AdaptadorProductos(listaFiltrada, requireContext(), this::abrirDetalleProducto));
     }
 
     private void mostrarProductosPorCategoria(Categoria categoria) {
         productoViewModel.obtenerProductosPorCategoria(categoria.getId()).observe(getViewLifecycleOwner(), productos -> {
-            if (productos != null) {
-                binding.recyclerViewProducto.setLayoutManager(new LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false));
-                binding.recyclerViewProducto.setAdapter(new AdaptadorProductos((List<Producto>) productos, getContext(),producto -> {
-                    abrirDetalleProducto(producto);
-                }));
-            }
+            if (productos != null) mostrarProductos(productos, true); // con control de stock
         });
     }
 
     private void filtrarProductos(String query) {
-        productoViewModel.obtenerProductosPorNombre(query).observe(getViewLifecycleOwner(), producto -> {
-            if (producto != null) {
-                Log.e("productoXnombre", producto.toString());
-                binding.recyclerViewProducto.setLayoutManager(new LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false));
-                binding.recyclerViewProducto.setAdapter(new AdaptadorProductos(producto, getContext(),producto1 -> {
-                    abrirDetalleProducto(producto1);
-                }));
+        productoViewModel.obtenerProductosPorNombre(query).observe(getViewLifecycleOwner(), productos -> {
+            if (productos != null && !productos.isEmpty()) {
+                mostrarProductos(productos, false); // se muestran todos, incluso sin stock
             } else {
-                Toast.makeText(getContext(), "No se encontraron productos que coincidan con: " + query, Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), "No se encontraron productos para: " + query, Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void cargarTodosLosProductos() {
-        productoViewModel.obtenerProductos().observe(getViewLifecycleOwner(), result -> {
-            if (result != null) {
-                binding.recyclerViewProducto.setLayoutManager(new LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false));
-                binding.recyclerViewProducto.setAdapter(new AdaptadorProductos((List<Producto>) result, getContext(),producto -> {
-                    abrirDetalleProducto(producto);
-                }));
-                productoViewModel.setProductoMutableLiveData(result);
-
-            }
-        });
+        List<Producto> productos = productoViewModel.obtenerProductos().getValue();
+        if (productos != null) mostrarProductos(productos, true);
     }
+
     private void abrirDetalleProducto(Producto producto) {
         ProductoDetalleFragment fragment = new ProductoDetalleFragment();
         Bundle bundle = new Bundle();
+        bundle.putSerializable("producto", producto);
         bundle.putString("nombre", producto.getNombre());
         bundle.putString("descripcion", producto.getDescripcion());
         bundle.putDouble("precio", producto.getPrecio());
         bundle.putInt("stock", producto.getStock());
         bundle.putString("imagen", producto.getImg());
-        bundle.putSerializable("producto",producto);
         fragment.setArguments(bundle);
 
         getParentFragmentManager().beginTransaction()

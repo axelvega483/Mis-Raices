@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @CrossOrigin("*")
 @RestController
-@RequestMapping("tarjetas")
+@RequestMapping("tarjeta")
 public class TarjetaCreditoController {
 
     private Map<String, Object> response;

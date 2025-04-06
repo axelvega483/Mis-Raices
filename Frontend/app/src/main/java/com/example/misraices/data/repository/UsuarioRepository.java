@@ -86,4 +86,7 @@ public class UsuarioRepository {
     public MutableLiveData<Result<Usuario>> restablecerPassword(Usuario usuario) {
         return ejecutarPeticion(usuarioService.restablecerPassword(usuario));
     }
+    public MutableLiveData<Result<Usuario>> editarUsuario(Integer id,Usuario usuario) {
+        return ejecutarPeticion(usuarioService.actualizarUsuario(id,usuario));
+    }
 }

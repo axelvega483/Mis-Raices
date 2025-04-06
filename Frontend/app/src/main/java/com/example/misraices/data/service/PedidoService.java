@@ -8,6 +8,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 
 public interface PedidoService {
 
@@ -16,4 +17,6 @@ public interface PedidoService {
 
     @GET("/pedido")
     Call<List<Pedido>>obtener();
+    @POST("/pedido/finalizarCompra/{pedidoId}/{tarjetaId}")
+    Call<Pedido>finalizarCompra(@Path("pedidoId") int pedidoId, @Path("tarjetaId") int tarjetaId);
 }

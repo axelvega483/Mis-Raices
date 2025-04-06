@@ -49,6 +49,7 @@ public class AdaptadorProductos extends RecyclerView.Adapter<AdaptadorProductos.
                 listener.onProductoClick(producto);
             }
         });
+
     }
 
     @Override

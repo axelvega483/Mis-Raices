@@ -37,7 +37,7 @@ public class Usuario implements Serializable {
     private String codigo;//codigo de activacion de cuenta
     private String token;//token para restablecer contraceña
     private LocalDateTime tokenLimite; //tiempo de token
-
+    
     
     @JsonManagedReference("usuario-pedidos")
     private List<Pedido> pedidos;

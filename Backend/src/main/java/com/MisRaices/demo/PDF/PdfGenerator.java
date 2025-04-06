@@ -66,6 +66,10 @@ public class PdfGenerator {
             Paragraph cliente = new Paragraph("Cliente: " + pedido.getUsuario().getNombre() + " " + pedido.getUsuario().getApellido(), fontCuerpo);
             cliente.setAlignment(Paragraph.ALIGN_LEFT);
             document.add(cliente);
+            
+            Paragraph direccion = new Paragraph("Direccíon: " + pedido.getUsuario().getDireccion(), fontCuerpo);
+            cliente.setAlignment(Paragraph.ALIGN_LEFT);
+            document.add(direccion);
             document.add(new Paragraph(" "));
             // Detalles del pedido (tabla)
             PdfPTable table = new PdfPTable(3);  // Tres columnas: Producto, Cantidad, Precio

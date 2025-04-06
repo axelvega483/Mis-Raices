@@ -11,6 +11,8 @@ import com.example.misraices.R;
 import com.example.misraices.databinding.ActivityPrincipalBinding;
 import com.example.misraices.view.fragment.CarritoFragment;
 import com.example.misraices.view.fragment.HomeFragment;
+import com.example.misraices.view.fragment.PedidoRealizadoFragment;
+import com.example.misraices.view.fragment.PerfilFragment;
 import com.google.android.material.navigation.NavigationBarView;
 
 public class PrincipalActivity extends AppCompatActivity {
@@ -41,11 +43,11 @@ public class PrincipalActivity extends AppCompatActivity {
                 } else if (itemId == R.id.nav_carrito) {
                     openFragment(CarritoFragment.newInstance());
 
-                } /*else if (itemId == R.id.nav_pedido) {
-                    openFragment();
+                } else if (itemId == R.id.nav_pedido) {
+                    openFragment(PedidoRealizadoFragment.newInstance());
                 } else if (itemId==R.id.nav_perfil) {
-                    openFragment();
-                }*/
+                    openFragment(PerfilFragment.newInstance());
+                }
                 return true;
             }
         });
