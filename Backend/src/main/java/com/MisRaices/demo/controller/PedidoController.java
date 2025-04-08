@@ -11,6 +11,7 @@ import com.MisRaices.demo.service.PedidoService;
 import com.MisRaices.demo.service.ProductoService;
 import com.MisRaices.demo.service.TarjetaCreditoService;
 import com.MisRaices.demo.service.UsuarioService;
+import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -84,53 +85,52 @@ public class PedidoController {
     public ResponseEntity<?> crear(@RequestBody Pedido pedido) {
         try {
             response = new HashMap<>();
+
             Usuario cliente = usuarioService.obtener(pedido.getUsuario().getId()).orElse(null);
             if (cliente == null) {
-                response.put("error", "cliente no válido.");
+                response.put("error", "Cliente no válido.");
                 return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             }
+
             pedido.setUsuario(cliente);
-            int nuevoStock, stock, cant;
-            Double precio = 0.0;
             List<PedidoDetalle> detalles = new ArrayList<>();
+            double total = 0.0;
 
             for (PedidoDetalle detalle : pedido.getDetalle()) {
-                PedidoDetalle deta = new PedidoDetalle();
-                Optional<Producto> productoOptional = productoService.obtener(detalle.getProducto().getId());
-
-                if (!productoOptional.isPresent()) {
-                    response.put("error", "Producto no encontrado con ID: " + detalle.getProducto().getId());
+                Optional<Producto> productoOpt = productoService.obtener(detalle.getProducto().getId());
+                if (!productoOpt.isPresent()) {
+                    response.put("error", "Producto con ID " + detalle.getProducto().getId() + " no encontrado.");
                     return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
                 }
 
-                Producto producto = productoOptional.get();
-                producto.setId(detalle.getProducto().getId());
+                Producto producto = productoOpt.get();
+                int cantidad = detalle.getCantidad();
+                int nuevoStock = producto.getStock() - cantidad;
 
-                deta.setCantidad(detalle.getCantidad());
-                deta.setProducto(producto);
-                deta.setPedido(pedido);
-
-                detalles.add(deta);
-
-                precio += producto.getPrecio() * detalle.getCantidad();
-
-                stock = producto.getStock();
-                cant = detalle.getCantidad();
-                nuevoStock = stock - cant;
-
-                if (nuevoStock >= 0) {
-                    producto.setStock(nuevoStock);
-                } else {
-                    response.put("error", "El stock no puede ser negativo para el producto: " + producto.getNombre());
+                if (nuevoStock < 0) {
+                    response.put("error", "Stock insuficiente para el producto: " + producto.getNombre());
                     return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
                 }
+
+                PedidoDetalle nuevoDetalle = new PedidoDetalle();
+                nuevoDetalle.setCantidad(cantidad);
+                nuevoDetalle.setProducto(producto);
+                nuevoDetalle.setPedido(pedido);
+
+                detalles.add(nuevoDetalle);
+                total += producto.getPrecio() * cantidad;
             }
 
             pedido.setDetalle(detalles);
-            pedido.setTotal(precio);
+            pedido.setTotal(total);
             pedido.setFechaPedido(LocalDateTime.now());
-            pedido.setEstado("PENDIENTE");         
-            return new ResponseEntity<>(pedidoService.guardar(pedido), HttpStatus.CREATED);
+            pedido.setEstado("PENDIENTE");
+
+            Pedido pedidoGuardado = pedidoService.guardar(pedido);
+
+            response.put("mensaje", "Pedido creado exitosamente.");
+            response.put("pedido", pedidoGuardado);
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
 
         } catch (Exception e) {
             response.put("error", e.getMessage());
@@ -177,6 +177,7 @@ public class PedidoController {
 
     }
 
+    @Transactional
     @PostMapping("/finalizarCompra/{pedidoId}/{tarjetaId}")
     public ResponseEntity<?> finalizarCompra(@PathVariable Integer pedidoId, @PathVariable Integer tarjetaId) {
         try {
@@ -184,22 +185,46 @@ public class PedidoController {
 
             Pedido pedido = pedidoService.obtener(pedidoId).orElse(null);
             if (pedido == null) {
-                response.put("error", "pedido no encontrado");
+                response.put("error", "Pedido con ID " + pedidoId + " no encontrado.");
                 return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+            }
+
+            double total = 0.0;
+
+            for (PedidoDetalle detalle : pedido.getDetalle()) {
+                Optional<Producto> productoOpt = productoService.obtener(detalle.getProducto().getId());
+                if (!productoOpt.isPresent()) {
+                    response.put("error", "Producto con ID " + detalle.getProducto().getId() + " no encontrado.");
+                    return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+                }
+
+                Producto producto = productoOpt.get();
+                int cantidad = detalle.getCantidad();
+                int nuevoStock = producto.getStock() - cantidad;
+
+                if (nuevoStock < 0) {
+                    response.put("error", "Stock insuficiente para el producto: " + producto.getNombre());
+                    return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+                }
+
+                producto.setStock(nuevoStock);
+                productoService.guardar(producto);
+
+                total += producto.getPrecio() * cantidad;
             }
 
             TarjetaCredito tarjeta = tarjetaCreditoService.obtener(tarjetaId).orElse(null);
             if (tarjeta == null) {
-                response.put("error", "tarjeta no encontrada");
+                response.put("error", "Tarjeta con ID " + tarjetaId + " no encontrada.");
                 return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
             }
+
             if (tarjeta.getSaldo() < pedido.getTotal()) {
-                response.put("Tarjeta", "Saldo insuficiente en la tarjeta");
+                response.put("error", "Saldo insuficiente en la tarjeta.");
                 return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             }
 
             tarjeta.setSaldo(tarjeta.getSaldo() - pedido.getTotal());
-           
             tarjetaCreditoService.guardar(tarjeta);
 
             pedido.setFechaPedido(LocalDateTime.now());
@@ -207,16 +232,14 @@ public class PedidoController {
             pedidoService.guardar(pedido);
 
             String rutaPDF = PdfGenerator.generarFacturaPDF(pedido);
+            emailService.enviarFacturaConAdjunto(pedido.getUsuario().getCorreo(), rutaPDF);
 
-            String emailCliente = pedido.getUsuario().getCorreo();
-            emailService.enviarFacturaConAdjunto(emailCliente, rutaPDF);
+            response.put("mensaje", "Compra finalizada con éxito y factura enviada al correo.");
+            response.put("pedido", pedido);
+            return new ResponseEntity<>(response, HttpStatus.OK);
 
-            response.put("mensaje", "Compra finalizada con éxito y factura enviada al correo");
-            
-
-            return new ResponseEntity<>(pedido, HttpStatus.OK);
         } catch (Exception e) {
-            response.put("error aca", e.getMessage());
+            response.put("error", e.getMessage());
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
