@@ -46,7 +46,7 @@
         <androidx.cardview.widget.CardView
             android:id="@+id/cardViewDetalle"
             android:layout_width="332dp"
-            android:layout_height="117dp"
+            android:layout_height="125dp"
             android:layout_marginTop="40dp"
             app:cardBackgroundColor="@color/white"
             app:cardCornerRadius="20dp"
@@ -67,7 +67,7 @@
                     android:layout_height="wrap_content"
                     android:text="Descripción"
                     android:textColor="@color/black"
-                    android:textSize="20sp"/>
+                    android:textSize="20sp" />
 
                 <TextView
                     android:id="@+id/precioDetalleTxt"
@@ -83,7 +83,7 @@
                     android:layout_height="wrap_content"
                     android:text="Stock"
                     android:textColor="@color/black"
-                    android:textSize="20sp"/>
+                    android:textSize="20sp" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 

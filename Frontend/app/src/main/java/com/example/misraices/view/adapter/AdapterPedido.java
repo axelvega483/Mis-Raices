@@ -16,10 +16,16 @@ import java.util.List;
 public class AdapterPedido extends RecyclerView.Adapter<AdapterPedido.ViewHolder> {
     private List<Pedido> listaPedidos;
     private Context context;
+    private OnPedidoClickListener listener;
 
-    public AdapterPedido(List<Pedido> listaPedidos, Context context) {
+    public interface OnPedidoClickListener {
+        void onPedidoClick(Pedido pedido);
+    }
+
+    public AdapterPedido(List<Pedido> listaPedidos, Context context, OnPedidoClickListener listener) {
         this.listaPedidos = listaPedidos;
         this.context = context;
+        this.listener = listener;
     }
 
     @NonNull
@@ -33,10 +39,14 @@ public class AdapterPedido extends RecyclerView.Adapter<AdapterPedido.ViewHolder
     @Override
     public void onBindViewHolder(@NonNull AdapterPedido.ViewHolder holder, int position) {
         Pedido pedido = listaPedidos.get(position);
-            holder.binding.OrdenTxt.setText("Orden: " + pedido.getId());
-            holder.binding.TotalTxt.setText("Total: " + pedido.getTotal());
-            holder.binding.EstadoTxt.setText("Estado: " + pedido.getEstado());
-
+        holder.binding.OrdenTxt.setText("Orden: " + pedido.getId());
+        holder.binding.TotalTxt.setText("Total: " + pedido.getTotal());
+        holder.binding.EstadoTxt.setText("Estado: " + pedido.getEstado());
+        holder.binding.getRoot().setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onPedidoClick(pedido);
+            }
+        });
     }
 
     @Override

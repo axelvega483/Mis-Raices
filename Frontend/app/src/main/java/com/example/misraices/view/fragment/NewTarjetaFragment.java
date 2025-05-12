@@ -73,10 +73,7 @@ public class NewTarjetaFragment extends Fragment {
                 Log.e("tarjeta creada", tarjeta.toString());
                 tarjetaViewModel.setTarjetaLiveData(tarjeta);
 
-                requireActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.frameContainer, TarjetasFragment.newInstance())
-                        .addToBackStack(null)
-                        .commit();
+                requireActivity().getSupportFragmentManager().popBackStack();
             });
 
         });

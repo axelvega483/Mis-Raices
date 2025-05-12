@@ -8,17 +8,20 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.misraices.R;
 import com.example.misraices.data.model.Pedido;
+import com.example.misraices.data.model.PedidoDetalle;
 import com.example.misraices.databinding.FragmentPedidoRealizadoBinding;
 import com.example.misraices.view.adapter.AdapterPedido;
 import com.example.misraices.viewModel.PedidoViewModel;
 import com.example.misraices.viewModel.UsuarioViewModel;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -76,11 +79,28 @@ public class PedidoRealizadoFragment extends Fragment {
                     }
                     if (!pedidosEnPreparacion.isEmpty()) {
                         binding.recyclerViewPedidos.setLayoutManager(new LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false));
-                        binding.recyclerViewPedidos.setAdapter(new AdapterPedido(pedidosEnPreparacion, getContext()));
+                        binding.recyclerViewPedidos.setAdapter(new AdapterPedido(pedidosEnPreparacion, getContext(), this::mostrarPedido));
                         pedidoViewModel.setPedidoMutableLiveData(pedidosEnPreparacion.get(0));
                     }
                 }
             });
         });
+    }
+
+    private void mostrarPedido(Pedido pedido) {
+        PedidoDetalleFragment fragment = new PedidoDetalleFragment();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("pedido", pedido);
+        bundle.putInt("id", pedido.getId());
+        bundle.putString("fecha", pedido.getFechaPedido());
+        bundle.putString("direccion", pedido.getDireccion());
+        bundle.putSerializable("detalle",(Serializable) pedido.getDetalle());
+        bundle.putDouble("total", pedido.getTotal());
+        fragment.setArguments(bundle);
+
+        getParentFragmentManager().beginTransaction()
+                .replace(R.id.frameContainer, fragment)
+                .addToBackStack(null)
+                .commit();
     }
 }

@@ -20,7 +20,6 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.misraices.R;
-import com.example.misraices.data.model.Usuario;
 import com.example.misraices.databinding.FragmentPerfilBinding;
 import com.example.misraices.view.activity.MainActivity;
 import com.example.misraices.viewModel.UsuarioViewModel;
@@ -95,14 +94,25 @@ public class PerfilFragment extends Fragment {
 
 
         binding.btnCerrarSesion.setOnClickListener(view -> cerrarSesion());
+
         binding.ImgPerfil.setOnClickListener(view -> {
-            pickMedia.launch(new PickVisualMediaRequest.Builder().setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE).build());
+            pickMedia.launch(new PickVisualMediaRequest.Builder()
+                    .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
+                    .build());
         });
         binding.btnEditarPerfil.setOnClickListener(view -> {
-            requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frameContainer, EditarPerfilFragment.newInstance()).addToBackStack(null).commit();
+            requireActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.frameContainer, EditarPerfilFragment.newInstance())
+                    .addToBackStack(null)
+                    .commit();
         });
         binding.btnTarjetas.setOnClickListener(view -> {
-            requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frameContainer, TarjetasFragment.newInstance()).addToBackStack(null).commit();
+            requireActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.frameContainer, TarjetasFragment.newInstance())
+                    .addToBackStack(null)
+                    .commit();
         });
     }
 
@@ -112,8 +122,6 @@ public class PerfilFragment extends Fragment {
         SharedPreferences.Editor editor = prefs.edit();
         editor.clear();
         editor.apply();
-
-
         Intent intent = new Intent(requireContext(), MainActivity.class);
         startActivity(intent);
         requireActivity().finish();

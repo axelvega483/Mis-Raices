@@ -34,7 +34,7 @@ public class PedidoViewModel extends ViewModel {
 
 
     public void init(Context context) {
-        this.context = context.getApplicationContext(); // para evitar memory leaks
+        this.context = context.getApplicationContext(); // para evitar perdida de memoria
         cargarCarritoDesdePrefs();
     }
 
@@ -53,7 +53,7 @@ public class PedidoViewModel extends ViewModel {
         List<PedidoDetalle> detalles = detallesLiveData.getValue();
         if (detalles != null) {
             for (PedidoDetalle detalle : detalles) {
-                int cantidad = (detalle.getCantidad() != null) ? detalle.getCantidad() : 1; // Evita null
+                int cantidad = (detalle.getCantidad() != null) ? detalle.getCantidad() : 1;
                 total += detalle.getProducto().getPrecio() * cantidad;
             }
         }

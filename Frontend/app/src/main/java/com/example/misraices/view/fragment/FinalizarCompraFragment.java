@@ -66,6 +66,7 @@ public class FinalizarCompraFragment extends Fragment {
         tarjetaViewModel = new ViewModelProvider(requireActivity()).get(TarjetaViewModel.class);
         usuarioViewModel = new ViewModelProvider(requireActivity()).get(UsuarioViewModel.class);
     }
+
     private void initListener() {
         SharedPreferences prefs = requireActivity().getSharedPreferences("MiAppPrefs", Context.MODE_PRIVATE);
         int usuarioId = prefs.getInt("usuarioId", -1);
@@ -103,7 +104,7 @@ public class FinalizarCompraFragment extends Fragment {
                     Pedido pedido = new Pedido();
                     pedido.setDetalle(pedidoViewModel.getDetallesLiveData().getValue());
                     pedido.setUsuario(usuario.getData());
-                    pedido.setEstado("PENDIENTE"); // Asegurate de setear estado si no lo hacías
+                    pedido.setEstado("PENDIENTE");
                     pedidoViewModel.crearPedido(pedido);
 
                     new android.os.Handler().postDelayed(() -> {
@@ -116,7 +117,6 @@ public class FinalizarCompraFragment extends Fragment {
 
                                     pedidoViewModel.finalizarCompra(ultimoPedido.getId(), tarjetaSeleccionada.getId());
                                     Toast.makeText(getContext(), "Compra finalizada", Toast.LENGTH_SHORT).show();
-                                    Toast.makeText(getContext(), "Saldo restante: " + tarjetaSeleccionada.getSaldo(), Toast.LENGTH_SHORT).show();
 
                                     requireActivity().getSupportFragmentManager().beginTransaction()
                                             .replace(R.id.frameContainer, PedidoRealizadoFragment.newInstance())
@@ -126,6 +126,7 @@ public class FinalizarCompraFragment extends Fragment {
                                     Toast.makeText(getContext(), "Saldo insuficiente", Toast.LENGTH_SHORT).show();
                                 }
                             }
+
                         });
                     }, 1500);
 
@@ -133,7 +134,18 @@ public class FinalizarCompraFragment extends Fragment {
                     pedidoViewModel.setPedidoMutableLiveData(pedido);
                 }
             });
+            Toast.makeText(getContext(), "Saldo restante: " + tarjetaSeleccionada.getSaldo(), Toast.LENGTH_SHORT).show();
+
         });
+
+        binding.btnAgregarTarjeta.setOnClickListener(view -> {
+            requireActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.frameContainer, NewTarjetaFragment.newInstance())
+                    .addToBackStack(null)
+                    .commit();
+        });
+
+
     }
 
 }
