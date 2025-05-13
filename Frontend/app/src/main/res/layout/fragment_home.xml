@@ -21,7 +21,7 @@
             android:elevation="4dp"
             android:iconifiedByDefault="false"
             android:padding="8dp"
-            android:queryHint="Buscar productos" />
+            android:queryHint="Buscar producto" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -45,7 +45,7 @@
 
             <TextView
                 android:id="@+id/textView5"
-                android:layout_width="wrap_content"
+                android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Productos"
@@ -53,10 +53,12 @@
                 android:textSize="25sp" />
 
             <TextView
-                android:id="@+id/seeAllTxt"
+                android:id="@+id/verTodoTxt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="See all"
+                android:text="Ver todo"
+                android:textAlignment="center"
+                android:textSize="20sp"
                 android:textColor="@color/black" />
         </LinearLayout>
 

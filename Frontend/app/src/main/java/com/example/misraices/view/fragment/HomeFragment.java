@@ -80,9 +80,14 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        binding.seeAllTxt.setOnClickListener(v -> {
-            List<Producto> productos = productoViewModel.obtenerProductos().getValue();
-            if (productos != null) mostrarProductos(productos, true);
+        binding.verTodoTxt.setOnClickListener(v -> {
+            productoViewModel.obtenerProductos().observe(getViewLifecycleOwner(), productos -> {
+                if (productos != null) {
+                    productoViewModel.setProductoMutableLiveData(productos);
+                    mostrarProductos(productos, true); // solo productos con stock
+                }
+            });
+
         });
 
         binding.searchView.setOnQueryTextListener(new androidx.appcompat.widget.SearchView.OnQueryTextListener() {

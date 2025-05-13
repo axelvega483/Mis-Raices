@@ -134,8 +134,6 @@ public class FinalizarCompraFragment extends Fragment {
                     pedidoViewModel.setPedidoMutableLiveData(pedido);
                 }
             });
-            Toast.makeText(getContext(), "Saldo restante: " + tarjetaSeleccionada.getSaldo(), Toast.LENGTH_SHORT).show();
-
         });
 
         binding.btnAgregarTarjeta.setOnClickListener(view -> {
