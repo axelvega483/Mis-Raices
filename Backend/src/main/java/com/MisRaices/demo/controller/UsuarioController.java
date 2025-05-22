@@ -2,6 +2,10 @@ package com.MisRaices.demo.controller;
 
 import com.MisRaices.demo.entity.Usuario;
 import com.MisRaices.demo.service.UsuarioService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +23,11 @@ public class UsuarioController {
 
     Map<String, Object> response;
 
+    @Operation(summary = "Listar todos los usuarios", description = "Devuelve una lista con todos los usuarios registrados.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Usuarios listados correctamente"),
+        @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+    })
     @GetMapping()
     public ResponseEntity<?> listarTodos() {
         try {
@@ -30,8 +39,15 @@ public class UsuarioController {
         }
     }
 
+    @Operation(summary = "Obtener un usuario por ID", description = "Devuelve un usuario específico según su ID.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Usuario encontrado"),
+        @ApiResponse(responseCode = "404", description = "Usuario no encontrado"),
+        @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+    })
     @GetMapping("{id}")
-    public ResponseEntity<?> obtenerUsuario(@PathVariable Integer id) {
+    public ResponseEntity<?> obtenerUsuario(
+            @Parameter(description = "ID del usuario a obtener", required = true) @PathVariable Integer id) {
         try {
             response = new HashMap<>();
             Usuario user = usuarioService.obtener(id).orElse(null);
@@ -47,8 +63,17 @@ public class UsuarioController {
         }
     }
 
+    @Operation(summary = "Modificar un usuario", description = "Actualiza los datos de un usuario existente mediante su ID.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Usuario actualizado correctamente"),
+        @ApiResponse(responseCode = "404", description = "Usuario no encontrado"),
+        @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+    })
     @PutMapping("{id}")
-    public ResponseEntity<?> modificarUsuario(@RequestBody Usuario usuario, @PathVariable Integer id) {
+    public ResponseEntity<?> modificarUsuario(
+            @Parameter(description = "Datos actualizados del usuario", required = true)
+            @RequestBody Usuario usuario,
+            @Parameter(description = "ID del usuario a modificar", required = true) @PathVariable Integer id) {
         try {
             response = new HashMap<>();
             Usuario user = usuarioService.obtener(id).orElse(null);
@@ -66,8 +91,15 @@ public class UsuarioController {
         }
     }
 
+    @Operation(summary = "Eliminar un usuario", description = "Elimina un usuario del sistema mediante su ID.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Usuario eliminado correctamente"),
+        @ApiResponse(responseCode = "404", description = "Usuario no encontrado"),
+        @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+    })
     @DeleteMapping("{id}")
-    public ResponseEntity<?> eliminarUsuario(@PathVariable Integer id) {
+    public ResponseEntity<?> eliminarUsuario(
+            @Parameter(description = "ID del usuario a eliminar", required = true) @PathVariable Integer id) {
         try {
             response = new HashMap<>();
             Usuario user = usuarioService.obtener(id).orElse(null);
@@ -94,10 +126,10 @@ public class UsuarioController {
         if (nuevo.getTelefono() != null) {
             viejo.setTelefono(nuevo.getTelefono());
         }
-        if (nuevo.getDireccion()!= null) {
+        if (nuevo.getDireccion() != null) {
             viejo.setDireccion(nuevo.getDireccion());
         }
-        if(nuevo.getPassword()!=null){
+        if (nuevo.getPassword() != null) {
             viejo.setPassword(nuevo.getPassword());
         }
     }

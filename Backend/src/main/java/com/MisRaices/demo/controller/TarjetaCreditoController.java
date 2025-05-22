@@ -4,9 +4,12 @@ import com.MisRaices.demo.entity.TarjetaCredito;
 import com.MisRaices.demo.entity.Usuario;
 import com.MisRaices.demo.service.TarjetaCreditoService;
 import com.MisRaices.demo.service.UsuarioService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +35,11 @@ public class TarjetaCreditoController {
     @Autowired
     private UsuarioService UsuarioService;
 
+    @Operation(summary = "Listar todas las tarjetas", description = "Devuelve una lista con todas las tarjetas de crédito registradas.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Listado obtenido correctamente"),
+        @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+    })
     @GetMapping()
     public ResponseEntity<?> listar() {
         try {
@@ -43,12 +51,20 @@ public class TarjetaCreditoController {
         }
     }
 
+    @Operation(summary = "Registrar una nueva tarjeta", description = "Crea una tarjeta de crédito asociada a un usuario y establece un saldo inicial.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "Tarjeta creada correctamente"),
+        @ApiResponse(responseCode = "400", description = "Usuario no válido"),
+        @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+    })
     @PostMapping()
-    public ResponseEntity<?> crearTarjeta(@RequestBody TarjetaCredito tarjetaCredito) {
+    public ResponseEntity<?> crearTarjeta(
+            @Parameter(description = "Datos de la tarjeta a registrar", required = true)
+            @RequestBody TarjetaCredito tarjetaCredito) {
         try {
             response = new HashMap<>();
             Usuario user = UsuarioService.obtener(tarjetaCredito.getUsuario().getId()).orElse(null);
-             if (user == null) {
+            if (user == null) {
                 response.put("error", "cliente no válido.");
                 return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             }
@@ -61,9 +77,18 @@ public class TarjetaCreditoController {
         }
     }
 
+    @Operation(summary = "Actualizar una tarjeta", description = "Actualiza los datos de una tarjeta de crédito existente por ID.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Tarjeta actualizada correctamente"),
+        @ApiResponse(responseCode = "404", description = "Tarjeta no encontrada"),
+        @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+    })
     @PutMapping("{id}")
-    public ResponseEntity<?> editar(@RequestBody TarjetaCredito tarjetaCredito,
-            @PathVariable(required = true) Integer id) {
+    public ResponseEntity<?> editar(
+            @Parameter(description = "Datos actualizados de la tarjeta", required = true)
+            @RequestBody TarjetaCredito tarjetaCredito,
+            @Parameter(description = "ID de la tarjeta a editar", required = true)
+            @PathVariable Integer id) {
         try {
             response = new HashMap<>();
             TarjetaCredito tarjeta = creditoService.obtener(id).orElse(null);
@@ -80,8 +105,15 @@ public class TarjetaCreditoController {
         }
     }
 
+    @Operation(summary = "Eliminar una tarjeta", description = "Elimina una tarjeta de crédito por su ID.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Tarjeta eliminada correctamente"),
+        @ApiResponse(responseCode = "404", description = "Tarjeta no encontrada"),
+        @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+    })
     @DeleteMapping("{id}")
-    public ResponseEntity<?> eliminar(@PathVariable Integer id) {
+    public ResponseEntity<?> eliminar(
+            @Parameter(description = "ID de la tarjeta a eliminar", required = true) @PathVariable Integer id) {
         try {
             response = new HashMap<>();
             TarjetaCredito tarjeta = creditoService.obtener(id).orElse(null);

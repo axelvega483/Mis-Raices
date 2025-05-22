@@ -4,6 +4,10 @@ import com.MisRaices.demo.entity.Categoria;
 import com.MisRaices.demo.entity.Producto;
 import com.MisRaices.demo.service.CategoriaService;
 import com.MisRaices.demo.service.ProductoService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +32,11 @@ public class ProductoController {
     @Autowired
     private CategoriaService categoriaService;
 
+    @Operation(summary = "Listar todos los productos", description = "Devuelve una lista con todos los productos registrados.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Lista de productos obtenida exitosamente"),
+        @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+    })
     @GetMapping
     public ResponseEntity<?> listar() {
         try {
@@ -39,8 +48,14 @@ public class ProductoController {
         }
     }
 
+    @Operation(summary = "Obtener un producto por ID", description = "Busca y devuelve un producto específico según su ID.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Producto encontrado"),
+        @ApiResponse(responseCode = "404", description = "Producto no encontrado"),
+        @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+    })
     @GetMapping("{id}")
-    public ResponseEntity<?> obtenerProducto(@PathVariable Integer id) {
+    public ResponseEntity<?> obtenerProducto(@Parameter(description = "ID del producto", required = true) @PathVariable Integer id) {
         try {
             response = new HashMap<>();
             Producto producto = productoService.obtener(id).orElse(null);
@@ -56,8 +71,14 @@ public class ProductoController {
         }
     }
 
+    @Operation(summary = "Obtener productos por categoría", description = "Devuelve una lista de productos asociados a una categoría específica.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Productos encontrados"),
+        @ApiResponse(responseCode = "404", description = "Categoría o productos no encontrados"),
+        @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+    })
     @GetMapping("categoria/{id}")
-    public ResponseEntity<?> obtenerProductoXcategoria(@PathVariable Integer id) {
+    public ResponseEntity<?> obtenerProductoXcategoria(@Parameter(description = "ID de la categoría", required = true) @PathVariable Integer id) {
         try {
             response = new HashMap<>();
             Categoria categoria = categoriaService.obtener(id).orElse(null);
@@ -82,19 +103,25 @@ public class ProductoController {
         }
     }
 
+    @Operation(summary = "Buscar productos por nombre", description = "Devuelve productos cuyo nombre coincida (total o parcialmente) con el valor ingresado.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Productos encontrados"),
+        @ApiResponse(responseCode = "404", description = "No se encontraron productos con ese nombre"),
+        @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+    })
     @GetMapping("nombre/{nombre}")
-    public ResponseEntity<?> obtenerProductoNombre(@PathVariable String nombre) {
+    public ResponseEntity<?> obtenerProductoNombre(@Parameter(description = "Nombre del producto a buscar", required = true) @PathVariable String nombre) {
         try {
             List<Producto> productos = productoService.obtenerNombre(nombre);
 
-        if (productos != null && !productos.isEmpty()) {
-            // Si se encuentran productos, devolver la lista
-            return new ResponseEntity<>(productos, HttpStatus.OK);
-        } else {
-            // Si no se encuentran productos, devolver un mensaje adecuado
-            response.put("message", "No se encontraron productos con el nombre: " + nombre);
-            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-        }
+            if (productos != null && !productos.isEmpty()) {
+                // Si se encuentran productos, devolver la lista
+                return new ResponseEntity<>(productos, HttpStatus.OK);
+            } else {
+                // Si no se encuentran productos, devolver un mensaje adecuado
+                response.put("message", "No se encontraron productos con el nombre: " + nombre);
+                return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+            }
         } catch (Exception e) {
             Map<String, Object> errorResponse = new HashMap<>();
             errorResponse.put("error", e.getMessage());

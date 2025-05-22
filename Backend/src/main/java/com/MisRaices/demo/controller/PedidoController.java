@@ -11,6 +11,10 @@ import com.MisRaices.demo.service.PedidoService;
 import com.MisRaices.demo.service.ProductoService;
 import com.MisRaices.demo.service.TarjetaCreditoService;
 import com.MisRaices.demo.service.UsuarioService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -53,6 +57,11 @@ public class PedidoController {
 
     private Map<String, Object> response;
 
+    @Operation(summary = "Listar todos los pedidos", description = "Retorna una lista de todos los pedidos realizados.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Lista obtenida exitosamente"),
+        @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+    })
     @GetMapping
     public ResponseEntity<?> listar() {
         try {
@@ -64,8 +73,14 @@ public class PedidoController {
         }
     }
 
+    @Operation(summary = "Obtener un pedido", description = "Devuelve un pedido específico por ID.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Pedido encontrado"),
+        @ApiResponse(responseCode = "404", description = "Pedido no encontrado"),
+        @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+    })
     @GetMapping("{id}")
-    public ResponseEntity<?> obtener(@PathVariable Integer id) {
+    public ResponseEntity<?> obtener(@Parameter(description = "ID del pedido a obtener", required = true) @PathVariable Integer id) {
         try {
             response = new HashMap<>();
             Pedido pedido = pedidoService.obtener(id).orElse(null);
@@ -81,6 +96,12 @@ public class PedidoController {
         }
     }
 
+    @Operation(summary = "Crear un nuevo pedido", description = "Crea un nuevo pedido con detalles de productos.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "Pedido creado exitosamente"),
+        @ApiResponse(responseCode = "400", description = "Datos inválidos o stock insuficiente"),
+        @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+    })
     @PostMapping
     public ResponseEntity<?> crear(@RequestBody Pedido pedido) {
         try {
@@ -138,9 +159,15 @@ public class PedidoController {
         }
     }
 
+    @Operation(summary = "Actualizar un pedido", description = "Actualiza los detalles de un pedido existente.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Pedido actualizado exitosamente"),
+        @ApiResponse(responseCode = "404", description = "Pedido no encontrado"),
+        @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+    })
     @PutMapping("{id}")
     public ResponseEntity<?> actualizar(@RequestBody Pedido pedido,
-            @PathVariable(required = true) Integer id) {
+            @PathVariable(required = true) @Parameter(description = "ID del pedido a actualizar", required = true) Integer id) {
         try {
             response = new HashMap<>();
             Pedido pedidoBD = pedidoService.obtener(id).orElse(null);
@@ -156,8 +183,14 @@ public class PedidoController {
         }
     }
 
+    @Operation(summary = "Eliminar un pedido", description = "Elimina un pedido por su ID.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Pedido eliminado"),
+        @ApiResponse(responseCode = "404", description = "Pedido no encontrado"),
+        @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+    })
     @DeleteMapping("{id}")
-    public ResponseEntity<?> eliminar(@PathVariable Integer id) {
+    public ResponseEntity<?> eliminar(@Parameter(description = "ID del pedido a eliminar", required = true) @PathVariable Integer id) {
         try {
             response = new HashMap<>();
             Pedido pe = pedidoService.obtener(id).orElse(null);
@@ -177,9 +210,19 @@ public class PedidoController {
 
     }
 
+    @Operation(summary = "Finalizar una compra", description = "Finaliza el pedido, descuenta el saldo de la tarjeta, actualiza stock y envía factura por correo.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Compra finalizada exitosamente"),
+        @ApiResponse(responseCode = "400", description = "Stock o saldo insuficiente"),
+        @ApiResponse(responseCode = "404", description = "Pedido o tarjeta no encontrado"),
+        @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+    })
     @Transactional
     @PostMapping("/finalizarCompra/{pedidoId}/{tarjetaId}")
-    public ResponseEntity<?> finalizarCompra(@PathVariable Integer pedidoId, @PathVariable Integer tarjetaId) {
+    public ResponseEntity<?> finalizarCompra(@Parameter(description = "ID del pedido a finalizar", required = true)
+            @PathVariable Integer pedidoId,
+            @Parameter(description = "ID de la tarjeta a utilizar", required = true)
+            @PathVariable Integer tarjetaId) {
         try {
             response = new HashMap<>();
 

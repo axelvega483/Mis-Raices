@@ -3,6 +3,9 @@ package com.MisRaices.demo.controller;
 import com.MisRaices.demo.entity.Usuario;
 import com.MisRaices.demo.service.EmailService;
 import com.MisRaices.demo.service.UsuarioService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
@@ -26,6 +29,14 @@ public class CuentaController {
     @Autowired
     private EmailService emailService;
 
+    @Operation(
+            summary = "Iniciar sesión",
+            description = "Permite a un usuario autenticarse con correo y contraseña."
+    )
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Inicio de sesión exitoso"),
+        @ApiResponse(responseCode = "500", description = "Credenciales incorrectas o error interno")
+    })
     @PostMapping("/login")
     public ResponseEntity<?> IniciarSesion(@RequestBody Usuario usuario) {
         try {
@@ -43,6 +54,14 @@ public class CuentaController {
         }
     }
 
+    @Operation(
+            summary = "Registrar usuario",
+            description = "Registra un nuevo usuario y envía un correo electrónico con el código de activación."
+    )
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Usuario registrado correctamente"),
+        @ApiResponse(responseCode = "500", description = "Error al registrar usuario")
+    })
     @PostMapping("/registro")
     public ResponseEntity<?> registrarUsuario(@RequestBody Usuario usuario) {
         try {
@@ -62,26 +81,15 @@ public class CuentaController {
         }
     }
 
-    // Método para generar un código de activación aleatorio
-    private String generateActivationCode() {
-        String letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        String numbers = "0123456789";
-        Random random = new Random();
-
-        // Generar tres letras
-        StringBuilder activationCode = new StringBuilder();
-        for (int i = 0; i < 3; i++) {
-            activationCode.append(letters.charAt(random.nextInt(letters.length())));
-        }
-
-        // Generar tres números
-        for (int i = 0; i < 3; i++) {
-            activationCode.append(numbers.charAt(random.nextInt(numbers.length())));
-        }
-
-        return activationCode.toString();
-    }
-
+    @Operation(
+            summary = "Activar cuenta",
+            description = "Activa la cuenta de un usuario con el código enviado al correo electrónico."
+    )
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Cuenta activada exitosamente"),
+        @ApiResponse(responseCode = "404", description = "Usuario no encontrado"),
+        @ApiResponse(responseCode = "400", description = "Cuenta ya activada o código incorrecto")
+    })
     @PostMapping("/activarCuenta")
     public ResponseEntity<?> activarCuenta(@RequestBody Usuario usuario) {
         try {
@@ -110,6 +118,15 @@ public class CuentaController {
         }
     }
 
+    @Operation(
+            summary = "Solicitar token para restablecer contraseña",
+            description = "Envía un token de restablecimiento de contraseña al correo electrónico del usuario."
+    )
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Token generado y enviado exitosamente"),
+        @ApiResponse(responseCode = "404", description = "Correo no asociado a un usuario"),
+        @ApiResponse(responseCode = "500", description = "Error al enviar token")
+    })
     @PostMapping("/solicitarToken")
     public ResponseEntity<?> solicitarRestablecerContraseña(@RequestBody Usuario usuario) {
         response = new HashMap<>();
@@ -133,6 +150,15 @@ public class CuentaController {
         }
     }
 
+    @Operation(
+            summary = "Restablecer contraseña",
+            description = "Permite cambiar la contraseña si el token es válido y no ha expirado."
+    )
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Contraseña restablecida exitosamente"),
+        @ApiResponse(responseCode = "400", description = "Token inválido o expirado"),
+        @ApiResponse(responseCode = "500", description = "Error al restablecer contraseña")
+    })
     @PostMapping("/restablecerPassword")
     public ResponseEntity<?> restablecerContraseña(@RequestBody Usuario usuario) {
         try {
@@ -152,5 +178,25 @@ public class CuentaController {
             response.put("error", e.getMessage());
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    // Método para generar un código de activación aleatorio
+    private String generateActivationCode() {
+        String letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        String numbers = "0123456789";
+        Random random = new Random();
+
+        // Generar tres letras
+        StringBuilder activationCode = new StringBuilder();
+        for (int i = 0; i < 3; i++) {
+            activationCode.append(letters.charAt(random.nextInt(letters.length())));
+        }
+
+        // Generar tres números
+        for (int i = 0; i < 3; i++) {
+            activationCode.append(numbers.charAt(random.nextInt(numbers.length())));
+        }
+
+        return activationCode.toString();
     }
 }
