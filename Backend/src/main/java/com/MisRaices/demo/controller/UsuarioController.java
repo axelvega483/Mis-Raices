@@ -1,5 +1,6 @@
 package com.MisRaices.demo.controller;
 
+import com.MisRaices.demo.entity.Direccion;
 import com.MisRaices.demo.entity.Usuario;
 import com.MisRaices.demo.service.UsuarioService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -91,6 +92,32 @@ public class UsuarioController {
         }
     }
 
+    @Operation(summary = "Asignar o actualizar dirección del usuario", description = "Permite asignar o actualizar la dirección embebida de un usuario existente mediante su ID.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Dirección actualizada correctamente"),
+        @ApiResponse(responseCode = "404", description = "Usuario no encontrado"),
+        @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+    })
+    @PutMapping("/direccion/{id}")
+    public ResponseEntity<?> cargarDireccion(
+            @Parameter(description = "ID del usuario al que se le actualizará la dirección", required = true) @PathVariable Integer id,
+            @Parameter(description = "Datos de la dirección a asignar", required = true) @RequestBody Direccion direccion) {
+        try {
+            response = new HashMap<>();
+            Usuario dir = usuarioService.obtener(id).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+            if (dir != null) {
+                dir.setDireccion(direccion);
+                return new ResponseEntity<>(usuarioService.guardar(dir), HttpStatus.OK);
+            } else {
+                response.put("usuario no encontrado", dir);
+                return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            response.put("error al actualizar usuario", e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @Operation(summary = "Eliminar un usuario", description = "Elimina un usuario del sistema mediante su ID.")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Usuario eliminado correctamente"),
@@ -125,9 +152,6 @@ public class UsuarioController {
         }
         if (nuevo.getTelefono() != null) {
             viejo.setTelefono(nuevo.getTelefono());
-        }
-        if (nuevo.getDireccion() != null) {
-            viejo.setDireccion(nuevo.getDireccion());
         }
         if (nuevo.getPassword() != null) {
             viejo.setPassword(nuevo.getPassword());

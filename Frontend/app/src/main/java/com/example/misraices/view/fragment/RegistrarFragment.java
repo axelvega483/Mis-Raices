@@ -67,7 +67,6 @@ public class RegistrarFragment extends Fragment {
                 usuario.setApellido(binding.apellidoEditText.getText().toString());
                 usuario.setTelefono(Long.valueOf(binding.telefonoEditText.getText().toString()));
                 usuario.setCorreo(binding.CorreoEditText.getText().toString());
-                usuario.setDireccion(binding.direccionEditText.getText().toString());
                 String password = binding.passwordEditText.getText().toString();
                 String confirPass = binding.confirPassEditText.getText().toString();
                 if (!password.equals(confirPass)) {

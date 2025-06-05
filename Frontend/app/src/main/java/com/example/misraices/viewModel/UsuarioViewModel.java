@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.misraices.data.model.Direccion;
 import com.example.misraices.data.model.Result;
 import com.example.misraices.data.model.Usuario;
 import com.example.misraices.data.repository.UsuarioRepository;
@@ -18,7 +19,15 @@ public class UsuarioViewModel extends ViewModel {
     private final UsuarioRepository repo = new UsuarioRepository();
     private MutableLiveData<Usuario> usuarioMutableLiveData = new MutableLiveData<>();
     private ExecutorService executor = Executors.newSingleThreadExecutor();
+    private final MutableLiveData<Boolean> direccionActualizada = new MutableLiveData<>(false);
 
+    public LiveData<Boolean> getDireccionActualizada() {
+        return direccionActualizada;
+    }
+
+    public void setDireccionActualizada(boolean valor) {
+        direccionActualizada.setValue(valor);
+    }
 
     public void setUsuarioLiveData(Usuario usuario) {
         executor.execute(new Runnable() {
@@ -66,5 +75,8 @@ public class UsuarioViewModel extends ViewModel {
     }
     public MutableLiveData<Result<Usuario>> obtenerId(Integer id) {
         return repo.obtenerId(id);
+    }
+    public MutableLiveData<Result<Usuario>> actualizarDireccion(Integer id, Direccion direccion) {
+        return repo.actualizarDireccion(id, direccion);
     }
 }

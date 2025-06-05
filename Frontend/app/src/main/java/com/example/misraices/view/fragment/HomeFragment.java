@@ -1,5 +1,7 @@
 package com.example.misraices.view.fragment;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -15,12 +17,15 @@ import android.widget.Toast;
 
 import com.example.misraices.R;
 import com.example.misraices.data.model.Categoria;
+import com.example.misraices.data.model.Direccion;
 import com.example.misraices.data.model.Producto;
+import com.example.misraices.data.model.Usuario;
 import com.example.misraices.databinding.FragmentHomeBinding;
 import com.example.misraices.view.adapter.AdaptadorCategorias;
 import com.example.misraices.view.adapter.AdaptadorProductos;
 import com.example.misraices.viewModel.CategoriaViewModel;
 import com.example.misraices.viewModel.ProductoViewModel;
+import com.example.misraices.viewModel.UsuarioViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,8 +35,10 @@ public class HomeFragment extends Fragment {
     private FragmentHomeBinding binding;
     private ProductoViewModel productoViewModel;
     private CategoriaViewModel categoriaViewModel;
+    private UsuarioViewModel usuarioViewModel;
     private Handler handler = new Handler();
     private Runnable searchRunnable;
+    private int usuarioId;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -62,9 +69,40 @@ public class HomeFragment extends Fragment {
     public void init() {
         productoViewModel = new ViewModelProvider(requireActivity()).get(ProductoViewModel.class);
         categoriaViewModel = new ViewModelProvider(requireActivity()).get(CategoriaViewModel.class);
-
+        usuarioViewModel = new ViewModelProvider(requireActivity()).get(UsuarioViewModel.class);
+        SharedPreferences prefs = requireActivity().getSharedPreferences("MiAppPrefs", Context.MODE_PRIVATE);
+        usuarioId = prefs.getInt("usuarioId", -1);
     }
+
     private void initlistener() {
+        usuarioViewModel.obtenerId(usuarioId).observe(getViewLifecycleOwner(), result -> {
+            if (result != null && result.getData() != null) {
+                Usuario usuario = result.getData();
+                Direccion direccion = usuario.getDireccion();
+                if (direccion != null) {
+                    String calle = direccion.getCalle() != null ? direccion.getCalle() : "";
+                    String numero = direccion.getNumero() != null ? direccion.getNumero() : "";
+                    String direccionTexto = (calle + " " + numero).trim();
+                    if (direccionTexto.isEmpty()) {
+                        direccionTexto = "Dirección";
+                    }
+                    binding.mapDireccionUsuario.setText(direccionTexto);
+                } else {
+                    binding.mapDireccionUsuario.setText("Dirección");
+                }
+            } else {
+                binding.mapDireccionUsuario.setText("Dirección");
+            }
+        });
+        binding.mapDireccionUsuario.setOnClickListener(v -> {
+            MapaFragment mapaFragment = new MapaFragment();
+            getParentFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.frameContainer, mapaFragment)
+                    .addToBackStack(null)
+                    .commit();
+        });
+
         productoViewModel.obtenerProductos().observe(getViewLifecycleOwner(), productos -> {
             if (productos != null) {
                 productoViewModel.setProductoMutableLiveData(productos);

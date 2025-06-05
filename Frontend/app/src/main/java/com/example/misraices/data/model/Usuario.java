@@ -13,7 +13,7 @@ public class Usuario implements Serializable {
     private String nombre;
     private String apellido;
     private Long telefono;
-    private String direccion;
+    private Direccion direccion;
     private String correo;
     private String password;
     private boolean activo;
@@ -21,6 +21,7 @@ public class Usuario implements Serializable {
     private String token;
     private List<Pedido> pedidos;
     private List<TarjetaCredito> tarjetas;
+
     @Override
     public String toString() {
         return "Usuario{" +
@@ -28,13 +29,14 @@ public class Usuario implements Serializable {
                 ", nombre='" + nombre + '\'' +
                 ", apellido='" + apellido + '\'' +
                 ", telefono=" + telefono +
+                ", direccion=" + direccion +
                 ", correo='" + correo + '\'' +
                 ", password='" + password + '\'' +
                 ", activo=" + activo +
                 ", codigo='" + codigo + '\'' +
                 ", token='" + token + '\'' +
-                ", direccion='" + direccion + '\''+
                 ", pedidos=" + pedidos +
+                ", tarjetas=" + tarjetas +
                 '}';
     }
 }

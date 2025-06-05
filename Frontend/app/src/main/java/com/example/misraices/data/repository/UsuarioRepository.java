@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.misraices.data.api.ApiRetrofit;
 import com.example.misraices.data.model.Categoria;
+import com.example.misraices.data.model.Direccion;
 import com.example.misraices.data.model.Result;
 import com.example.misraices.data.model.Usuario;
 import com.example.misraices.data.service.UsuarioService;
@@ -91,5 +92,8 @@ public class UsuarioRepository {
     }
     public MutableLiveData<Result<Usuario>> obtenerId(Integer id) {
         return ejecutarPeticion(usuarioService.obtenerUsuarioPorId(id));
+    }
+    public MutableLiveData<Result<Usuario>>actualizarDireccion(Integer id, Direccion direccion) {
+        return ejecutarPeticion(usuarioService.actualizarDireccion(id,direccion));
     }
 }

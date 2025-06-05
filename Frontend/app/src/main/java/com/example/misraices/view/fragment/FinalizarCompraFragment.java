@@ -65,6 +65,14 @@ public class FinalizarCompraFragment extends Fragment {
         pedidoViewModel = new ViewModelProvider(requireActivity()).get(PedidoViewModel.class);
         tarjetaViewModel = new ViewModelProvider(requireActivity()).get(TarjetaViewModel.class);
         usuarioViewModel = new ViewModelProvider(requireActivity()).get(UsuarioViewModel.class);
+
+        usuarioViewModel.getDireccionActualizada().observe(getViewLifecycleOwner(), direccionActualizada -> {
+            if (direccionActualizada != null && direccionActualizada) {
+                binding.btnfinalizarCompra.performClick();
+                usuarioViewModel.setDireccionActualizada(false);
+            }
+        });
+
     }
 
     private void initListener() {
@@ -94,6 +102,7 @@ public class FinalizarCompraFragment extends Fragment {
         });
 
         binding.btnfinalizarCompra.setOnClickListener(view -> {
+
             if (tarjetaSeleccionada == null) {
                 Toast.makeText(getContext(), "Seleccione una tarjeta", Toast.LENGTH_SHORT).show();
                 return;

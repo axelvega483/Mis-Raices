@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.misraices.R;
+import com.example.misraices.data.model.Direccion;
 import com.example.misraices.databinding.FragmentPerfilBinding;
 import com.example.misraices.view.activity.MainActivity;
 import com.example.misraices.viewModel.UsuarioViewModel;
@@ -80,18 +81,23 @@ public class PerfilFragment extends Fragment {
             Log.e("usuarioPerfil", usuario.toString());
             if (usuario != null && usuario.getData() != null) {
                 Log.e("usuarioPerfil", usuario.getData().toString());
-
+                Direccion direccion = usuario.getData().getDireccion();
                 binding.NombrePerfilTxt.setText(usuario.getData().getNombre() + " " + usuario.getData().getApellido());
                 binding.CorreoPerfilTxt.setText("Correo: " + usuario.getData().getCorreo().toLowerCase());
                 binding.TelefonoPerfilTxt.setText("Telefono: " + usuario.getData().getTelefono().toString());
-                binding.DireccionPerfilTxt.setText("Direccion: " + usuario.getData().getDireccion().toLowerCase());
-
+                binding.DireccionPerfilTxt.setText("Dirección: " + direccion.getCalle() + " " + direccion.getNumero());
             } else {
                 Log.e("usuarioPerfil", "Usuario o data es null");
                 Toast.makeText(getContext(), "No se pudo cargar el perfil", Toast.LENGTH_SHORT).show();
             }
         });
-
+        binding.btnMisPlantas.setOnClickListener(view -> {
+            requireActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.frameContainer, MisPlantasFragment.newInstance())
+                    .addToBackStack(null)
+                    .commit();
+        });
 
         binding.btnCerrarSesion.setOnClickListener(view -> cerrarSesion());
 

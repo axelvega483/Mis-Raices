@@ -61,10 +61,9 @@ public class EditarPerfilFragment extends Fragment {
     private void init() {
         usuarioViewModel = new ViewModelProvider(requireActivity()).get(UsuarioViewModel.class);
         usuarioViewModel.obtenerId(usuarioId).observe(getViewLifecycleOwner(), usuario -> {
-            if (usuario!= null ) {
+            if (usuario != null) {
                 binding.nombreEditText.setText(usuario.getData().getNombre());
                 binding.apellidoEditText.setText(usuario.getData().getApellido());
-                binding.direccionEditText.setText(usuario.getData().getDireccion());
                 binding.telefonoEditText.setText(String.valueOf(usuario.getData().getTelefono()));
                 usuarioActual = usuario.getData();
             } else {
@@ -78,7 +77,6 @@ public class EditarPerfilFragment extends Fragment {
             if (usuarioActual != null) {
                 String nombre = binding.nombreEditText.getText().toString().trim();
                 String apellido = binding.apellidoEditText.getText().toString().trim();
-                String direccion = binding.direccionEditText.getText().toString().trim();
                 String telefonoStr = binding.telefonoEditText.getText().toString().trim();
                 String actualPassword = binding.passwordBDEditText.getText().toString();
                 String newPassword = binding.passwordEditText.getText().toString();
@@ -94,7 +92,6 @@ public class EditarPerfilFragment extends Fragment {
 
                 usuarioActual.setNombre(nombre);
                 usuarioActual.setApellido(apellido);
-                usuarioActual.setDireccion(direccion);
                 usuarioActual.setTelefono(telefono);
 
                 String passBD = usuarioActual.getPassword();

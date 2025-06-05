@@ -1,5 +1,6 @@
 package com.example.misraices.data.service;
 
+import com.example.misraices.data.model.Direccion;
 import com.example.misraices.data.model.Usuario;
 
 import java.util.List;
@@ -27,6 +28,9 @@ public interface UsuarioService {
 
     @POST("/autenticacion/restablecerPassword")
     Call<Usuario>restablecerPassword(@Body Usuario usuario);
+
+    @PUT("/usuario/direccion/{id}")
+    Call<Usuario> actualizarDireccion(@Path("id") Integer id, @Body Direccion direccion);
 
     @GET("/usuario")
     Call<List<Usuario>> obtenerUsuario();

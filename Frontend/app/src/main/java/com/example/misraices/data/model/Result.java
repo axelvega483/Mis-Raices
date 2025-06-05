@@ -1,4 +1,5 @@
 package com.example.misraices.data.model;
+
 import lombok.*;
 
 @Getter
@@ -8,6 +9,11 @@ import lombok.*;
 public class Result<T> {
     private T data;
     private String error;
+
+    public boolean isSuccess() {
+        return error == null;
+    }
+
 
     public Result(T data) {
         this.data = data;

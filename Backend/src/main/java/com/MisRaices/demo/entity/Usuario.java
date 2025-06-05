@@ -2,7 +2,6 @@ package com.MisRaices.demo.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
@@ -26,7 +25,6 @@ public class Usuario implements Serializable {
 
     private String nombre;
     private String apellido;
-    private String direccion;
     private Long telefono;
     @Email
     @Column(unique = true)
@@ -38,7 +36,10 @@ public class Usuario implements Serializable {
     private String codigo;//codigo de activacion de cuenta
     private String token;//token para restablecer contraceña
     private LocalDateTime tokenLimite; //tiempo de token
-
+    
+    @Embedded
+    private Direccion direccion;
+    
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Pedido> pedidos;

@@ -64,7 +64,7 @@ public class PedidoDetalleFragment extends Fragment {
 
         usuarioViewModel.obtenerId(usuarioId).observe(getViewLifecycleOwner(), usuario -> {
             if (usuario != null) {
-                binding.direccionTxt.setText("Dirección: "+usuario.getData().getDireccion());
+                binding.direccionTxt.setText("Dirección: "+usuario.getData().getDireccion().getCalle()+" "+usuario.getData().getDireccion().getNumero());
             }
         });
         Bundle args = getArguments();

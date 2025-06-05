@@ -67,7 +67,7 @@ public class PdfGenerator {
             cliente.setAlignment(Paragraph.ALIGN_LEFT);
             document.add(cliente);
             
-            Paragraph direccion = new Paragraph("Direccíon: " + pedido.getUsuario().getDireccion(), fontCuerpo);
+            Paragraph direccion = new Paragraph("Direccíon: " + pedido.getUsuario().getDireccion().getCalle()+" "+pedido.getUsuario().getDireccion().getNumero(), fontCuerpo);
             cliente.setAlignment(Paragraph.ALIGN_LEFT);
             document.add(direccion);
             document.add(new Paragraph(" "));
