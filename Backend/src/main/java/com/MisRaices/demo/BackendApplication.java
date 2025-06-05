@@ -62,12 +62,14 @@ public class BackendApplication {
                 Optional<Categoria> interior = categoriaService.obtenerNombre("Interior");
                 Optional<Categoria> suculenta = categoriaService.obtenerNombre("Suculenta");
 
+
                 Producto bracho = new Producto();
                 bracho.setCategoria(arbol.get());
                 bracho.setNombre("Bracho");
                 bracho.setDescripcion("40cm, bolsa 1L");
                 bracho.setPrecio(1000.0);
                 bracho.setStock(8);
+                bracho.setCuidado("Árbol perenne de 8 a 10 m de altura con copa piramidal, ideal para plantar en jardines y paseos. Requiere exposición a pleno sol y suelos bien drenados. Es resistente a la sequía una vez establecido, pero se beneficia de riegos regulares durante períodos secos. Puede soportar heladas débiles siendo un árbol jóven.");
                 bracho.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743618906/bracho-40cm-bolsa_1l-_1000_tsglxb.jpg");
 
                 Producto chivato = new Producto();
@@ -76,6 +78,7 @@ public class BackendApplication {
                 chivato.setDescripcion("50cm bolsa 5L");
                 chivato.setPrecio(3000.0);
                 chivato.setStock(7);
+                chivato.setCuidado("Árbol caducifolio de 6-8 m de altura, con la copa aparasolada. Prefiere climas cálidos y soleados. Necesita suelos bien drenados y riegos moderados. Planta muy apreciada en jardinería por su espectacular floración de color rojo intenso. Se debe plantar en sitios amplios, sin construcciones ya que posee un sistema radicular agresivo. Sensible al frío, no soporta heladas intensas y prolongadas.");
                 chivato.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743618964/chivato-bolsa_5l-_3000_lyfoep.jpg");
 
                 Producto guayacan = new Producto();
@@ -84,6 +87,7 @@ public class BackendApplication {
                 guayacan.setDescripcion("80cm bolsa 5L");
                 guayacan.setPrecio(1800.0);
                 guayacan.setStock(5);
+                guayacan.setCuidado("Árbol caducifolio de copa aparasolada y porte grande, alcanza una altura de 20 m en condiciones favorables. Se destaca por su corteza delgada constituida por escamas pardo-verdosas que se desprenden dejando parches de color verde-grisáceos. Prospera en pleno sol y suelos bien drenados. Tolera la sequía gracias a su sistema radicular profundo, pero se recomienda riego regular en su etapa de crecimiento. Ideal para jardines amplios o parquizados.");
                 guayacan.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743619016/Guayac%C3%A1n-bolsa_5l-_80cm-_1800_os7byl.jpg");
 
                 Producto thevetia = new Producto();
@@ -92,6 +96,7 @@ public class BackendApplication {
                 thevetia.setDescripcion("Recipiente descartable 1m");
                 thevetia.setPrecio(2800.0);
                 thevetia.setStock(9);
+                thevetia.setCuidado("Arbolito de 3 a 4 m de altura con copa frondosa, ideal para veredas o jardines pequeños. Necesita exposición a pleno sol y suelos bien drenados. Es resistente a la sequía y florece durante gran parte del año con flores amarillas llamativas. No soporta heladas intensas y prolongadas. Sus hojas, tallos, flores,  frutos y semillas poseen un látex tóxico para personas y mascotas, se recomienda lavado con agua y jabón en caso de contacto con la piel.");
                 thevetia.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743619047/thevetia-_recipiente_descartable-_1m-_2800_oxevqi.jpg");
 
                 Producto boldo = new Producto();
@@ -100,6 +105,7 @@ public class BackendApplication {
                 boldo.setDescripcion("Maceta N°12");
                 boldo.setPrecio(1200.0);
                 boldo.setStock(5);
+                boldo.setCuidado("Planta rastrera de follaje perenne y tupido, muy aromática. Prefiere sol suave o media sombra y suelos sueltos que drenen bien. No requiere riegos constantes; mantener el sustrato apenas húmedo es suficiente. Puede cultivarse en maceta o jardín, y la poda ayuda a mantener su forma. No se recomienda su consumo ya que posee compuestos tóxicos.");
                 boldo.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743619143/boldo_paraguayo-_maceta_n12-_1200_w1ady2.jpg");
 
                 Producto incienso = new Producto();
@@ -108,6 +114,7 @@ public class BackendApplication {
                 incienso.setDescripcion("Maceta N°12");
                 incienso.setPrecio(1500.0);
                 incienso.setStock(10);
+                incienso.setCuidado("Planta rastrera con follaje variegado, muy aromática. Requiere luz indirecta y suelos bien drenados. No soporta temperaturas demasiado altas o bajas, ideal para climas templados. Es sensible al exceso de riego, por lo que se debe permitir que el sustrato se seque entre riegos.");
                 incienso.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743619185/incienso-_maceta_n12-_1500_d2srrf.jpg");
 
 
@@ -117,6 +124,7 @@ public class BackendApplication {
                 mammillaria.setDescripcion("Maceta N°6");
                 mammillaria.setPrecio(500.0);
                 mammillaria.setStock(15);
+                mammillaria.setCuidado("Cactus cilíndricos de porte rastrero de hasta 15 cm de longitud y flores blanco-amarillentas. Rápido crecimiento en condiciones favorables. Necesita mucha luz solar directa y riegos muy espaciados, especialmente en invierno. Se recomienda utilizar sustrato bien drenado. Ideal para macetas pequeñas.");
                 mammillaria.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743619340/mammillaria_elongata-_maceta_n6-_500_w3nj5f.jpg");
 
                 Producto gracilis = new Producto();
@@ -125,6 +133,7 @@ public class BackendApplication {
                 gracilis.setDescripcion("Maceta N°8");
                 gracilis.setPrecio(700.0);
                 gracilis.setStock(13);
+                gracilis.setCuidado("Son cactus de porte cespitoso que no suelen superar 10 cm de altura.  Las flores son pequeñas y de color amarillo o crema. Prefiere exposición solar directa y altas temperaturas. Necesita riegos moderados y suelos con buen drenaje. Dejar que el sustrato se seque completamente entre riegos para evitar pudrición de raíces.");
                 gracilis.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743619393/mammillaria_gracilis-_maceta_n8-_700_taopo0.jpg");
 
                 Producto plumosa = new Producto();
@@ -133,6 +142,7 @@ public class BackendApplication {
                 plumosa.setDescripcion("Maceta N°6");
                 plumosa.setPrecio(500.0);
                 plumosa.setStock(8);
+                plumosa.setCuidado("Cactus globoso de aspecto llamativo y floración delicada. Requiere sol pleno. Prospera en suelos bien drenados con riegos escasos ya que es tolerante a la sequía y muy sensible al exceso de agua.");
                 plumosa.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743619439/mammillaria_plumosa-_maceta_n6-_500_lbgxtf.jpg");
 
                 Producto prolifera = new Producto();
@@ -141,6 +151,7 @@ public class BackendApplication {
                 prolifera.setDescripcion("Maceta N°8");
                 prolifera.setPrecio(700.0);
                 prolifera.setStock(7);
+                prolifera.setCuidado("Cactus pequeño de 10 cm de alto con flores blanco-amarillentas. Necesita exposición solar directa y riegos moderados a escasos. Es importante evitar el encharcamiento para prevenir enfermedades radiculares.");
                 prolifera.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743619494/mammillaria_prolifera-_maceta_n8-_700_cfke52.jpg");
 
                 Producto opuntia = new Producto();
@@ -149,6 +160,7 @@ public class BackendApplication {
                 opuntia.setDescripcion("Maceta soplada N°12");
                 opuntia.setPrecio(700.0);
                 opuntia.setStock(8);
+                opuntia.setCuidado("Cactus de tallo aplanado de 15 a 30cm de alto.. Prefiere pleno sol y suelos con buen drenaje. Riegos esporádicos, permitiendo que el sustrato se seque completamente entre aplicaciones. Soporta perfectamente altas temperaturas.");
                 opuntia.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743619530/opuntia_humifusa-_maceta_soplada_n12-_700_ylpa71.jpg");
 
                 Producto albuca = new Producto();
@@ -157,6 +169,7 @@ public class BackendApplication {
                 albuca.setDescripcion("Maceta N°18");
                 albuca.setPrecio(3500.0);
                 albuca.setStock(5);
+                albuca.setCuidado("Planta bulbosa, perenne. Es una planta tóxica para mascotas y humanos, no se recomienda su ingesta. Soporta sol directo per no altas temperaturas, ya que sus hojas pueden sufrir quemaduras. Necesita un suelo con buen drenaje y riegos moderados, evitando el exceso de humedad que puede provocar pudrición del bulbo.");
                 albuca.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743619756/albuca_bracteata-_maceta_n18-_3500_d0udxv.jpg");
 
                 Producto euphorbia = new Producto();
@@ -165,6 +178,7 @@ public class BackendApplication {
                 euphorbia.setDescripcion("Maceta soplada N°16");
                 euphorbia.setPrecio(2100.0);
                 euphorbia.setStock(4);
+                euphorbia.setCuidado("Arbusto perenne de 5 a 8 m de altura con follaje muy llamativo. Prefiere luz indirecta brillante y suelos bien drenados. Riegos moderados, dejando que el sustrato se seque entre aplicaciones. Es una planta muy sensible al frío, prefiere climas templados.");
                 euphorbia.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743619853/euphorbia_umbellata-_maceta_soplada_n16-_2100_gzwrte.jpg");
 
                 Producto rayito = new Producto();
@@ -173,6 +187,7 @@ public class BackendApplication {
                 rayito.setDescripcion("Maceta Bols N°8");
                 rayito.setPrecio(2800.0);
                 rayito.setStock(4);
+                rayito.setCuidado("Planta de porte rastrero con hojas suculentas y floración abundante y llamativa. Va muy bien a pleno sol y florece mejor si recibe al menos 6 horas diarias de luz. Necesita riegos moderados y un sustrato liviano. Sus flores se abren con la luz del día y se cierran al atardecer, creando un efecto visual encantador. Prefiere climas cálidos.");
                 rayito.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743619961/Rayito_de_sol-_maceta_bolsa_n18_colgante-_2800_j2nuky.jpg");
 
                 Producto tradescantia = new Producto();
@@ -181,6 +196,7 @@ public class BackendApplication {
                 tradescantia.setDescripcion("Bolsa 5L");
                 tradescantia.setPrecio(2300.0);
                 tradescantia.setStock(6);
+                tradescantia.setCuidado("Planta de porte rastrero con follaje muy llamativo de color púrpura intenso y floración delicada durante todo el año. Evitar la luz solar directa. Prefiere suelos bien drenados y riegos moderados, permitiendo que el sustrato se seque entre aplicaciones. Prefiere climas cálidos.");
                 tradescantia.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743620079/tradescantia_pallida-bolsa_5l-_2300_yzytcp.jpg");
 
                 Producto helecho = new Producto();
@@ -189,6 +205,7 @@ public class BackendApplication {
                 helecho.setDescripcion("Maceta N°15");
                 helecho.setPrecio(400.0);
                 helecho.setStock(4);
+                helecho.setCuidado("Es un helecho robusto, ideal para principiantes. Prefiere la luz solar indirecta y ambientes húmedos. Se debe mantener el sustrato húmedo, pero no encharcado. Es importante no exponer la planta a aire acondicionado directo, calefacción u otro artefacto que pueda resecar demasiado el ambiente.");
                 helecho.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743620139/helecho_serrucho-_maceta_n15-_4000_eol1jv.jpg");
 
                 Producto brasil = new Producto();
@@ -197,6 +214,7 @@ public class BackendApplication {
                 brasil.setDescripcion("Maceta soplada N°12");
                 brasil.setPrecio(2000.0);
                 brasil.setStock(6);
+                brasil.setCuidado("Planta trepadora de fácil cuidado. con follaje muy llamativo por su patrón de colores. Tóxica para mascotas. Crece bien con mucha luz indirecta y humedad ambiental media. Requiere riegos regulares, dejando secar la capa superior del sustrato entre cada uno. Es importante no exponer la planta a aire acondicionado directo, calefacción u otro artefacto que pueda resecar demasiado el ambiente.");
                 brasil.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743620217/philodendron_brasil-_maceta_soplada_n12-_2000_jcmt0w.jpg");
         
                 Producto plateado = new Producto();
@@ -205,6 +223,7 @@ public class BackendApplication {
                 plateado.setDescripcion("Maceta N°14");
                 plateado.setPrecio(3000.0);
                 plateado.setStock(3);
+                plateado.setCuidado("Planta de hábito trepador con hojas muy llamativas de color verde con destellos plateados. Tóxica para mascotas. Necesita luz solar indirecta y suelos bien drenados. Riegos moderados, evitando el encharcamiento. Es importante no exponer la planta a aire acondicionado directo, calefacción u otro artefacto que pueda resecar demasiado el ambiente.");
                 plateado.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743620289/philodendron_plateado-maceta_n14-_3000_whoxet.jpg");
 
                 Producto sanseviera = new Producto();
@@ -213,6 +232,7 @@ public class BackendApplication {
                 sanseviera.setDescripcion("Maceta N°15");
                 sanseviera.setPrecio(2800.0);
                 sanseviera.setStock(7);
+                sanseviera.setCuidado("Planta suculenta de interior, ideal para principiantes por su resistencia. Muy utilizada por su capacidad para purificar el aire. Tolera una amplia gama de condiciones de luz, aunque la exposición directa al sol durante un tiempo prolongado puede quemar sus hojas. Requiere riegos esporádicos y suelo bien drenado.");
                 sanseviera.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743620336/Sansevieria_enana-_maceta_n15-_2800_m7qdqi.jpg");
 
                 Producto crassula = new Producto();
@@ -221,6 +241,7 @@ public class BackendApplication {
                 crassula.setDescripcion("Maceta soplada N°12");
                 crassula.setPrecio(1600.0);
                 crassula.setStock(9);
+                crassula.setCuidado("Plantas suculentas con follaje llamativo de color verde y rojo brillante. La coloración rojiza se obtiene gracias a la exposición prolongada al sol directo. Prefiere luz solar directa, sin embargo, bajo temperaturas demasiado altas sus hojas pueden sufrir quemaduras. Requieren suelos con buen drenaje y riegos moderados, permitiendo que el sustrato se seque completamente entre aplicaciones.");
                 crassula.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743620423/crassula_-_maceta_soplada_n12_-_1600_njcgd7.jpg");
 
                 Producto echeveria = new Producto();
@@ -229,6 +250,7 @@ public class BackendApplication {
                 echeveria.setDescripcion("Maceta soplada N°12");
                 echeveria.setPrecio(3000.0);
                 echeveria.setStock(7);
+                echeveria.setCuidado("Suculenta con hojas de tonos grisáceas y dispuestas en forma de roseta. Requiere pleno sol,  sin embargo, bajo temperaturas demasiado altas sus hojas pueden sufrir quemaduras. Requieren suelos con buen drenaje y riegos escasos, evitando mojar las hojas para prevenir enfermedades.");
                 echeveria.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743620491/echeveria_elegans_-_maceta_soplada_n12-_3000_g2xinr.jpg");
 
                 Producto haworthia = new Producto();
@@ -237,6 +259,7 @@ public class BackendApplication {
                 haworthia.setDescripcion("Maceta N°12");
                 haworthia.setPrecio(2300.0);
                 haworthia.setStock(5);
+                haworthia.setCuidado("Muy atractiva por sus hojas translúcidas dispuestas en forma de roseta. Es de fácil cuidado. Necesita luz indirecta y suelos bien drenados. Riegos moderados, dejando secar el sustrato entre aplicaciones.");
                 haworthia.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743620541/haworthia_cymbiformis-_maceta_n12-_2300_zmk42j.jpg");
 
                 Producto kalanchoe = new Producto();
@@ -245,8 +268,10 @@ public class BackendApplication {
                 kalanchoe.setDescripcion("Maceta soplada N°12");
                 kalanchoe.setPrecio(1500.0);
                 kalanchoe.setStock(9);
+                kalanchoe.setCuidado("Destaca por su follaje atigrado en tonos verdes, grises y rojizos. Es tóxica para mascotas. Prefiere luz solar plena y soporta elevadas temperaturas. Prefiere suelos con buen drenaje pero no es exigente en nutrientes. Riegos moderados, evitando el exceso de humedad que puede causar pudrición. Resiste muy bien la sequía.");
                 kalanchoe.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743620589/kalanchoe_humilis._maceta_soplada_n12-_1500_cnaz9d.jpg");
 
+  
                 productoService.guardar(bracho);
                 productoService.guardar(chivato);
                 productoService.guardar(guayacan);

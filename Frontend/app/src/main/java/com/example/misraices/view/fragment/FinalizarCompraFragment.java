@@ -33,6 +33,7 @@ public class FinalizarCompraFragment extends Fragment {
     private TarjetaViewModel tarjetaViewModel;
     private UsuarioViewModel usuarioViewModel;
     private TarjetaCredito tarjetaSeleccionada;
+    private int usuarioId;
 
     public FinalizarCompraFragment() {
         // Required empty public constructor
@@ -73,11 +74,11 @@ public class FinalizarCompraFragment extends Fragment {
             }
         });
 
+        SharedPreferences prefs = requireActivity().getSharedPreferences("MiAppPrefs", Context.MODE_PRIVATE);
+        usuarioId = prefs.getInt("usuarioId", -1);
     }
 
     private void initListener() {
-        SharedPreferences prefs = requireActivity().getSharedPreferences("MiAppPrefs", Context.MODE_PRIVATE);
-        int usuarioId = prefs.getInt("usuarioId", -1);
 
         usuarioViewModel.obtenerId(usuarioId).observe(getViewLifecycleOwner(), usuario -> {
             tarjetaViewModel.obtenerTarjetas().observe(getViewLifecycleOwner(), tarjetas -> {
@@ -100,9 +101,7 @@ public class FinalizarCompraFragment extends Fragment {
                 }
             });
         });
-
         binding.btnfinalizarCompra.setOnClickListener(view -> {
-
             if (tarjetaSeleccionada == null) {
                 Toast.makeText(getContext(), "Seleccione una tarjeta", Toast.LENGTH_SHORT).show();
                 return;
@@ -110,6 +109,21 @@ public class FinalizarCompraFragment extends Fragment {
 
             usuarioViewModel.obtenerId(usuarioId).observe(getViewLifecycleOwner(), usuario -> {
                 if (usuario.getData() != null) {
+
+                    if (usuario.getData().getDireccion() == null) {
+                        // Usuario no tiene dirección, navegar para que la ingrese
+                        requireActivity().getSupportFragmentManager().beginTransaction()
+                                .replace(R.id.frameContainer, MapaFragment.newInstance())
+                                .addToBackStack(null)
+                                .commit();
+
+                        Toast.makeText(getContext(), "Por favor, ingrese su dirección antes de continuar.", Toast.LENGTH_LONG).show();
+
+                        // Salimos sin continuar con la compra
+                        return;
+                    }
+
+                    // Usuario tiene dirección, continuar con creación y finalización de pedido
                     Pedido pedido = new Pedido();
                     pedido.setDetalle(pedidoViewModel.getDetallesLiveData().getValue());
                     pedido.setUsuario(usuario.getData());
@@ -135,15 +149,16 @@ public class FinalizarCompraFragment extends Fragment {
                                     Toast.makeText(getContext(), "Saldo insuficiente", Toast.LENGTH_SHORT).show();
                                 }
                             }
-
                         });
                     }, 1500);
 
-                    pedidoViewModel.limpiarCarrito();
                     pedidoViewModel.setPedidoMutableLiveData(pedido);
+                    pedidoViewModel.limpiarCarrito();
                 }
             });
+
         });
+
 
         binding.btnAgregarTarjeta.setOnClickListener(view -> {
             requireActivity().getSupportFragmentManager().beginTransaction()

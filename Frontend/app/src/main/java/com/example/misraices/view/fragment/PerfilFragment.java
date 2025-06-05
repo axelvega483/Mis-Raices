@@ -85,7 +85,11 @@ public class PerfilFragment extends Fragment {
                 binding.NombrePerfilTxt.setText(usuario.getData().getNombre() + " " + usuario.getData().getApellido());
                 binding.CorreoPerfilTxt.setText("Correo: " + usuario.getData().getCorreo().toLowerCase());
                 binding.TelefonoPerfilTxt.setText("Telefono: " + usuario.getData().getTelefono().toString());
-                binding.DireccionPerfilTxt.setText("Dirección: " + direccion.getCalle() + " " + direccion.getNumero());
+                if (usuario.getData().getDireccion() != null) {
+                    binding.DireccionPerfilTxt.setText("Dirección: " + direccion.getCalle() + " " + direccion.getNumero());
+                } else {
+                    binding.DireccionPerfilTxt.setText("Dirección: ");
+                }
             } else {
                 Log.e("usuarioPerfil", "Usuario o data es null");
                 Toast.makeText(getContext(), "No se pudo cargar el perfil", Toast.LENGTH_SHORT).show();
