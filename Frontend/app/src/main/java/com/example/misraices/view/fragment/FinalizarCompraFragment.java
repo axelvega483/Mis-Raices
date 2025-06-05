@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.example.misraices.R;
 import com.example.misraices.data.model.Pedido;
+import com.example.misraices.data.model.PedidoDetalle;
 import com.example.misraices.data.model.TarjetaCredito;
 import com.example.misraices.databinding.FragmentFinalizarCompraBinding;
 import com.example.misraices.view.adapter.AdapterTarjetaCompra;
@@ -102,64 +103,9 @@ public class FinalizarCompraFragment extends Fragment {
             });
         });
         binding.btnfinalizarCompra.setOnClickListener(view -> {
-            if (tarjetaSeleccionada == null) {
-                Toast.makeText(getContext(), "Seleccione una tarjeta", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            usuarioViewModel.obtenerId(usuarioId).observe(getViewLifecycleOwner(), usuario -> {
-                if (usuario.getData() != null) {
-
-                    if (usuario.getData().getDireccion() == null) {
-                        // Usuario no tiene dirección, navegar para que la ingrese
-                        requireActivity().getSupportFragmentManager().beginTransaction()
-                                .replace(R.id.frameContainer, MapaFragment.newInstance())
-                                .addToBackStack(null)
-                                .commit();
-
-                        Toast.makeText(getContext(), "Por favor, ingrese su dirección antes de continuar.", Toast.LENGTH_LONG).show();
-
-                        // Salimos sin continuar con la compra
-                        return;
-                    }
-
-                    // Usuario tiene dirección, continuar con creación y finalización de pedido
-                    Pedido pedido = new Pedido();
-                    pedido.setDetalle(pedidoViewModel.getDetallesLiveData().getValue());
-                    pedido.setUsuario(usuario.getData());
-                    pedido.setEstado("PENDIENTE");
-                    pedidoViewModel.crearPedido(pedido);
-
-                    new android.os.Handler().postDelayed(() -> {
-                        pedidoViewModel.obtenerPedidos().observe(getViewLifecycleOwner(), pedidos -> {
-                            if (pedidos != null && !pedidos.isEmpty()) {
-                                Pedido ultimoPedido = pedidos.get(pedidos.size() - 1);
-
-                                if (tarjetaSeleccionada.getSaldo() >= ultimoPedido.getTotal() &&
-                                        "PENDIENTE".equals(ultimoPedido.getEstado())) {
-
-                                    pedidoViewModel.finalizarCompra(ultimoPedido.getId(), tarjetaSeleccionada.getId());
-                                    Toast.makeText(getContext(), "Compra finalizada", Toast.LENGTH_SHORT).show();
-
-                                    requireActivity().getSupportFragmentManager().beginTransaction()
-                                            .replace(R.id.frameContainer, PedidoRealizadoFragment.newInstance())
-                                            .addToBackStack(null)
-                                            .commit();
-                                } else {
-                                    Toast.makeText(getContext(), "Saldo insuficiente", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        });
-                    }, 1500);
-
-                    pedidoViewModel.setPedidoMutableLiveData(pedido);
-                    pedidoViewModel.limpiarCarrito();
-                }
-            });
-
+            if (!validarDatosIniciales()) return;
+            procesarUsuarioYCrearPedido();
         });
-
-
         binding.btnAgregarTarjeta.setOnClickListener(view -> {
             requireActivity().getSupportFragmentManager().beginTransaction()
                     .replace(R.id.frameContainer, NewTarjetaFragment.newInstance())
@@ -168,6 +114,87 @@ public class FinalizarCompraFragment extends Fragment {
         });
 
 
+    }
+
+    private boolean validarDatosIniciales() {
+        if (tarjetaSeleccionada == null) {
+            Toast.makeText(getContext(), "Seleccione una tarjeta", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        List<PedidoDetalle> detalles = pedidoViewModel.getDetallesLiveData().getValue();
+        if (detalles == null || detalles.isEmpty()) {
+            Toast.makeText(getContext(), "El carrito está vacío", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        return true;
+    }
+
+    private void procesarUsuarioYCrearPedido() {
+        usuarioViewModel.obtenerId(usuarioId).observe(getViewLifecycleOwner(), usuario -> {
+            if (usuario.getData() == null) {
+                Toast.makeText(getContext(), "Usuario no encontrado", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (usuario.getData().getDireccion() == null) {
+                requireActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.frameContainer, MapaFragment.newInstance())
+                        .addToBackStack(null)
+                        .commit();
+
+                Toast.makeText(getContext(), "Por favor, ingrese su dirección antes de continuar.", Toast.LENGTH_LONG).show();
+                return;
+            }
+
+            List<PedidoDetalle> detalles = pedidoViewModel.getDetallesLiveData().getValue();
+            Pedido pedido = new Pedido();
+            pedido.setDetalle(detalles);
+            pedido.setUsuario(usuario.getData());
+            pedido.setEstado("PENDIENTE");
+
+            pedidoViewModel.crearPedido(pedido).observe(getViewLifecycleOwner(), resultado -> {
+                Pedido pedidoCreado = resultado != null ? resultado.getData() : null;
+                    Log.e("pedidoCreado",resultado.getData().toString());
+                if (pedidoCreado == null || pedidoCreado.getId() == null) {
+                    Toast.makeText(getContext(), "Error al crear el pedido", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                // Ahora tenemos el pedido con ID asignado desde el backend
+                pedidoViewModel.setPedidoMutableLiveData(pedidoCreado);
+                pedidoViewModel.limpiarCarrito();
+
+                finalizarPedidoSiEsVálido(pedidoCreado.getId());
+            });
+
+        });
+    }
+
+    private void finalizarPedidoSiEsVálido(int pedidoId) {
+        pedidoViewModel.obtenerPedidoPorId(pedidoId).observe(getViewLifecycleOwner(), response -> {
+            Pedido pedido = response != null ? response.getData() : null;
+
+            if (pedido == null) {
+                Toast.makeText(getContext(), "No se pudo obtener el pedido", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (tarjetaSeleccionada.getSaldo() >= pedido.getTotal()
+                    && "PENDIENTE".equals(pedido.getEstado())) {
+
+                pedidoViewModel.finalizarCompra(pedido.getId(), tarjetaSeleccionada.getId());
+                Toast.makeText(getContext(), "Compra finalizada", Toast.LENGTH_SHORT).show();
+
+                requireActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.frameContainer, PedidoRealizadoFragment.newInstance())
+                        .addToBackStack(null)
+                        .commit();
+            } else {
+                Toast.makeText(getContext(), "Saldo insuficiente o pedido inválido", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 }

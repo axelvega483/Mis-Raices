@@ -13,11 +13,14 @@ import retrofit2.http.Path;
 public interface PedidoService {
 
     @POST("/pedido")
-    Call<Pedido>crear(@Body Pedido pedido);
+    Call<Pedido> crear(@Body Pedido pedido);
+
+    @GET("/pedido/{id}")
+    Call<Pedido> obtenerPorId(@Path("id") int id);
 
     @GET("/pedido")
-    Call<List<Pedido>>obtener();
+    Call<List<Pedido>> obtener();
 
     @POST("/pedido/finalizarCompra/{pedidoId}/{tarjetaId}")
-    Call<Pedido>finalizarCompra(@Path("pedidoId") int pedidoId, @Path("tarjetaId") int tarjetaId);
+    Call<Pedido> finalizarCompra(@Path("pedidoId") int pedidoId, @Path("tarjetaId") int tarjetaId);
 }

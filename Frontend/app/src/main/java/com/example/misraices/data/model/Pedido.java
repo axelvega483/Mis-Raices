@@ -10,7 +10,6 @@ import lombok.*;
 @NoArgsConstructor
 public class Pedido implements Serializable {
     private Integer id;
-    private String direccion;
     private String fechaPedido;
     private String estado;
     private List<PedidoDetalle> detalle;
@@ -21,7 +20,6 @@ public class Pedido implements Serializable {
     public String toString() {
         return "Pedido{" +
                 "id=" + id +
-                ", direccion='" + direccion + '\'' +
                 ", fechaPedido=" + fechaPedido +
                 ", estado='" + estado + '\'' +
                 ", detalle=" + detalle +

@@ -60,6 +60,7 @@ public class PedidoViewModel extends ViewModel {
         return total;
     }
 
+
     public void actualizarListaPedidos(List<PedidoDetalle> nuevaLista) {
         detallesLiveData.setValue(nuevaLista);
         guardarCarritoEnPrefs();
@@ -74,6 +75,11 @@ public class PedidoViewModel extends ViewModel {
         return false;
     }
 
+    public MutableLiveData<Result<Pedido>> obtenerPedidoPorId(int id) {
+        return repo.obtenerPorId(id);
+    }
+
+
     public MutableLiveData<List<PedidoDetalle>> getDetallesLiveData() {
         return detallesLiveData;
     }
@@ -81,9 +87,11 @@ public class PedidoViewModel extends ViewModel {
     public MutableLiveData<Result<Pedido>> crearPedido(Pedido pedido) {
         return repo.crear(pedido);
     }
+
     public MutableLiveData<List<Pedido>> obtenerPedidos() {
         return repo.obtener();
     }
+
     public MutableLiveData<Result<Pedido>> finalizarCompra(int pedidoId, int tarjetaId) {
         return repo.finalizarCompra(pedidoId, tarjetaId);
     }

@@ -1,14 +1,19 @@
 package com.MisRaices.demo.controller;
 
+import com.MisRaices.demo.DTOS.UsuarioDTO.UsuarioGetDTO;
+import com.MisRaices.demo.DTOS.UsuarioDTO.UsuarioMapper;
+import com.MisRaices.demo.DTOS.UsuarioDTO.UsuarioPutDTO;
 import com.MisRaices.demo.entity.Direccion;
 import com.MisRaices.demo.entity.Usuario;
 import com.MisRaices.demo.service.UsuarioService;
+import com.MisRaices.demo.util.ApiRespo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,8 +27,6 @@ public class UsuarioController {
     @Autowired
     private UsuarioService usuarioService;
 
-    Map<String, Object> response;
-
     @Operation(summary = "Listar todos los usuarios", description = "Devuelve una lista con todos los usuarios registrados.")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Usuarios listados correctamente"),
@@ -32,11 +35,12 @@ public class UsuarioController {
     @GetMapping()
     public ResponseEntity<?> listarTodos() {
         try {
-            response = new HashMap<>();
-            return new ResponseEntity<>(usuarioService.listar(), HttpStatus.OK);
+            List<UsuarioGetDTO> dto = usuarioService.listar().stream()
+                    .map(UsuarioMapper::toDTO)
+                    .collect(Collectors.toList());
+            return new ResponseEntity<>(new ApiRespo<>("Usuarios", dto, true), HttpStatus.OK);
         } catch (Exception e) {
-            response.put("sin Usuario", e.getMessage());
-            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new ApiRespo<>("Error: " + e.getMessage(), null, false), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -50,17 +54,16 @@ public class UsuarioController {
     public ResponseEntity<?> obtenerUsuario(
             @Parameter(description = "ID del usuario a obtener", required = true) @PathVariable Integer id) {
         try {
-            response = new HashMap<>();
+
             Usuario user = usuarioService.obtener(id).orElse(null);
             if (user != null) {
-                return new ResponseEntity<>(user, HttpStatus.OK);
+                UsuarioGetDTO dto = UsuarioMapper.toDTO(user);
+                return new ResponseEntity<>(new ApiRespo<>("Usuario", dto, true), HttpStatus.OK);
             } else {
-                response.put("Usuario no encontrado", user);
-                return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>(new ApiRespo<>("Usuario no encontrado", null, true), HttpStatus.NOT_FOUND);
             }
         } catch (Exception e) {
-            response.put("sin Usuario", e.getMessage());
-            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new ApiRespo<>("Error: " + e.getMessage(), null, false), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -73,48 +76,49 @@ public class UsuarioController {
     @PutMapping("{id}")
     public ResponseEntity<?> modificarUsuario(
             @Parameter(description = "Datos actualizados del usuario", required = true)
-            @RequestBody Usuario usuario,
+            @RequestBody UsuarioPutDTO usuarioPut,
             @Parameter(description = "ID del usuario a modificar", required = true) @PathVariable Integer id) {
         try {
-            response = new HashMap<>();
+
             Usuario user = usuarioService.obtener(id).orElse(null);
             if (user != null) {
-                actualizar(user, usuario);
-                return new ResponseEntity<>(usuarioService.guardar(user), HttpStatus.OK);
+                user.setApellido(usuarioPut.getApellido());
+                user.setNombre(usuarioPut.getNombre());
+                if (user.getPassword().equals(usuarioPut.getPassword())) {
+                    user.setPassword(usuarioPut.getPassword());
+                    UsuarioGetDTO dto = UsuarioMapper.toDTO(usuarioService.guardar(user));
+                    return new ResponseEntity<>(new ApiRespo<>("Usuario actualizado", dto, true), HttpStatus.OK);
+                } else {
+                    return new ResponseEntity<>(new ApiRespo<>("Error, contraseña no coiciden", null, false), HttpStatus.CONFLICT);
+                }
             } else {
-                response.put("usuario no encontrado", user);
-                return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>(new ApiRespo<>("usuario no encontrado", null, false), HttpStatus.NOT_FOUND);
             }
 
         } catch (Exception e) {
-            response.put("error al actualizar usuario", e.getMessage());
-            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new ApiRespo<>("Error al eliminar usuario: " + e.getMessage(), null, false), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @Operation(summary = "Asignar o actualizar dirección del usuario", description = "Permite asignar o actualizar la dirección embebida de un usuario existente mediante su ID.")
+    @Operation(summary = "Asignar o actualizar dirección del usuario", description = "Permite asignar o actualizar la dirección embebida de un usuario existente.")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Dirección actualizada correctamente"),
         @ApiResponse(responseCode = "404", description = "Usuario no encontrado"),
         @ApiResponse(responseCode = "500", description = "Error interno del servidor")
     })
     @PutMapping("/direccion/{id}")
-    public ResponseEntity<?> cargarDireccion(
-            @Parameter(description = "ID del usuario al que se le actualizará la dirección", required = true) @PathVariable Integer id,
-            @Parameter(description = "Datos de la dirección a asignar", required = true) @RequestBody Direccion direccion) {
+    public ResponseEntity<?> cargarDireccion(@PathVariable Integer id, @RequestBody Direccion direccion) {
         try {
-            response = new HashMap<>();
-            Usuario dir = usuarioService.obtener(id).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-            if (dir != null) {
-                dir.setDireccion(direccion);
-                return new ResponseEntity<>(usuarioService.guardar(dir), HttpStatus.OK);
+            Usuario usuario = usuarioService.obtener(id).orElse(null);
+            if (usuario != null) {
+                usuario.setDireccion(direccion);
+                UsuarioGetDTO dto = UsuarioMapper.toDTO(usuarioService.guardar(usuario));
+                return new ResponseEntity<>(new ApiRespo<>("Dirección actualizada correctamente", dto, true), HttpStatus.OK);
             } else {
-                response.put("usuario no encontrado", dir);
-                return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>(new ApiRespo<>("Usuario no encontrado", null, false), HttpStatus.NOT_FOUND);
             }
         } catch (Exception e) {
-            response.put("error al actualizar usuario", e.getMessage());
-            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new ApiRespo<>("Error al actualizar dirección: " + e.getMessage(), null, false), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -125,36 +129,17 @@ public class UsuarioController {
         @ApiResponse(responseCode = "500", description = "Error interno del servidor")
     })
     @DeleteMapping("{id}")
-    public ResponseEntity<?> eliminarUsuario(
-            @Parameter(description = "ID del usuario a eliminar", required = true) @PathVariable Integer id) {
+    public ResponseEntity<?> eliminarUsuario(@PathVariable Integer id) {
         try {
-            response = new HashMap<>();
-            Usuario user = usuarioService.obtener(id).orElse(null);
-            if (user == null) {
-                response.put("no existe usuario para eliminar", user);
-                return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+            Usuario usuario = usuarioService.obtener(id).orElse(null);
+            if (usuario != null) {
+                usuarioService.eliminar(id);
+                return new ResponseEntity<>(new ApiRespo<>("Usuario eliminado correctamente", null, true), HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(new ApiRespo<>("Usuario no encontrado", null, false), HttpStatus.NOT_FOUND);
             }
-            usuarioService.eliminar(id);
-            response.put("usuario eliminado", "");
-            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
-            response.put("error al eliminar el usuario", e.getMessage());
-            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    public void actualizar(Usuario viejo, Usuario nuevo) {
-        if (nuevo.getNombre() != null) {
-            viejo.setNombre(nuevo.getNombre());
-        }
-        if (nuevo.getApellido() != null) {
-            viejo.setApellido(nuevo.getApellido());
-        }
-        if (nuevo.getTelefono() != null) {
-            viejo.setTelefono(nuevo.getTelefono());
-        }
-        if (nuevo.getPassword() != null) {
-            viejo.setPassword(nuevo.getPassword());
+            return new ResponseEntity<>(new ApiRespo<>("Error al eliminar usuario: " + e.getMessage(), null, false), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

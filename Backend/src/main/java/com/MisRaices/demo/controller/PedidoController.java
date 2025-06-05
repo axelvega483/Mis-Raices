@@ -1,5 +1,9 @@
 package com.MisRaices.demo.controller;
 
+import com.MisRaices.demo.DTOS.PedidoDTO.PedidoDetallePostDTO;
+import com.MisRaices.demo.DTOS.PedidoDTO.PedidoGetDTO;
+import com.MisRaices.demo.DTOS.PedidoDTO.PedidoMapper;
+import com.MisRaices.demo.DTOS.PedidoDTO.PedidoPostDTO;
 import com.MisRaices.demo.PDF.PdfGenerator;
 import com.MisRaices.demo.entity.Pedido;
 import com.MisRaices.demo.entity.PedidoDetalle;
@@ -12,16 +16,12 @@ import com.MisRaices.demo.service.ProductoService;
 import com.MisRaices.demo.service.TarjetaCreditoService;
 import com.MisRaices.demo.service.UsuarioService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +34,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import com.MisRaices.demo.util.ApiRespo;
+import java.util.stream.Collectors;
 
 @CrossOrigin("*")
 @RestController
@@ -55,91 +57,66 @@ public class PedidoController {
     @Autowired
     private EmailService emailService;
 
-    private Map<String, Object> response;
-
     @Operation(summary = "Listar todos los pedidos", description = "Retorna una lista de todos los pedidos realizados.")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Lista obtenida exitosamente"),
         @ApiResponse(responseCode = "500", description = "Error interno del servidor")
     })
     @GetMapping
-    public ResponseEntity<?> listar() {
+    public ResponseEntity<ApiRespo<List<PedidoGetDTO>>> listar() {
         try {
-            response = new HashMap<>();
-            return new ResponseEntity<>(pedidoService.listar(), HttpStatus.OK);
+            List<PedidoGetDTO> dto = pedidoService.listar().stream()
+                    .map(PedidoMapper::toDTO).collect(Collectors.toList());
+            return new ResponseEntity<>(new ApiRespo<>("Lista obtenida exitosamente", dto, true), HttpStatus.OK);
         } catch (Exception e) {
-            response.put("error al listar los pedidos", e.getMessage());
-            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new ApiRespo<>("Error interno del servidor: " + e.getMessage(), null, false), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @Operation(summary = "Obtener un pedido", description = "Devuelve un pedido específico por ID.")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Pedido encontrado"),
-        @ApiResponse(responseCode = "404", description = "Pedido no encontrado"),
-        @ApiResponse(responseCode = "500", description = "Error interno del servidor")
-    })
     @GetMapping("{id}")
-    public ResponseEntity<?> obtener(@Parameter(description = "ID del pedido a obtener", required = true) @PathVariable Integer id) {
+    public ResponseEntity<ApiRespo<PedidoGetDTO>> obtener(@PathVariable Integer id) {
         try {
-            response = new HashMap<>();
             Pedido pedido = pedidoService.obtener(id).orElse(null);
-            if (pedido != null) {
-                return new ResponseEntity<>(pedido, HttpStatus.OK);
-            } else {
-                response.put("error", "pedido no existe");
-                return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+            if (pedido == null) {
+                return new ResponseEntity<>(new ApiRespo<>("Pedido no encontrado", null, false), HttpStatus.NOT_FOUND);
             }
+            PedidoGetDTO dto = PedidoMapper.toDTO(pedido);
+            return new ResponseEntity<>(new ApiRespo<>("Pedido encontrado", dto, true), HttpStatus.OK);
         } catch (Exception e) {
-            response.put("error", e.getMessage());
-            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new ApiRespo<>("Error interno del servidor: " + e.getMessage(), null, false), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @Operation(summary = "Crear un nuevo pedido", description = "Crea un nuevo pedido con detalles de productos.")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "201", description = "Pedido creado exitosamente"),
-        @ApiResponse(responseCode = "400", description = "Datos inválidos o stock insuficiente"),
-        @ApiResponse(responseCode = "500", description = "Error interno del servidor")
-    })
     @PostMapping
-    public ResponseEntity<?> crear(@RequestBody Pedido pedido) {
+    public ResponseEntity<ApiRespo<PedidoGetDTO>> crear(@RequestBody PedidoPostDTO pedidoPostDTO) {
         try {
-            response = new HashMap<>();
-
-            Usuario cliente = usuarioService.obtener(pedido.getUsuario().getId()).orElse(null);
+            Usuario cliente = usuarioService.obtener(pedidoPostDTO.getUsuarioId()).orElse(null);
             if (cliente == null) {
-                response.put("error", "Cliente no válido.");
-                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>(new ApiRespo<>("Cliente no válido", null, false), HttpStatus.BAD_REQUEST);
             }
 
+            Pedido pedido = new Pedido();
             pedido.setUsuario(cliente);
+
             List<PedidoDetalle> detalles = new ArrayList<>();
-            double total = 0.0;
+            double total = 0;
 
-            for (PedidoDetalle detalle : pedido.getDetalle()) {
-                Optional<Producto> productoOpt = productoService.obtener(detalle.getProducto().getId());
-                if (!productoOpt.isPresent()) {
-                    response.put("error", "Producto con ID " + detalle.getProducto().getId() + " no encontrado.");
-                    return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+            for (PedidoDetallePostDTO detDto : pedidoPostDTO.getDetalle()) {
+                Producto producto = productoService.obtener(detDto.getProductoId()).orElse(null);
+                if (producto == null) {
+                    return new ResponseEntity<>(new ApiRespo<>("Producto no encontrado con ID " + detDto.getProductoId(), null, false), HttpStatus.NOT_FOUND);
+                }
+                if (producto.getStock() < detDto.getCantidad()) {
+                    return new ResponseEntity<>(new ApiRespo<>("Stock insuficiente para producto " + producto.getNombre(), null, false), HttpStatus.BAD_REQUEST);
                 }
 
-                Producto producto = productoOpt.get();
-                int cantidad = detalle.getCantidad();
-                int nuevoStock = producto.getStock() - cantidad;
+                PedidoDetalle detalle = new PedidoDetalle();
+                detalle.setProducto(producto);
+                detalle.setCantidad(detDto.getCantidad());
+                detalle.setPedido(pedido);
 
-                if (nuevoStock < 0) {
-                    response.put("error", "Stock insuficiente para el producto: " + producto.getNombre());
-                    return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-                }
-
-                PedidoDetalle nuevoDetalle = new PedidoDetalle();
-                nuevoDetalle.setCantidad(cantidad);
-                nuevoDetalle.setProducto(producto);
-                nuevoDetalle.setPedido(pedido);
-
-                detalles.add(nuevoDetalle);
-                total += producto.getPrecio() * cantidad;
+                detalles.add(detalle);
+                total += producto.getPrecio() * detDto.getCantidad();
             }
 
             pedido.setDetalle(detalles);
@@ -148,123 +125,114 @@ public class PedidoController {
             pedido.setEstado("PENDIENTE");
 
             Pedido pedidoGuardado = pedidoService.guardar(pedido);
+            PedidoGetDTO dto = PedidoMapper.toDTO(pedidoGuardado);
 
-            response.put("mensaje", "Pedido creado exitosamente.");
-            response.put("pedido", pedidoGuardado);
-            return new ResponseEntity<>(response, HttpStatus.CREATED);
-
+            return new ResponseEntity<>(new ApiRespo<>("Pedido creado exitosamente", dto, true), HttpStatus.CREATED);
         } catch (Exception e) {
-            response.put("error", e.getMessage());
-            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new ApiRespo<>("Error interno del servidor: " + e.getMessage(), null, false), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @Operation(summary = "Actualizar un pedido", description = "Actualiza los detalles de un pedido existente.")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Pedido actualizado exitosamente"),
-        @ApiResponse(responseCode = "404", description = "Pedido no encontrado"),
-        @ApiResponse(responseCode = "500", description = "Error interno del servidor")
-    })
     @PutMapping("{id}")
-    public ResponseEntity<?> actualizar(@RequestBody Pedido pedido,
-            @PathVariable(required = true) @Parameter(description = "ID del pedido a actualizar", required = true) Integer id) {
+    public ResponseEntity<ApiRespo<PedidoGetDTO>> actualizar(@RequestBody PedidoPostDTO pedidoPostDTO,
+            @PathVariable Integer id) {
         try {
-            response = new HashMap<>();
             Pedido pedidoBD = pedidoService.obtener(id).orElse(null);
             if (pedidoBD == null) {
-                response.put("error", "no se encontro pedido");
-                return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>(new ApiRespo<>("Pedido no encontrado", null, false), HttpStatus.NOT_FOUND);
             }
-            actualizar(pedidoBD, pedido);
-            return new ResponseEntity<>(pedidoService.guardar(pedidoBD), HttpStatus.OK);
+
+            // Actualizar usuario si es diferente
+            if (!pedidoBD.getUsuario().getId().equals(pedidoPostDTO.getUsuarioId())) {
+                Usuario cliente = usuarioService.obtener(pedidoPostDTO.getUsuarioId()).orElse(null);
+                if (cliente == null) {
+                    return new ResponseEntity<>(new ApiRespo<>("Cliente no válido", null, false), HttpStatus.BAD_REQUEST);
+                }
+                pedidoBD.setUsuario(cliente);
+            }
+
+            List<PedidoDetalle> detalles = new ArrayList<>();
+            double total = 0;
+
+            for (PedidoDetallePostDTO detDto : pedidoPostDTO.getDetalle()) {
+                Producto producto = productoService.obtener(detDto.getProductoId()).orElse(null);
+                if (producto == null) {
+                    return new ResponseEntity<>(new ApiRespo<>("Producto no encontrado con ID " + detDto.getProductoId(), null, false), HttpStatus.NOT_FOUND);
+                }
+                if (producto.getStock() < detDto.getCantidad()) {
+                    return new ResponseEntity<>(new ApiRespo<>("Stock insuficiente para producto " + producto.getNombre(), null, false), HttpStatus.BAD_REQUEST);
+                }
+
+                PedidoDetalle detalle = new PedidoDetalle();
+                detalle.setProducto(producto);
+                detalle.setCantidad(detDto.getCantidad());
+                detalle.setPedido(pedidoBD);
+
+                detalles.add(detalle);
+                total += producto.getPrecio() * detDto.getCantidad();
+            }
+
+            pedidoBD.setDetalle(detalles);
+            pedidoBD.setTotal(total);
+
+            Pedido pedidoActualizado = pedidoService.guardar(pedidoBD);
+            PedidoGetDTO dto = PedidoMapper.toDTO(pedidoActualizado);
+
+            return ResponseEntity.ok(new ApiRespo<>("Pedido actualizado exitosamente", dto, true));
         } catch (Exception e) {
-            response.put("error", e.getMessage());
-            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new ApiRespo<>("Error interno del servidor: " + e.getMessage(), null, false), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @Operation(summary = "Eliminar un pedido", description = "Elimina un pedido por su ID.")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Pedido eliminado"),
-        @ApiResponse(responseCode = "404", description = "Pedido no encontrado"),
-        @ApiResponse(responseCode = "500", description = "Error interno del servidor")
-    })
     @DeleteMapping("{id}")
-    public ResponseEntity<?> eliminar(@Parameter(description = "ID del pedido a eliminar", required = true) @PathVariable Integer id) {
+    public ResponseEntity<ApiRespo<String>> eliminar(@PathVariable Integer id) {
         try {
-            response = new HashMap<>();
-            Pedido pe = pedidoService.obtener(id).orElse(null);
-            if (pe != null) {
-                pedidoService.eliminar(id);
-                response.put("pedido", "elimindo");
-                return new ResponseEntity<>(response, HttpStatus.OK);
-            } else {
-                response.put("pedido no encontrado", pe);
-                return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+            Pedido pedido = pedidoService.obtener(id).orElse(null);
+            if (pedido == null) {
+                return new ResponseEntity<>(new ApiRespo<>("Pedido no encontrado", null, false), HttpStatus.NOT_FOUND);
             }
-
+            pedidoService.eliminar(id);
+            return ResponseEntity.ok(new ApiRespo<>("Pedido eliminado exitosamente", "Eliminado", true));
         } catch (Exception e) {
-            response.put("error", e.getMessage());
-            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new ApiRespo<>("Error interno del servidor: " + e.getMessage(), null, false), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
     }
 
-    @Operation(summary = "Finalizar una compra", description = "Finaliza el pedido, descuenta el saldo de la tarjeta, actualiza stock y envía factura por correo.")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Compra finalizada exitosamente"),
-        @ApiResponse(responseCode = "400", description = "Stock o saldo insuficiente"),
-        @ApiResponse(responseCode = "404", description = "Pedido o tarjeta no encontrado"),
-        @ApiResponse(responseCode = "500", description = "Error interno del servidor")
-    })
     @Transactional
     @PostMapping("/finalizarCompra/{pedidoId}/{tarjetaId}")
-    public ResponseEntity<?> finalizarCompra(@Parameter(description = "ID del pedido a finalizar", required = true)
-            @PathVariable Integer pedidoId,
-            @Parameter(description = "ID de la tarjeta a utilizar", required = true)
+    public ResponseEntity<ApiRespo<PedidoGetDTO>> finalizarCompra(@PathVariable Integer pedidoId,
             @PathVariable Integer tarjetaId) {
         try {
-            response = new HashMap<>();
-
             Pedido pedido = pedidoService.obtener(pedidoId).orElse(null);
             if (pedido == null) {
-                response.put("error", "Pedido con ID " + pedidoId + " no encontrado.");
-                return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>(new ApiRespo<>("Pedido no encontrado con ID " + pedidoId, null, false), HttpStatus.NOT_FOUND);
             }
 
             double total = 0.0;
 
             for (PedidoDetalle detalle : pedido.getDetalle()) {
-                Optional<Producto> productoOpt = productoService.obtener(detalle.getProducto().getId());
-                if (!productoOpt.isPresent()) {
-                    response.put("error", "Producto con ID " + detalle.getProducto().getId() + " no encontrado.");
-                    return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+                Producto producto = productoService.obtener(detalle.getProducto().getId()).orElse(null);
+                if (producto == null) {
+                    return new ResponseEntity<>(new ApiRespo<>("Producto no encontrado con ID " + detalle.getProducto().getId(), null, false), HttpStatus.NOT_FOUND);
                 }
-
-                Producto producto = productoOpt.get();
-                int cantidad = detalle.getCantidad();
-                int nuevoStock = producto.getStock() - cantidad;
-
+                int nuevoStock = producto.getStock() - detalle.getCantidad();
                 if (nuevoStock < 0) {
-                    response.put("error", "Stock insuficiente para el producto: " + producto.getNombre());
-                    return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+                    return new ResponseEntity<>(new ApiRespo<>("Stock insuficiente para producto: " + producto.getNombre(), null, false), HttpStatus.BAD_REQUEST);
                 }
 
                 producto.setStock(nuevoStock);
                 productoService.guardar(producto);
 
-                total += producto.getPrecio() * cantidad;
+                total += producto.getPrecio() * detalle.getCantidad();
             }
 
             TarjetaCredito tarjeta = tarjetaCreditoService.obtener(tarjetaId).orElse(null);
             if (tarjeta == null) {
-                response.put("error", "Tarjeta con ID " + tarjetaId + " no encontrada.");
-                return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>(new ApiRespo<>("Tarjeta no encontrada con ID " + tarjetaId, null, false), HttpStatus.NOT_FOUND);
             }
 
             if (tarjeta.getSaldo() < pedido.getTotal()) {
-                response.put("error", "Saldo insuficiente en la tarjeta.");
-                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>(new ApiRespo<>("Saldo insuficiente en la tarjeta", null, false), HttpStatus.BAD_REQUEST);
             }
 
             tarjeta.setSaldo(tarjeta.getSaldo() - pedido.getTotal());
@@ -272,27 +240,16 @@ public class PedidoController {
 
             pedido.setFechaPedido(LocalDateTime.now());
             pedido.setEstado("EN PREPARACIÓN");
-            pedidoService.guardar(pedido);
+            Pedido pedidoFinalizado = pedidoService.guardar(pedido);
 
-            String rutaPDF = PdfGenerator.generarFacturaPDF(pedido);
-            emailService.enviarFacturaConAdjunto(pedido.getUsuario().getCorreo(), rutaPDF);
+            String rutaPDF = PdfGenerator.generarFacturaPDF(pedidoFinalizado);
+            emailService.enviarFacturaConAdjunto(pedidoFinalizado.getUsuario().getCorreo(), rutaPDF);
 
-            response.put("mensaje", "Compra finalizada con éxito y factura enviada al correo.");
-            response.put("pedido", pedido);
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            PedidoGetDTO dto = PedidoMapper.toDTO(pedidoFinalizado);
 
+            return ResponseEntity.ok(new ApiRespo<>("Compra finalizada con éxito y factura enviada al correo", dto, true));
         } catch (Exception e) {
-            response.put("error", e.getMessage());
-            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    public void actualizar(Pedido viejo, Pedido nuevo) {
-        if (nuevo.getDetalle() != null) {
-            viejo.setDetalle(nuevo.getDetalle());
-        }
-        if (nuevo.getTotal() != null) {
-            viejo.setTotal(nuevo.getTotal());
+            return new ResponseEntity<>(new ApiRespo<>("Error interno del servidor: " + e.getMessage(), null, false), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

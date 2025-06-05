@@ -93,7 +93,6 @@ public class PedidoRealizadoFragment extends Fragment {
         bundle.putSerializable("pedido", pedido);
         bundle.putInt("id", pedido.getId());
         bundle.putString("fecha", pedido.getFechaPedido());
-        bundle.putString("direccion", pedido.getDireccion());
         bundle.putSerializable("detalle",(Serializable) pedido.getDetalle());
         bundle.putDouble("total", pedido.getTotal());
         fragment.setArguments(bundle);

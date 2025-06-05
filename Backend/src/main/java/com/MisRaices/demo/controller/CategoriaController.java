@@ -1,7 +1,10 @@
 package com.MisRaices.demo.controller;
 
+import com.MisRaices.demo.DTOS.CategoriaDTO.CategoriaGetDTO;
+import com.MisRaices.demo.DTOS.CategoriaDTO.CategoriaMapper;
 import com.MisRaices.demo.entity.Categoria;
 import com.MisRaices.demo.service.CategoriaService;
+import com.MisRaices.demo.util.ApiRespo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -17,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("categoria")
 public class CategoriaController {
 
-    private Map<String, Object> response;
     @Autowired
     private CategoriaService categoriaService;
 
@@ -29,11 +31,13 @@ public class CategoriaController {
     @GetMapping
     public ResponseEntity<?> listar() {
         try {
-            response = new HashMap<>();
-            return new ResponseEntity<>(categoriaService.listar(), HttpStatus.OK);
+            List<CategoriaGetDTO> dto = categoriaService.listar()
+                    .stream()
+                    .map(CategoriaMapper::toDTO)
+                    .toList();
+            return new ResponseEntity<>(new ApiRespo<>("Categoria", dto, true), HttpStatus.OK);
         } catch (Exception e) {
-            response.put("error al listar categoria", e.getMessage());
-            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new ApiRespo<>("Error: "+e.getMessage(), null, false), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -49,17 +53,16 @@ public class CategoriaController {
     public ResponseEntity<?> obtenerCategoria(
             @Parameter(description = "ID de la categoría a buscar") @PathVariable Integer id) {
         try {
-            response = new HashMap<>();
+
             Categoria categoria = categoriaService.obtener(id).orElse(null);
             if (categoria != null) {
-                return new ResponseEntity<>(categoria, HttpStatus.OK);
+                CategoriaGetDTO dto = CategoriaMapper.toDTO(categoria);
+                return new ResponseEntity<>(new ApiRespo<>("Categoria encontrada", dto, true), HttpStatus.OK);
             } else {
-                response.put("categoria", "No encontrada");
-                return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>(new ApiRespo<>("Categoria no encontrada", null, false), HttpStatus.NOT_FOUND);
             }
         } catch (Exception e) {
-            response.put("error", e.getMessage());
-            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new ApiRespo<>("Error: "+e.getMessage(), null, false), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -75,17 +78,16 @@ public class CategoriaController {
     public ResponseEntity<?> obtenerCategoriaPorNombre(
             @Parameter(description = "Nombre de la categoría a buscar") @PathVariable String nombre) {
         try {
-            response = new HashMap<>();
+
             Categoria categoria = categoriaService.obtenerNombre(nombre).orElse(null);
             if (categoria != null) {
-                return new ResponseEntity<>(categoria, HttpStatus.OK);
+                CategoriaGetDTO dto = CategoriaMapper.toDTO(categoria);
+                return new ResponseEntity<>(new ApiRespo<>("Categoria encontrada", dto, true), HttpStatus.OK);
             } else {
-                response.put("categoria", "no encontrada");
-                return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>(new ApiRespo<>("Categoria no encontrada", null, false), HttpStatus.NOT_FOUND);
             }
         } catch (Exception e) {
-            response.put("error", e.getMessage());
-            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new ApiRespo<>("Error: "+e.getMessage(), null, false), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

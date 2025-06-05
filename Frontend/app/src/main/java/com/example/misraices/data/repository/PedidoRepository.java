@@ -69,9 +69,14 @@ public class PedidoRepository {
         return ejecutarPeticion(pedidoService.crear(pedido));
     }
 
+    public MutableLiveData<Result<Pedido>> obtenerPorId(int id) {
+        return ejecutarPeticion(pedidoService.obtenerPorId(id));
+    }
+
     public MutableLiveData<List<Pedido>> obtener() {
         return ejecutarPeticionLista(pedidoService.obtener());
     }
+
     public MutableLiveData<Result<Pedido>> finalizarCompra(int pedidoId, int tarjetaId) {
         return ejecutarPeticion(pedidoService.finalizarCompra(pedidoId, tarjetaId));
     }
