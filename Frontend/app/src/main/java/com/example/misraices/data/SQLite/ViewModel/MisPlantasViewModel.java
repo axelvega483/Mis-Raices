@@ -55,6 +55,7 @@ public class MisPlantasViewModel extends AndroidViewModel {
                             planta.setNombre(producto.getNombre());
                             planta.setImg(producto.getImg());
                             planta.setCuidados(producto.getCuidado());
+                            planta.setVideo(producto.getVideo());
                             Log.e("MisPlantasViewModel", "Planta: " + planta.toString());
                             plantasParaGuardar.add(planta);
                             Log.e("MisPlantasViewModel", "Plantas para guardar: " + planta.toString());

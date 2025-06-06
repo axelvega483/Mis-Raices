@@ -35,6 +35,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.MisRaices.demo.util.ApiRespo;
+import com.MisRaices.demo.util.EstadoPedido;
 import java.util.stream.Collectors;
 
 @CrossOrigin("*")
@@ -90,7 +91,7 @@ public class PedidoController {
     @PostMapping
     public ResponseEntity<ApiRespo<PedidoGetDTO>> crear(@RequestBody PedidoPostDTO pedidoPostDTO) {
         try {
-            Usuario cliente = usuarioService.obtener(pedidoPostDTO.getUsuarioId()).orElse(null);
+            Usuario cliente = usuarioService.obtener(pedidoPostDTO.getUsuario().getId()).orElse(null);
             if (cliente == null) {
                 return new ResponseEntity<>(new ApiRespo<>("Cliente no válido", null, false), HttpStatus.BAD_REQUEST);
             }
@@ -102,9 +103,9 @@ public class PedidoController {
             double total = 0;
 
             for (PedidoDetallePostDTO detDto : pedidoPostDTO.getDetalle()) {
-                Producto producto = productoService.obtener(detDto.getProductoId()).orElse(null);
+                Producto producto = productoService.obtener(detDto.getProducto().getId()).orElse(null);
                 if (producto == null) {
-                    return new ResponseEntity<>(new ApiRespo<>("Producto no encontrado con ID " + detDto.getProductoId(), null, false), HttpStatus.NOT_FOUND);
+                    return new ResponseEntity<>(new ApiRespo<>("Producto no encontrado con ID " + detDto.getProducto().getId(), null, false), HttpStatus.NOT_FOUND);
                 }
                 if (producto.getStock() < detDto.getCantidad()) {
                     return new ResponseEntity<>(new ApiRespo<>("Stock insuficiente para producto " + producto.getNombre(), null, false), HttpStatus.BAD_REQUEST);
@@ -122,7 +123,7 @@ public class PedidoController {
             pedido.setDetalle(detalles);
             pedido.setTotal(total);
             pedido.setFechaPedido(LocalDateTime.now());
-            pedido.setEstado("PENDIENTE");
+            pedido.setEstado(EstadoPedido.PENDIENTE);
 
             Pedido pedidoGuardado = pedidoService.guardar(pedido);
             PedidoGetDTO dto = PedidoMapper.toDTO(pedidoGuardado);
@@ -143,8 +144,8 @@ public class PedidoController {
             }
 
             // Actualizar usuario si es diferente
-            if (!pedidoBD.getUsuario().getId().equals(pedidoPostDTO.getUsuarioId())) {
-                Usuario cliente = usuarioService.obtener(pedidoPostDTO.getUsuarioId()).orElse(null);
+            if (!pedidoBD.getUsuario().getId().equals(pedidoPostDTO.getUsuario().getId())) {
+                Usuario cliente = usuarioService.obtener(pedidoPostDTO.getUsuario().getId()).orElse(null);
                 if (cliente == null) {
                     return new ResponseEntity<>(new ApiRespo<>("Cliente no válido", null, false), HttpStatus.BAD_REQUEST);
                 }
@@ -155,9 +156,9 @@ public class PedidoController {
             double total = 0;
 
             for (PedidoDetallePostDTO detDto : pedidoPostDTO.getDetalle()) {
-                Producto producto = productoService.obtener(detDto.getProductoId()).orElse(null);
+                Producto producto = productoService.obtener(detDto.getProducto().getId()).orElse(null);
                 if (producto == null) {
-                    return new ResponseEntity<>(new ApiRespo<>("Producto no encontrado con ID " + detDto.getProductoId(), null, false), HttpStatus.NOT_FOUND);
+                    return new ResponseEntity<>(new ApiRespo<>("Producto no encontrado con ID " + detDto.getProducto().getId(), null, false), HttpStatus.NOT_FOUND);
                 }
                 if (producto.getStock() < detDto.getCantidad()) {
                     return new ResponseEntity<>(new ApiRespo<>("Stock insuficiente para producto " + producto.getNombre(), null, false), HttpStatus.BAD_REQUEST);
@@ -239,7 +240,7 @@ public class PedidoController {
             tarjetaCreditoService.guardar(tarjeta);
 
             pedido.setFechaPedido(LocalDateTime.now());
-            pedido.setEstado("EN PREPARACIÓN");
+            pedido.setEstado(EstadoPedido.PENDIENTE);
             Pedido pedidoFinalizado = pedidoService.guardar(pedido);
 
             String rutaPDF = PdfGenerator.generarFacturaPDF(pedidoFinalizado);

@@ -1,5 +1,7 @@
 package com.MisRaices.demo.DTOS.PedidoDTO;
 
+import com.MisRaices.demo.DTOS.UsuarioDTO.UsuarioGetDTO;
+import com.MisRaices.demo.util.EstadoPedido;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.Getter;
@@ -11,8 +13,8 @@ public class PedidoGetDTO {
 
     private Integer id;
     private LocalDateTime fechaPedido;
-    private String estado;
+    private EstadoPedido estado;
     private List<PedidoDetalleDTO> detalle;
     private Double total;
-    private UsuarioSimpleDTO usuario;
+    private UsuarioGetDTO usuario;
 }

@@ -23,6 +23,7 @@ public class NewTarjetaFragment extends Fragment {
     private FragmentNewTarjetaBinding binding;
     private TarjetaViewModel tarjetaViewModel;
     private UsuarioViewModel usuarioViewModel;
+    private int usuarioId;
 
     public NewTarjetaFragment() {
         // Required empty public constructor
@@ -54,13 +55,14 @@ public class NewTarjetaFragment extends Fragment {
     private void init() {
         tarjetaViewModel = new ViewModelProvider(requireActivity()).get(TarjetaViewModel.class);
         usuarioViewModel = new ViewModelProvider(requireActivity()).get(UsuarioViewModel.class);
+
+        SharedPreferences prefs = requireActivity().getSharedPreferences("MiAppPrefs", Context.MODE_PRIVATE);
+        usuarioId = prefs.getInt("usuarioId", -1);
     }
 
     private void initListener() {
         binding.btnNuevaTarjeta.setOnClickListener(view -> {
-            SharedPreferences prefs = requireActivity().getSharedPreferences("MiAppPrefs", Context.MODE_PRIVATE);
-            int usuarioId = prefs.getInt("usuarioId", -1);
-            usuarioViewModel.obtenerId(usuarioId).observe(getViewLifecycleOwner(),usuario-> {
+            usuarioViewModel.obtenerId(usuarioId).observe(getViewLifecycleOwner(), usuario -> {
                 Log.e("usuario", usuario.toString());
                 TarjetaCredito tarjeta = new TarjetaCredito();
                 tarjeta.setUsuario(usuario.getData());

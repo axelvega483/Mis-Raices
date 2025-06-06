@@ -29,7 +29,7 @@ public class CategoriaController {
     )
     @ApiResponse(responseCode = "200", description = "Categorías listadas correctamente")
     @GetMapping
-    public ResponseEntity<?> listar() {
+    public ResponseEntity<ApiRespo<?>> listar() {
         try {
             List<CategoriaGetDTO> dto = categoriaService.listar()
                     .stream()
@@ -50,7 +50,7 @@ public class CategoriaController {
         @ApiResponse(responseCode = "404", description = "Categoría no encontrada")
     })
     @GetMapping("{id}")
-    public ResponseEntity<?> obtenerCategoria(
+    public ResponseEntity<ApiRespo<?>> obtenerCategoria(
             @Parameter(description = "ID de la categoría a buscar") @PathVariable Integer id) {
         try {
 
@@ -75,7 +75,7 @@ public class CategoriaController {
         @ApiResponse(responseCode = "404", description = "Categoría no encontrada")
     })
     @GetMapping("nombre/{nombre}")
-    public ResponseEntity<?> obtenerCategoriaPorNombre(
+    public ResponseEntity<ApiRespo<?>> obtenerCategoriaPorNombre(
             @Parameter(description = "Nombre de la categoría a buscar") @PathVariable String nombre) {
         try {
 

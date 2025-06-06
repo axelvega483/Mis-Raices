@@ -1,5 +1,7 @@
 package com.MisRaices.demo.DTOS.PedidoDTO;
 
+import com.MisRaices.demo.DTOS.ProductoDTO.ProductoMapper;
+import com.MisRaices.demo.DTOS.UsuarioDTO.UsuarioMapper;
 import com.MisRaices.demo.entity.Pedido;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,24 +17,17 @@ public class PedidoMapper {
         dto.setFechaPedido(pedido.getFechaPedido());
         dto.setEstado(pedido.getEstado());
         dto.setTotal(pedido.getTotal());
-
-        UsuarioSimpleDTO userDto = new UsuarioSimpleDTO();
-        userDto.setId(pedido.getUsuario().getId());
-        userDto.setNombre(pedido.getUsuario().getNombre());
-        userDto.setCorreo(pedido.getUsuario().getCorreo());
-        dto.setUsuario(userDto);
+        if (pedido.getUsuario() != null) {
+            dto.setUsuario(UsuarioMapper.toDTO(pedido.getUsuario()));
+        }
 
         List<PedidoDetalleDTO> detallesDto = pedido.getDetalle().stream().map(detalle -> {
             PedidoDetalleDTO detDto = new PedidoDetalleDTO();
             detDto.setId(detalle.getId());
             detDto.setCantidad(detalle.getCantidad());
-
-            ProductoSimpleDTO prodDto = new ProductoSimpleDTO();
-            prodDto.setId(detalle.getProducto().getId());
-            prodDto.setNombre(detalle.getProducto().getNombre());
-            prodDto.setPrecio(detalle.getProducto().getPrecio());
-
-            detDto.setProducto(prodDto);
+            if (detalle.getProducto() != null) {
+                detDto.setProducto(ProductoMapper.toDTO(detalle.getProducto()));
+            }
             return detDto;
         }).collect(Collectors.toList());
 

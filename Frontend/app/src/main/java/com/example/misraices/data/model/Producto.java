@@ -16,6 +16,7 @@ public class Producto implements Serializable {
     private int stock;
     private Double precio;
     private String cuidado;
+    private String video;
     private Categoria categoria;
     private String img;
 
@@ -28,6 +29,7 @@ public class Producto implements Serializable {
                 ", stock=" + stock +
                 ", precio=" + precio +
                 ", cuidados='" + cuidado + '\'' +
+                ", video='" + video + '\'' +
                 ", categoria=" + categoria +
                 ", img='" + img + '\'' +
                 '}';

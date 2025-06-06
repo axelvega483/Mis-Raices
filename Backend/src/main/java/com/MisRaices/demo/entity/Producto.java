@@ -26,6 +26,7 @@ public class Producto implements Serializable {
     @Column(length = 1000)
     private String cuidado;
     
+    private String video;
     private Double precio;
 
     @ManyToOne

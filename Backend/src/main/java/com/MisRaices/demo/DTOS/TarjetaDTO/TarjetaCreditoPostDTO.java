@@ -1,9 +1,11 @@
 package com.MisRaices.demo.DTOS.TarjetaDTO;
 
+import com.MisRaices.demo.entity.Usuario;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 import lombok.Setter;
 
 @Getter
@@ -12,17 +14,21 @@ import lombok.Setter;
 @NoArgsConstructor
 public class TarjetaCreditoPostDTO {
 
-    @NonNull
-    private Integer id;
-    @NonNull
+    @NotBlank
     private String titular;
-    @NonNull
+
+    @NotBlank
     private String numero;
-    @NonNull
+
+    @NotBlank
     private String fechaVencimiento;
-    @NonNull
+
+    @NotBlank
     private String codigoSeguridad;
-    @NonNull
+
+    @NotBlank
     private String tipo;
-    private Integer usuario;
+
+    @NotNull
+    private Usuario usuario;
 }

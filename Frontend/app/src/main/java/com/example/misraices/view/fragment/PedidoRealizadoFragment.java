@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import com.example.misraices.R;
 import com.example.misraices.data.model.Pedido;
 import com.example.misraices.data.model.PedidoDetalle;
+import com.example.misraices.data.util.EstadoPedido;
 import com.example.misraices.databinding.FragmentPedidoRealizadoBinding;
 import com.example.misraices.view.adapter.AdapterPedido;
 import com.example.misraices.viewModel.PedidoViewModel;
@@ -71,7 +72,7 @@ public class PedidoRealizadoFragment extends Fragment {
                     List<Pedido> pedidosEnPreparacion = new ArrayList<>();
 
                     for (Pedido pedido : pedidos) {
-                        if ("EN PREPARACIÓN".equals(pedido.getEstado())) {
+                        if (pedido.getEstado().equals(EstadoPedido.PENDIENTE)) {
                             if (pedido.getUsuario().getId() == usuario.getData().getId()) {
                                 pedidosEnPreparacion.add(pedido);
                             }

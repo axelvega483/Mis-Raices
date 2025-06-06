@@ -80,7 +80,7 @@ private TarjetaCredito tarjetaActual;
                         requireActivity().getSupportFragmentManager().popBackStack();
                     } else {
                         Toast.makeText(getContext(), "Error al actualizar la tarjeta", Toast.LENGTH_SHORT).show();
-                        Log.e("EditarTarjeta", "Error: " + result.getError());
+                        Log.e("EditarTarjeta", "Error: " + result.isExito());
                     }
                 });
             }

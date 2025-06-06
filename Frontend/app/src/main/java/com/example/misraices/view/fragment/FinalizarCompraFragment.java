@@ -18,6 +18,7 @@ import com.example.misraices.R;
 import com.example.misraices.data.model.Pedido;
 import com.example.misraices.data.model.PedidoDetalle;
 import com.example.misraices.data.model.TarjetaCredito;
+import com.example.misraices.data.util.EstadoPedido;
 import com.example.misraices.databinding.FragmentFinalizarCompraBinding;
 import com.example.misraices.view.adapter.AdapterTarjetaCompra;
 import com.example.misraices.viewModel.PedidoViewModel;
@@ -102,17 +103,18 @@ public class FinalizarCompraFragment extends Fragment {
                 }
             });
         });
+
         binding.btnfinalizarCompra.setOnClickListener(view -> {
             if (!validarDatosIniciales()) return;
             procesarUsuarioYCrearPedido();
         });
+
         binding.btnAgregarTarjeta.setOnClickListener(view -> {
             requireActivity().getSupportFragmentManager().beginTransaction()
                     .replace(R.id.frameContainer, NewTarjetaFragment.newInstance())
                     .addToBackStack(null)
                     .commit();
         });
-
 
     }
 
@@ -152,17 +154,23 @@ public class FinalizarCompraFragment extends Fragment {
             Pedido pedido = new Pedido();
             pedido.setDetalle(detalles);
             pedido.setUsuario(usuario.getData());
-            pedido.setEstado("PENDIENTE");
+            pedido.setEstado(EstadoPedido.PENDIENTE);
 
             pedidoViewModel.crearPedido(pedido).observe(getViewLifecycleOwner(), resultado -> {
-                Pedido pedidoCreado = resultado != null ? resultado.getData() : null;
-                    Log.e("pedidoCreado",resultado.getData().toString());
-                if (pedidoCreado == null || pedidoCreado.getId() == null) {
+                if (resultado == null || resultado.getData() == null || resultado.getData().getData() == null) {
                     Toast.makeText(getContext(), "Error al crear el pedido", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                // Ahora tenemos el pedido con ID asignado desde el backend
+                Pedido pedidoCreado = resultado.getData().getData();
+
+                Log.e("pedidoCreado", pedidoCreado.toString());
+
+                if (pedidoCreado.getId() == null) {
+                    Toast.makeText(getContext(), "Error: id del pedido es nulo", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                Log.e("pedido",pedidoCreado.toString());
                 pedidoViewModel.setPedidoMutableLiveData(pedidoCreado);
                 pedidoViewModel.limpiarCarrito();
 
@@ -174,7 +182,7 @@ public class FinalizarCompraFragment extends Fragment {
 
     private void finalizarPedidoSiEsVálido(int pedidoId) {
         pedidoViewModel.obtenerPedidoPorId(pedidoId).observe(getViewLifecycleOwner(), response -> {
-            Pedido pedido = response != null ? response.getData() : null;
+            Pedido pedido = response != null ? response.getData().getData() : null;
 
             if (pedido == null) {
                 Toast.makeText(getContext(), "No se pudo obtener el pedido", Toast.LENGTH_SHORT).show();
@@ -182,7 +190,7 @@ public class FinalizarCompraFragment extends Fragment {
             }
 
             if (tarjetaSeleccionada.getSaldo() >= pedido.getTotal()
-                    && "PENDIENTE".equals(pedido.getEstado())) {
+                    && pedido.getEstado().equals(EstadoPedido.PENDIENTE)) {
 
                 pedidoViewModel.finalizarCompra(pedido.getId(), tarjetaSeleccionada.getId());
                 Toast.makeText(getContext(), "Compra finalizada", Toast.LENGTH_SHORT).show();

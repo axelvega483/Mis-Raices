@@ -1,6 +1,7 @@
 package com.MisRaices.demo.DTOS.UsuarioDTO;
 
 import com.MisRaices.demo.entity.Direccion;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.Getter;
@@ -21,6 +22,8 @@ public class UsuarioGetDTO {
     private String token;
     private LocalDateTime tokenLimite;
     private Direccion direccion;
+    @JsonIgnore
     private List<UsuarioPedidos> pedidos;
+    @JsonIgnore
     private List<UsuarioTarjetas> tarjetas;
 }

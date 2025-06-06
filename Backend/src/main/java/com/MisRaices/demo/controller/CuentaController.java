@@ -42,7 +42,7 @@ public class CuentaController {
         @ApiResponse(responseCode = "500", description = "Error interno")
     })
     @PostMapping("/login")
-    public ResponseEntity<ApiRespo<?>> iniciarSesion(@Valid @RequestBody UsuarioLoginDTO loginDTO) {
+    public ResponseEntity<ApiRespo<UsuarioGetDTO>> iniciarSesion(@Valid @RequestBody UsuarioLoginDTO loginDTO) {
         try {
             Usuario user = usuarioService.findByCorreoAndPassword(loginDTO.getCorreo(), loginDTO.getPassword()).orElse(null);
             if (user == null) {

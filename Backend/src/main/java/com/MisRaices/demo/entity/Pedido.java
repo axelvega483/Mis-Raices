@@ -1,11 +1,14 @@
 package com.MisRaices.demo.entity;
 
+import com.MisRaices.demo.util.EstadoPedido;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -36,7 +39,9 @@ public class Pedido implements Serializable {
     @Column(name = "id")
     private Integer id;
     private LocalDateTime fechaPedido;
-    private String estado;
+
+    @Enumerated(EnumType.STRING)
+    private EstadoPedido estado;
 
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JsonManagedReference

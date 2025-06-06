@@ -1,6 +1,7 @@
 package com.example.misraices.data.model;
 
 import java.io.Serializable;
+
 import lombok.*;
 
 @Getter

@@ -84,13 +84,10 @@ public class UsuarioController {
             if (user != null) {
                 user.setApellido(usuarioPut.getApellido());
                 user.setNombre(usuarioPut.getNombre());
-                if (user.getPassword().equals(usuarioPut.getPassword())) {
-                    user.setPassword(usuarioPut.getPassword());
-                    UsuarioGetDTO dto = UsuarioMapper.toDTO(usuarioService.guardar(user));
-                    return new ResponseEntity<>(new ApiRespo<>("Usuario actualizado", dto, true), HttpStatus.OK);
-                } else {
-                    return new ResponseEntity<>(new ApiRespo<>("Error, contraseña no coiciden", null, false), HttpStatus.CONFLICT);
-                }
+                user.setPassword(usuarioPut.getPassword());
+                UsuarioGetDTO dto = UsuarioMapper.toDTO(usuarioService.guardar(user));
+                return new ResponseEntity<>(new ApiRespo<>("Usuario actualizado", dto, true), HttpStatus.OK);
+
             } else {
                 return new ResponseEntity<>(new ApiRespo<>("usuario no encontrado", null, false), HttpStatus.NOT_FOUND);
             }

@@ -1,7 +1,10 @@
 package com.example.misraices.view.adapter;
 
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.widget.MediaController;
+import android.widget.VideoView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -35,6 +38,12 @@ public class AdapterMisPlantas extends RecyclerView.Adapter<AdapterMisPlantas.Vi
                 .load(planta.getImg())
                 .centerCrop()
                 .into(holder.binding.imgProductoDetalle);
+        holder.binding.videoView.setVideoURI(Uri.parse(planta.getVideo()));
+        MediaController mediaController = new MediaController(holder.binding.videoView.getContext());
+        mediaController.setAnchorView(holder.binding.videoView);
+        holder.binding.videoView.setMediaController(mediaController);
+        holder.binding.videoView.seekTo(1);
+
     }
 
     @Override

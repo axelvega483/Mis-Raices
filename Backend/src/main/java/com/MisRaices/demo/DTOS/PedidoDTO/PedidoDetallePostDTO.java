@@ -1,5 +1,6 @@
 package com.MisRaices.demo.DTOS.PedidoDTO;
 
+import com.MisRaices.demo.DTOS.ProductoDTO.ProductoGetDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,6 +12,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class PedidoDetallePostDTO {
 
-    private Integer productoId;
+    private ProductoGetDTO producto;
     private Integer cantidad;
 }

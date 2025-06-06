@@ -5,6 +5,7 @@ import android.util.Log;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.misraices.data.api.ApiRetrofit;
+import com.example.misraices.data.model.ApiRespo;
 import com.example.misraices.data.model.Categoria;
 import com.example.misraices.data.model.Direccion;
 import com.example.misraices.data.model.Result;
@@ -25,22 +26,25 @@ public class UsuarioRepository {
     public UsuarioRepository() {
         this.usuarioService = ApiRetrofit.getRetrofitInstance().create(UsuarioService.class);
     }
-
-    public <T> MutableLiveData<Result<T>> ejecutarPeticion(Call<T> call) {
+    public <T> MutableLiveData<Result<T>> ejecutarPeticion(Call<ApiRespo<T>> call) {
         final MutableLiveData<Result<T>> mdl = new MutableLiveData<>();
-        call.enqueue(new Callback<T>() {
+        call.enqueue(new Callback<ApiRespo<T>>() {
             @Override
-            public void onResponse(Call<T> call, Response<T> response) {
-                Log.e("response", response.toString());
-                if (response.isSuccessful()) {
-                    mdl.setValue(new Result<>(response.body()));
+            public void onResponse(Call<ApiRespo<T>> call, Response<ApiRespo<T>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    ApiRespo<T> apiRespo = response.body();
+                    if (apiRespo.isExito()) {
+                        mdl.setValue(new Result<>(apiRespo.getData()));
+                    } else {
+                        mdl.setValue(new Result<>(apiRespo.getMensaje()));
+                    }
                 } else {
                     mdl.setValue(new Result<>("Error en la respuesta del servidor"));
                 }
             }
 
             @Override
-            public void onFailure(Call<T> call, Throwable t) {
+            public void onFailure(Call<ApiRespo<T>> call, Throwable t) {
                 mdl.setValue(new Result<>(t.getMessage()));
             }
         });

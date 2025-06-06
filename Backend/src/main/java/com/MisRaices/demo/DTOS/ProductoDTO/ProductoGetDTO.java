@@ -13,6 +13,7 @@ public class ProductoGetDTO {
     private String descripcion;
     private int stock;
     private String cuidado;
+    private String video;
     private Double precio;
     private Categoria categoria;
     private String img;

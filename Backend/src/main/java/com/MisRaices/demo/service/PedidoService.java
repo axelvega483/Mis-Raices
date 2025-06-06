@@ -4,7 +4,6 @@ import com.MisRaices.demo.entity.Pedido;
 import com.MisRaices.demo.entity.PedidoDetalle;
 import com.MisRaices.demo.entity.Producto;
 import com.MisRaices.demo.interfaz.PedidoInterfaz;
-import com.MisRaices.demo.repository.PedidoDetalleRepository;
 import com.MisRaices.demo.repository.PedidoRepository;
 import com.MisRaices.demo.repository.ProductoRepository;
 import java.util.List;
@@ -21,8 +20,6 @@ public class PedidoService implements PedidoInterfaz {
     @Autowired
     private ProductoRepository productoRepo;
 
-    @Autowired
-    private PedidoDetalleRepository pedidoDetalleRepo;
 
     @Override
     public Pedido guardar(Pedido pedido) {

@@ -1,14 +1,12 @@
 package com.example.misraices.data.repository;
 
-import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.misraices.data.api.ApiRetrofit;
+import com.example.misraices.data.model.ApiRespo;
 import com.example.misraices.data.model.Producto;
-import com.example.misraices.data.model.Result;
 import com.example.misraices.data.service.ProductoService;
-import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,30 +22,25 @@ public class ProductoRepository {
         this.productoService = ApiRetrofit.getRetrofitInstance().create(ProductoService.class);
     }
 
-    public MutableLiveData<List<Producto>> ejecutarPeticion(Call<List<Producto>> call) {
-        Log.e("Retrofit", "Ejecutando petición a: " + call.request().url());
+    public MutableLiveData<List<Producto>> ejecutarPeticion(Call<ApiRespo<List<Producto>>> call) {
         final MutableLiveData<List<Producto>> mdl = new MutableLiveData<>();
-        call.enqueue(new Callback<List<Producto>>() {
+        call.enqueue(new Callback<ApiRespo<List<Producto>>>() {
             @Override
-            public void onResponse(Call<List<Producto>> call, Response<List<Producto>> response) {
-                if (response.isSuccessful()) {
-                    Log.e("Retrofit Response", new Gson().toJson(response.body()));
-                    mdl.setValue(response.body());
-                    Log.e("response", response.toString());
+            public void onResponse(Call<ApiRespo<List<Producto>>> call, Response<ApiRespo<List<Producto>>> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().isExito()) {
+                    mdl.setValue(response.body().getData());
                 } else {
-                    Log.e("Retrofit Response", "Respuesta vacía o error: " + response.code());
                     mdl.setValue(new ArrayList<>());
                 }
             }
 
             @Override
-            public void onFailure(Call<List<Producto>> call, Throwable t) {
+            public void onFailure(Call<ApiRespo<List<Producto>>> call, Throwable t) {
                 mdl.setValue(new ArrayList<>());
             }
         });
         return mdl;
     }
-
 
     public MutableLiveData<List<Producto>> obtenerProductos() {
         return ejecutarPeticion(productoService.obtenerProductos());

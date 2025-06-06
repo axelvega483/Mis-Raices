@@ -5,6 +5,8 @@ import android.util.Log;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.misraices.data.api.ApiRetrofit;
+import com.example.misraices.data.model.ApiRespo;
+import com.example.misraices.data.model.Categoria;
 import com.example.misraices.data.model.Result;
 import com.example.misraices.data.model.TarjetaCredito;
 import com.example.misraices.data.model.Usuario;
@@ -21,58 +23,75 @@ public class TarjetaRepository {
     private TarjetaService tarjetaService;
 
     public TarjetaRepository() {
-        this.tarjetaService =  ApiRetrofit.getRetrofitInstance().create(TarjetaService.class);
+        this.tarjetaService = ApiRetrofit.getRetrofitInstance().create(TarjetaService.class);
     }
 
-    public <T> MutableLiveData<Result<T>> ejecutarPeticion(Call<T> call) {
-        final MutableLiveData<Result<T>> mdl = new MutableLiveData<>();
-        call.enqueue(new Callback<T>() {
+    public MutableLiveData<List<TarjetaCredito>> ejecutarPeticionLista(Call<ApiRespo<List<TarjetaCredito>>> call) {
+        final MutableLiveData<List<TarjetaCredito>> liveData = new MutableLiveData<>();
+        call.enqueue(new Callback<ApiRespo<List<TarjetaCredito>>>() {
             @Override
-            public void onResponse(Call<T> call, Response<T> response) {
-                Log.e("response", response.toString());
-                if (response.isSuccessful()) {
-                    mdl.setValue(new Result<>(response.body()));
+            public void onResponse(Call<ApiRespo<List<TarjetaCredito>>> call, Response<ApiRespo<List<TarjetaCredito>>> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().isExito()) {
+                    liveData.setValue(response.body().getData());
                 } else {
-                    mdl.setValue(new Result<>("Error en la respuesta del servidor"));
+                    liveData.setValue(new ArrayList<>());
                 }
             }
 
             @Override
-            public void onFailure(Call<T> call, Throwable t) {
-                mdl.setValue(new Result<>(t.getMessage()));
+            public void onFailure(Call<ApiRespo<List<TarjetaCredito>>> call, Throwable t) {
+                liveData.setValue(new ArrayList<>());
             }
         });
-        return mdl;
+        return liveData;
     }
-    public MutableLiveData<List<TarjetaCredito>> ejecutarPeticionLista(Call<List<TarjetaCredito>> call) {
-        final MutableLiveData<List<TarjetaCredito>> mdl = new MutableLiveData<>();
-        call.enqueue(new Callback<List<TarjetaCredito>>() {
+
+    public MutableLiveData<ApiRespo<TarjetaCredito>> ejecutarPeticion(Call<ApiRespo<TarjetaCredito>> call) {
+        final MutableLiveData<ApiRespo<TarjetaCredito>> liveData = new MutableLiveData<>();
+        call.enqueue(new Callback<ApiRespo<TarjetaCredito>>() {
             @Override
-            public void onResponse(Call<List<TarjetaCredito>> call, Response<List<TarjetaCredito>> response) {
+            public void onResponse(Call<ApiRespo<TarjetaCredito>> call, Response<ApiRespo<TarjetaCredito>> response) {
                 if (response.isSuccessful()) {
-                    mdl.setValue(response.body());
+                    liveData.setValue(response.body());
                 } else {
-                    mdl.setValue(new ArrayList<>());
+                    liveData.setValue(null);
                 }
             }
 
             @Override
-            public void onFailure(Call<List<TarjetaCredito>> call, Throwable t) {
-                mdl.setValue(new ArrayList<>());
+            public void onFailure(Call<ApiRespo<TarjetaCredito>> call, Throwable t) {
+                liveData.setValue(null);
             }
         });
-        return mdl;
+        return liveData;
     }
+
     public MutableLiveData<List<TarjetaCredito>> obtenerTarjetas() {
         return ejecutarPeticionLista(tarjetaService.obtenerTarjetas());
     }
-    public MutableLiveData<Result<TarjetaCredito>> crearTarjeta(TarjetaCredito tarjeta) {
+
+    public MutableLiveData<ApiRespo<TarjetaCredito>> crearTarjeta(TarjetaCredito tarjeta) {
         return ejecutarPeticion(tarjetaService.crearTarjeta(tarjeta));
     }
-    public MutableLiveData<Result<TarjetaCredito>> editarTarjeta(Integer id,TarjetaCredito tarjeta) {
-        return ejecutarPeticion(tarjetaService.actualizarTarjeta(id,tarjeta));
+
+    public MutableLiveData<ApiRespo<TarjetaCredito>> editarTarjeta(Integer id, TarjetaCredito tarjeta) {
+        return ejecutarPeticion(tarjetaService.actualizarTarjeta(id, tarjeta));
     }
-    public MutableLiveData<Result<Void>> eliminarTarjeta(Integer id) {
-        return ejecutarPeticion(tarjetaService.eliminarTarjeta(id));
+
+    public MutableLiveData<Boolean> eliminarTarjeta(Integer id) {
+        final MutableLiveData<Boolean> liveData = new MutableLiveData<>();
+        tarjetaService.eliminarTarjeta(id).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                liveData.setValue(response.isSuccessful());
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                liveData.setValue(false);
+            }
+        });
+        return liveData;
     }
+
 }

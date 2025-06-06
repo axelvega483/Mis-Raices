@@ -1,5 +1,7 @@
 package com.example.misraices.data.model;
 
+import com.example.misraices.data.util.EstadoPedido;
+
 import java.io.Serializable;
 import java.util.List;
 import lombok.*;
@@ -11,7 +13,7 @@ import lombok.*;
 public class Pedido implements Serializable {
     private Integer id;
     private String fechaPedido;
-    private String estado;
+    private EstadoPedido estado;
     private List<PedidoDetalle> detalle;
     private Double total;
     private Usuario usuario;

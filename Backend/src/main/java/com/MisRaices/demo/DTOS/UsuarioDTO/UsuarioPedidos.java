@@ -1,5 +1,6 @@
 package com.MisRaices.demo.DTOS.UsuarioDTO;
 
+import com.MisRaices.demo.util.EstadoPedido;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,8 +12,9 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UsuarioPedidos {
-     private Integer id;
+
+    private Integer id;
     private LocalDateTime fechaPedido;
-    private String estado;
+    private EstadoPedido estado;
     private Double total;
 }

@@ -11,10 +11,10 @@ import lombok.Setter;
 @NoArgsConstructor
 public class TarjetaCreditoPutDTO {
 
-    private Integer id;
     private String titular;
     private String numero;
     private String fechaVencimiento;
     private String codigoSeguridad;
     private String tipo;
+    private Double saldo;
 }

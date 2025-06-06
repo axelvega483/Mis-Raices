@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.misraices.data.model.ApiRespo;
 import com.example.misraices.data.model.Pedido;
 import com.example.misraices.data.model.PedidoDetalle;
 import com.example.misraices.data.model.Result;
@@ -16,6 +17,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import com.google.android.gms.common.api.Api;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -75,26 +77,27 @@ public class PedidoViewModel extends ViewModel {
         return false;
     }
 
-    public MutableLiveData<Result<Pedido>> obtenerPedidoPorId(int id) {
-        return repo.obtenerPorId(id);
-    }
-
-
     public MutableLiveData<List<PedidoDetalle>> getDetallesLiveData() {
         return detallesLiveData;
     }
 
-    public MutableLiveData<Result<Pedido>> crearPedido(Pedido pedido) {
+    public MutableLiveData<Result<ApiRespo<Pedido>>> obtenerPedidoPorId(int id) {
+        return repo.obtenerPorId(id);
+    }
+
+    public MutableLiveData<Result<ApiRespo<Pedido>>> crearPedido(Pedido pedido) {
         return repo.crear(pedido);
     }
+
+    public MutableLiveData<Result<ApiRespo<Pedido>>> finalizarCompra(int pedidoId, int tarjetaId) {
+        return repo.finalizarCompra(pedidoId, tarjetaId);
+    }
+
 
     public MutableLiveData<List<Pedido>> obtenerPedidos() {
         return repo.obtener();
     }
 
-    public MutableLiveData<Result<Pedido>> finalizarCompra(int pedidoId, int tarjetaId) {
-        return repo.finalizarCompra(pedidoId, tarjetaId);
-    }
 
     private void guardarCarritoEnPrefs() {
         if (context == null) return;

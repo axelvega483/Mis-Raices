@@ -1,5 +1,6 @@
 package com.MisRaices.demo.DTOS.TarjetaDTO;
 
+import com.MisRaices.demo.DTOS.UsuarioDTO.UsuarioGetDTO;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,10 +10,10 @@ public class TarjetaCreditoGetDTO {
 
     private Integer id;
     private String titular;
+    private String numero;
     private String fechaVencimiento;
+    private String codigoSeguridad;
     private String tipo;
     private Double saldo;
-    private Integer usuarioId;
-    private String usuarioNombre;
-    private String usuarioCorreo;
+    private UsuarioGetDTO usuario;
 }

@@ -1,5 +1,6 @@
 package com.example.misraices.data.service;
 
+import com.example.misraices.data.model.ApiRespo;
 import com.example.misraices.data.model.Direccion;
 import com.example.misraices.data.model.Usuario;
 
@@ -15,31 +16,31 @@ import retrofit2.http.Path;
 
 public interface UsuarioService {
     @POST("/autenticacion/registro")
-    Call<Usuario> crearUsuario(@Body Usuario usuario);
+    Call<ApiRespo<Usuario>>  crearUsuario(@Body Usuario usuario);
 
     @POST("/autenticacion/login")
-    Call<Usuario> login(@Body Usuario usuario);
+    Call<ApiRespo<Usuario>> login(@Body Usuario usuario);
 
     @POST("/autenticacion/activarCuenta")
-    Call<Usuario> activarCuenta(@Body Usuario usuario);
+    Call<ApiRespo<Usuario>>  activarCuenta(@Body Usuario usuario);
 
     @POST("/autenticacion/solicitarToken")
-    Call<Usuario> solicitarToken(@Body Usuario usuario);
+    Call<ApiRespo<Usuario>>  solicitarToken(@Body Usuario usuario);
 
     @POST("/autenticacion/restablecerPassword")
-    Call<Usuario>restablecerPassword(@Body Usuario usuario);
+    Call<ApiRespo<Usuario>> restablecerPassword(@Body Usuario usuario);
 
     @PUT("/usuario/direccion/{id}")
-    Call<Usuario> actualizarDireccion(@Path("id") Integer id, @Body Direccion direccion);
+    Call<ApiRespo<Usuario>>  actualizarDireccion(@Path("id") Integer id, @Body Direccion direccion);
 
     @GET("/usuario")
     Call<List<Usuario>> obtenerUsuario();
 
     @GET("/usuario/{id}")
-    Call<Usuario> obtenerUsuarioPorId(@Path("id") Integer id);
+    Call<ApiRespo<Usuario>>  obtenerUsuarioPorId(@Path("id") Integer id);
 
     @PUT("/usuario/{id}")
-    Call<Usuario> actualizarUsuario(@Path("id") Integer id, @Body Usuario usuario);
+    Call<ApiRespo<Usuario>>  actualizarUsuario(@Path("id") Integer id, @Body Usuario usuario);
 
     @DELETE("/usuario/{id}")
     Call<Void> eliminarUsuario(@Path("id") Integer id);

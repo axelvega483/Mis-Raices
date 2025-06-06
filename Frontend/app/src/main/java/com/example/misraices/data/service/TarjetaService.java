@@ -1,5 +1,7 @@
 package com.example.misraices.data.service;
 
+import com.example.misraices.data.model.ApiRespo;
+import com.example.misraices.data.model.Producto;
 import com.example.misraices.data.model.TarjetaCredito;
 
 import java.util.List;
@@ -14,13 +16,13 @@ import retrofit2.http.Path;
 
 public interface TarjetaService {
     @GET("/tarjeta")
-    Call<List<TarjetaCredito>> obtenerTarjetas();
+    Call<ApiRespo<List<TarjetaCredito>>> obtenerTarjetas();
 
     @POST("/tarjeta")
-    Call<TarjetaCredito> crearTarjeta(@Body TarjetaCredito tarjeta);
+    Call<ApiRespo<TarjetaCredito>> crearTarjeta(@Body TarjetaCredito tarjeta);
 
     @PUT("/tarjeta/{id}")
-    Call<TarjetaCredito> actualizarTarjeta(@Path("id") Integer id, @Body TarjetaCredito tarjeta);
+    Call<ApiRespo<TarjetaCredito>> actualizarTarjeta(@Path("id") Integer id, @Body TarjetaCredito tarjeta);
 
     @DELETE("/tarjeta/{id}")
     Call<Void> eliminarTarjeta(@Path("id") Integer id);
