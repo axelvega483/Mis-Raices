@@ -81,6 +81,10 @@ public class PedidoViewModel extends ViewModel {
         return detallesLiveData;
     }
 
+    public MutableLiveData<Result<ApiRespo<Pedido>>> cancelarPedido(int id) {
+        return repo.cancelar(id);
+    }
+
     public MutableLiveData<Result<ApiRespo<Pedido>>> obtenerPedidoPorId(int id) {
         return repo.obtenerPorId(id);
     }

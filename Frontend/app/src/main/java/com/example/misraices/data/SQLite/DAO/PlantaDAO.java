@@ -16,8 +16,9 @@ public interface PlantaDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertarPlanta(List<Planta>  planta);
 
-    @Query("SELECT * FROM plantas")
-    LiveData<List<Planta>> obtenerTodas();
+    @Query("SELECT * FROM plantas where usuarioId=:usuarioId")
+    LiveData<List<Planta>> obtenerTodas(int usuarioId);
 
-
+    @Query("DELETE FROM plantas WHERE pedidoId = :pedidoId")
+    void eliminarPlantasPorPedidoId(int pedidoId);
 }

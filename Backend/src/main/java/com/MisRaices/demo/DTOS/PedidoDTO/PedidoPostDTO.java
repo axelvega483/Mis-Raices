@@ -1,6 +1,7 @@
 package com.MisRaices.demo.DTOS.PedidoDTO;
 
 import com.MisRaices.demo.DTOS.UsuarioDTO.UsuarioGetDTO;
+import com.MisRaices.demo.util.EstadoPedido;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,4 +16,5 @@ public class PedidoPostDTO {
 
     private UsuarioGetDTO usuario;
     private List<PedidoDetallePostDTO> detalle;
+    private EstadoPedido estado;
 }

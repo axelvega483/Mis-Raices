@@ -26,14 +26,13 @@ public class PedidoService implements PedidoInterfaz {
         if (pedido.getDetalle() != null && !pedido.getDetalle().isEmpty()) {
             for (PedidoDetalle detalle : pedido.getDetalle()) {
                 Producto producto = detalle.getProducto();
-                // Verificar que el producto exista en la base de datos
                 producto = productoRepo.findById(producto.getId())
                         .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
-                detalle.setProducto(producto); // Asignar el producto
-                detalle.setPedido(pedido); // Asociar el detalle al pedido
+                detalle.setProducto(producto);
+                detalle.setPedido(pedido);
             }
         }
-        return repo.save(pedido); // Guardar el pedido con los detalles
+        return repo.save(pedido); 
     }
 
     @Override

@@ -72,10 +72,8 @@ public class PedidoRealizadoFragment extends Fragment {
                     List<Pedido> pedidosEnPreparacion = new ArrayList<>();
 
                     for (Pedido pedido : pedidos) {
-                        if (pedido.getEstado().equals(EstadoPedido.PENDIENTE)) {
-                            if (pedido.getUsuario().getId() == usuario.getData().getId()) {
-                                pedidosEnPreparacion.add(pedido);
-                            }
+                        if (pedido.getUsuario().getId() == usuario.getData().getId()) {
+                            pedidosEnPreparacion.add(pedido);
                         }
                     }
                     if (!pedidosEnPreparacion.isEmpty()) {
@@ -94,8 +92,9 @@ public class PedidoRealizadoFragment extends Fragment {
         bundle.putSerializable("pedido", pedido);
         bundle.putInt("id", pedido.getId());
         bundle.putString("fecha", pedido.getFechaPedido());
-        bundle.putSerializable("detalle",(Serializable) pedido.getDetalle());
+        bundle.putSerializable("detalle", (Serializable) pedido.getDetalle());
         bundle.putDouble("total", pedido.getTotal());
+        bundle.putString("estado", pedido.getEstado().toString());
         fragment.setArguments(bundle);
 
         getParentFragmentManager().beginTransaction()

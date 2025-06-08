@@ -74,6 +74,12 @@ public class PedidoController {
         }
     }
 
+    @Operation(summary = "Obtener pedido por ID", description = "Retorna un pedido según su identificador.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Pedido encontrado"),
+        @ApiResponse(responseCode = "404", description = "Pedido no encontrado"),
+        @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+    })
     @GetMapping("{id}")
     public ResponseEntity<ApiRespo<PedidoGetDTO>> obtener(@PathVariable Integer id) {
         try {
@@ -88,6 +94,13 @@ public class PedidoController {
         }
     }
 
+    @Operation(summary = "Crear un nuevo pedido", description = "Crea un nuevo pedido con sus detalles y calcula el total.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "Pedido creado exitosamente"),
+        @ApiResponse(responseCode = "400", description = "Datos inválidos o stock insuficiente"),
+        @ApiResponse(responseCode = "404", description = "Producto o cliente no encontrado"),
+        @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+    })
     @PostMapping
     public ResponseEntity<ApiRespo<PedidoGetDTO>> crear(@RequestBody PedidoPostDTO pedidoPostDTO) {
         try {
@@ -134,6 +147,13 @@ public class PedidoController {
         }
     }
 
+    @Operation(summary = "Actualizar un pedido existente", description = "Actualiza un pedido, sus detalles y recalcula el total.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Pedido actualizado exitosamente"),
+        @ApiResponse(responseCode = "400", description = "Datos inválidos o stock insuficiente"),
+        @ApiResponse(responseCode = "404", description = "Pedido o producto no encontrado"),
+        @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+    })
     @PutMapping("{id}")
     public ResponseEntity<ApiRespo<PedidoGetDTO>> actualizar(@RequestBody PedidoPostDTO pedidoPostDTO,
             @PathVariable Integer id) {
@@ -175,17 +195,58 @@ public class PedidoController {
 
             pedidoBD.setDetalle(detalles);
             pedidoBD.setTotal(total);
+            pedidoBD.setEstado(pedidoPostDTO.getEstado());
 
             Pedido pedidoActualizado = pedidoService.guardar(pedidoBD);
             PedidoGetDTO dto = PedidoMapper.toDTO(pedidoActualizado);
 
-            return ResponseEntity.ok(new ApiRespo<>("Pedido actualizado exitosamente", dto, true));
+            return new ResponseEntity<>(new ApiRespo<>("Pedido actualizado exitosamente", dto, true), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(new ApiRespo<>("Error interno del servidor: " + e.getMessage(), null, false), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @DeleteMapping("{id}")
+    @Operation(summary = "Cancelar un pedido", description = "Cancela el pedido indicado por ID, actualizando el estado y devolviendo el stock.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Pedido cancelado exitosamente"),
+        @ApiResponse(responseCode = "400", description = "El pedido ya estaba cancelado"),
+        @ApiResponse(responseCode = "404", description = "Pedido no encontrado"),
+        @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+    })
+    @PutMapping("/cancelar/{id}")
+    public ResponseEntity<ApiRespo<PedidoGetDTO>> cancelar(@PathVariable Integer id) {
+        try {
+            Pedido pedidoBD = pedidoService.obtener(id).orElse(null);
+            if (pedidoBD == null) {
+                return new ResponseEntity<>(new ApiRespo<>("Pedido no encontrado", null, false), HttpStatus.NOT_FOUND);
+            }
+
+            if (pedidoBD.getEstado() == EstadoPedido.CANCELADO) {
+                return new ResponseEntity<>(new ApiRespo<>("El pedido ya está cancelado", null, false), HttpStatus.BAD_REQUEST);
+            }
+
+            for (PedidoDetalle detalle : pedidoBD.getDetalle()) {
+                Producto producto = detalle.getProducto();
+                producto.setStock(producto.getStock() + detalle.getCantidad());
+            }
+
+            pedidoBD.setEstado(EstadoPedido.CANCELADO);
+            Pedido pedidoActualizado = pedidoService.guardar(pedidoBD);
+            PedidoGetDTO dto = PedidoMapper.toDTO(pedidoActualizado);
+
+            return new ResponseEntity<>(new ApiRespo<>("Pedido cancelado exitosamente", dto, true), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new ApiRespo<>("Error interno del servidor: " + e.getMessage(), null, false), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @Operation(summary = "Eliminar un pedido", description = "Elimina el pedido indicado por su ID.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Pedido eliminado exitosamente"),
+        @ApiResponse(responseCode = "404", description = "Pedido no encontrado"),
+        @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+    })
+    @DeleteMapping("/{id}")
     public ResponseEntity<ApiRespo<String>> eliminar(@PathVariable Integer id) {
         try {
             Pedido pedido = pedidoService.obtener(id).orElse(null);
@@ -199,6 +260,13 @@ public class PedidoController {
         }
     }
 
+    @Operation(summary = "Finalizar compra de un pedido", description = "Procesa el pago con una tarjeta, descuenta stock y envía factura por correo.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Compra finalizada exitosamente"),
+        @ApiResponse(responseCode = "400", description = "Saldo insuficiente o stock insuficiente"),
+        @ApiResponse(responseCode = "404", description = "Pedido, producto o tarjeta no encontrado"),
+        @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+    })
     @Transactional
     @PostMapping("/finalizarCompra/{pedidoId}/{tarjetaId}")
     public ResponseEntity<ApiRespo<PedidoGetDTO>> finalizarCompra(@PathVariable Integer pedidoId,

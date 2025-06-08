@@ -54,5 +54,5 @@ public class Pedido implements Serializable {
     @JoinColumn(name = "usuario_id")
     @JsonIgnoreProperties("pedidos")
     private Usuario usuario;
-
+    
 }

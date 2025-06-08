@@ -16,8 +16,10 @@ import android.widget.TextView;
 
 import com.example.misraices.R;
 import com.example.misraices.data.model.PedidoDetalle;
+import com.example.misraices.data.util.EstadoPedido;
 import com.example.misraices.databinding.FragmentPedidoDetalleBinding;
 import com.example.misraices.viewModel.PedidoViewModel;
+import com.example.misraices.viewModel.TarjetaViewModel;
 import com.example.misraices.viewModel.UsuarioViewModel;
 
 import java.time.LocalDateTime;
@@ -28,6 +30,7 @@ import java.util.List;
 public class PedidoDetalleFragment extends Fragment {
     private FragmentPedidoDetalleBinding binding;
     private UsuarioViewModel usuarioViewModel;
+    private PedidoViewModel pedidoViewModel;
     private int usuarioId;
     private final DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
@@ -54,28 +57,37 @@ public class PedidoDetalleFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = FragmentPedidoDetalleBinding.inflate(inflater, container, false);
         init();
+        initListener();
         return binding.getRoot();
     }
 
     private void init() {
         usuarioViewModel = new ViewModelProvider(requireActivity()).get(UsuarioViewModel.class);
+        pedidoViewModel = new ViewModelProvider(requireActivity()).get(PedidoViewModel.class);
         SharedPreferences prefs = requireActivity().getSharedPreferences("MiAppPrefs", Context.MODE_PRIVATE);
         usuarioId = prefs.getInt("usuarioId", -1);
 
         usuarioViewModel.obtenerId(usuarioId).observe(getViewLifecycleOwner(), usuario -> {
             if (usuario != null) {
-                binding.direccionTxt.setText("Dirección: "+usuario.getData().getDireccion().getCalle()+" "+usuario.getData().getDireccion().getNumero());
+                binding.direccionTxt.setText("Dirección: " + usuario.getData().getDireccion().getCalle() + " " + usuario.getData().getDireccion().getNumero());
             }
         });
         Bundle args = getArguments();
         if (args != null) {
+            String estado = args.getString("estado");
+            if (estado != null && estado.equals(EstadoPedido.CANCELADO.name())) {
+                binding.btnCancelarPedido.setVisibility(View.GONE);
+            } else {
+                binding.btnCancelarPedido.setVisibility(View.VISIBLE);
+            }
             String fechaStr = args.getString("fecha");
             if (fechaStr != null) {
                 // Suponiendo que fechaStr viene en formato ISO_LOCAL_DATE_TIME
                 LocalDateTime fecha = LocalDateTime.parse(fechaStr);
                 binding.fechaTxt.setText(outputFormatter.format(fecha));
             }
-            binding.pedidoIDTxt.setText(String.valueOf("Pedido N° "+args.getInt("id")));
+            binding.pedidoEstado.setText("Estado: " + args.getString("estado"));
+            binding.pedidoIDTxt.setText(String.valueOf("Pedido N° " + args.getInt("id")));
             binding.totalTxt.setText(String.format("$ %.2f", args.getDouble("total")));
             List<PedidoDetalle> detalles = (List<PedidoDetalle>) args.getSerializable("detalle");
             for (PedidoDetalle detalle : detalles) {
@@ -101,8 +113,21 @@ public class PedidoDetalleFragment extends Fragment {
 
                 binding.tableLayout.addView(row);
             }
+
         }
     }
 
-
+    private void initListener() {
+        binding.btnCancelarPedido.setOnClickListener(v -> {
+            Bundle args = getArguments();
+            if (args != null) {
+                if (!args.getString("estado").equals(EstadoPedido.CANCELADO)) {
+                    pedidoViewModel.cancelarPedido(args.getInt("id"));
+                    getFragmentManager().popBackStack();
+                }
+            }
+        });
+    }
 }
+
+

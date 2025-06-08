@@ -21,6 +21,7 @@ import com.example.misraices.data.model.Pedido;
 import com.example.misraices.data.model.PedidoDetalle;
 import com.example.misraices.data.model.Producto;
 import com.example.misraices.data.model.Usuario;
+import com.example.misraices.data.util.EstadoPedido;
 import com.example.misraices.databinding.FragmentMisPlantasBinding;
 import com.example.misraices.view.adapter.AdapterMisPlantas;
 import com.example.misraices.view.adapter.AdapterPedido;
@@ -80,21 +81,19 @@ public class MisPlantasFragment extends Fragment {
     }
 
     private void initListener() {
-        misPlantasViewModel.getPlantas().observe(getViewLifecycleOwner(), plantas -> {
-            if (plantas != null) {
-
-                binding.recyclerViewMisPlantas.setAdapter(new AdapterMisPlantas(plantas));
-
-            }
-        });
         usuarioViewModel.obtenerId(usuarioId).observe(getViewLifecycleOwner(), usuario -> {
             pedidoViewModel.obtenerPedidos().observe(getViewLifecycleOwner(), pedidos -> {
                 if (pedidos != null) {
                     misPlantasViewModel.sincronizarPlantasDesdePedidos(pedidos);
                 }
             });
+
+            misPlantasViewModel.cargarPlantasPorUsuarioLiveData(usuarioId)
+                    .observe(getViewLifecycleOwner(), plantas -> {
+                        if (plantas != null) {
+                            binding.recyclerViewMisPlantas.setAdapter(new AdapterMisPlantas(plantas));
+                        }
+                    });
         });
-
     }
-
 }
