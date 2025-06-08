@@ -20,6 +20,11 @@ public class PedidoDetalle implements Serializable {
         this.producto.setPrecio(precio);
         this.producto.setStock(stock);
     }
+    public double getSubtotal() {
+        if (producto == null || cantidad == null) return 0.0;
+        return producto.getPrecio() * cantidad;
+    }
+
     @Override
     public String toString() {
         return "PedidoDetalle{" +
