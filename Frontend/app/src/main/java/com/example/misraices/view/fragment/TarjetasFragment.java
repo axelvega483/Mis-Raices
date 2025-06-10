@@ -16,7 +16,6 @@ import android.view.ViewGroup;
 import com.example.misraices.R;
 import com.example.misraices.data.model.TarjetaCredito;
 import com.example.misraices.databinding.FragmentTarjetasBinding;
-import com.example.misraices.view.adapter.AdapterTarjetaCompra;
 import com.example.misraices.view.adapter.AdapterTarjetaDetalle;
 import com.example.misraices.viewModel.TarjetaViewModel;
 import com.example.misraices.viewModel.UsuarioViewModel;
@@ -29,6 +28,7 @@ public class TarjetasFragment extends Fragment {
     private FragmentTarjetasBinding binding;
     private TarjetaViewModel tarjetaViewModel;
     private UsuarioViewModel usuarioViewModel;
+
     public TarjetasFragment() {
         // Required empty public constructor
     }
@@ -57,13 +57,13 @@ public class TarjetasFragment extends Fragment {
 
     private void init() {
         tarjetaViewModel = new ViewModelProvider(requireActivity()).get(TarjetaViewModel.class);
-        usuarioViewModel= new ViewModelProvider(requireActivity()).get(UsuarioViewModel.class);
+        usuarioViewModel = new ViewModelProvider(requireActivity()).get(UsuarioViewModel.class);
     }
 
     private void initListener() {
         SharedPreferences prefs = requireActivity().getSharedPreferences("MiAppPrefs", Context.MODE_PRIVATE);
         int usuarioId = prefs.getInt("usuarioId", -1);
-        usuarioViewModel.obtenerId(usuarioId).observe(getViewLifecycleOwner(),usuario-> {
+        usuarioViewModel.obtenerId(usuarioId).observe(getViewLifecycleOwner(), usuario -> {
             tarjetaViewModel.obtenerTarjetas().observe(getViewLifecycleOwner(), tarjetas -> {
                 if (tarjetas != null) {
                     Log.e("tarjetas", tarjetas.toString());
@@ -97,8 +97,6 @@ public class TarjetasFragment extends Fragment {
                 .replace(R.id.frameContainer, fragment)
                 .addToBackStack(null)
                 .commit();
-
-
 
     }
 

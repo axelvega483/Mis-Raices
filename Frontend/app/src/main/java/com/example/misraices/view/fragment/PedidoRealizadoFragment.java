@@ -8,15 +8,12 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.misraices.R;
 import com.example.misraices.data.model.Pedido;
-import com.example.misraices.data.model.PedidoDetalle;
-import com.example.misraices.data.util.EstadoPedido;
 import com.example.misraices.databinding.FragmentPedidoRealizadoBinding;
 import com.example.misraices.view.adapter.AdapterPedido;
 import com.example.misraices.viewModel.PedidoViewModel;

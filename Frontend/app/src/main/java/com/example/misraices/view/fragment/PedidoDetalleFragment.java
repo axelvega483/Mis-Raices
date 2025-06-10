@@ -16,10 +16,8 @@ import android.widget.TextView;
 
 import com.example.misraices.R;
 import com.example.misraices.data.model.PedidoDetalle;
-import com.example.misraices.data.util.EstadoPedido;
 import com.example.misraices.databinding.FragmentPedidoDetalleBinding;
 import com.example.misraices.viewModel.PedidoViewModel;
-import com.example.misraices.viewModel.TarjetaViewModel;
 import com.example.misraices.viewModel.UsuarioViewModel;
 
 import java.time.LocalDateTime;
@@ -57,7 +55,6 @@ public class PedidoDetalleFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = FragmentPedidoDetalleBinding.inflate(inflater, container, false);
         init();
-        initListener();
         return binding.getRoot();
     }
 
@@ -74,15 +71,9 @@ public class PedidoDetalleFragment extends Fragment {
         });
         Bundle args = getArguments();
         if (args != null) {
-            String estado = args.getString("estado");
-            if (estado != null && estado.equals(EstadoPedido.CANCELADO.name())) {
-                binding.btnCancelarPedido.setVisibility(View.GONE);
-            } else {
-                binding.btnCancelarPedido.setVisibility(View.VISIBLE);
-            }
+
             String fechaStr = args.getString("fecha");
             if (fechaStr != null) {
-                // Suponiendo que fechaStr viene en formato ISO_LOCAL_DATE_TIME
                 LocalDateTime fecha = LocalDateTime.parse(fechaStr);
                 binding.fechaTxt.setText(outputFormatter.format(fecha));
             }
@@ -115,18 +106,6 @@ public class PedidoDetalleFragment extends Fragment {
             }
 
         }
-    }
-
-    private void initListener() {
-        binding.btnCancelarPedido.setOnClickListener(v -> {
-            Bundle args = getArguments();
-            if (args != null) {
-                if (!args.getString("estado").equals(EstadoPedido.CANCELADO)) {
-                    pedidoViewModel.cancelarPedido(args.getInt("id"));
-                    getFragmentManager().popBackStack();
-                }
-            }
-        });
     }
 }
 

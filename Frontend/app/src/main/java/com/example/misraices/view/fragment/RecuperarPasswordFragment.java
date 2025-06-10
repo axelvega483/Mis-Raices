@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.util.Log;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,6 +57,10 @@ public class RecuperarPasswordFragment extends Fragment {
             String email = binding.emailEditText.getText().toString();
             if (email.isEmpty()) {
                 Toast.makeText(getContext(), "Por favor ingrese su correo electrónico", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                Toast.makeText(getContext(), "El correo no es válido", Toast.LENGTH_SHORT).show();
                 return;
             }
             Log.e("entra1 ", "entra1");

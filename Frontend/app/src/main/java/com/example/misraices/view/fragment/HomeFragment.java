@@ -9,7 +9,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.os.Handler;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -106,7 +105,7 @@ public class HomeFragment extends Fragment {
         productoViewModel.obtenerProductos().observe(getViewLifecycleOwner(), productos -> {
             if (productos != null) {
                 productoViewModel.setProductoMutableLiveData(productos);
-                mostrarProductos(productos, true); // solo productos con stock
+                mostrarProductos(productos, true);
             }
         });
 
@@ -122,7 +121,7 @@ public class HomeFragment extends Fragment {
             productoViewModel.obtenerProductos().observe(getViewLifecycleOwner(), productos -> {
                 if (productos != null) {
                     productoViewModel.setProductoMutableLiveData(productos);
-                    mostrarProductos(productos, true); // solo productos con stock
+                    mostrarProductos(productos, true);
                 }
             });
 
@@ -162,14 +161,14 @@ public class HomeFragment extends Fragment {
 
     private void mostrarProductosPorCategoria(Categoria categoria) {
         productoViewModel.obtenerProductosPorCategoria(categoria.getId()).observe(getViewLifecycleOwner(), productos -> {
-            if (productos != null) mostrarProductos(productos, true); // con control de stock
+            if (productos != null) mostrarProductos(productos, true);
         });
     }
 
     private void filtrarProductos(String query) {
         productoViewModel.obtenerProductosPorNombre(query).observe(getViewLifecycleOwner(), productos -> {
             if (productos != null && !productos.isEmpty()) {
-                mostrarProductos(productos, true); // se muestran todos, incluso sin stock
+                mostrarProductos(productos, true);
             } else {
                 Toast.makeText(requireContext(), "No se encontraron productos para: " + query, Toast.LENGTH_SHORT).show();
             }

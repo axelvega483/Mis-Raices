@@ -97,7 +97,7 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
                                 .observe(getViewLifecycleOwner(), result -> {
                                     if (result != null && result.isSuccess()) {
                                         usuarioViewModel.setDireccionActualizada(true);
-                                        requireActivity().getSupportFragmentManager().popBackStack(); // Volvemos al HomeFragment
+                                        requireActivity().getSupportFragmentManager().popBackStack();
                                     } else {
                                         Toast.makeText(requireContext(), "Error al actualizar dirección", Toast.LENGTH_SHORT).show();
                                     }
@@ -131,6 +131,7 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
         }
         return null;
     }
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -138,7 +139,7 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
         if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             mMap.setMyLocationEnabled(true);
 
-            // 🔍 Intentar obtener dirección guardada primero
+
             usuarioViewModel.obtenerId(usuarioId).observe(getViewLifecycleOwner(), usuario -> {
                 if (usuario != null && usuario.getData().getDireccion() != null) {
                     Direccion direccion = usuario.getData().getDireccion();
@@ -148,7 +149,6 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
                     mMap.addMarker(new MarkerOptions().position(ubicacionGuardada).title("Tu dirección guardada"));
                     seleccion = ubicacionGuardada;
                 } else {
-                    // 🔄 Si no hay dirección guardada, usar GPS
                     moverCamaraAUbicacionActual();
                 }
             });
@@ -173,7 +173,6 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
                 mMap.addMarker(new MarkerOptions().position(ubicacionActual).title("Tu ubicación"));
                 seleccion = ubicacionActual;
             } else {
-                // Si no hay ubicación, no hacemos nada o ponemos un mensaje
                 Toast.makeText(requireContext(), "No se pudo obtener la ubicación actual", Toast.LENGTH_SHORT).show();
             }
         });

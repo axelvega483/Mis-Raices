@@ -4,8 +4,8 @@ import com.MisRaices.demo.entity.Categoria;
 import java.util.List;
 import java.util.Optional;
 
-
 public interface CategoriaInterfaz {
+
     public Categoria guardar(Categoria categoria);
 
     public void eliminar(Integer id);

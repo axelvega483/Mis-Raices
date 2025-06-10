@@ -8,13 +8,14 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UsuarioRegistroDTO {
-@NotNull
+
+    @NotNull
     private Integer id;
     @NotNull
     private String nombre;
     @NotNull
     private String apellido;
-    private Long telefono; // opcional
+    private Long telefono;
     @NotNull
     @Email
     private String correo;

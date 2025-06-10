@@ -162,8 +162,7 @@ public class PedidoController {
             if (pedidoBD == null) {
                 return new ResponseEntity<>(new ApiRespo<>("Pedido no encontrado", null, false), HttpStatus.NOT_FOUND);
             }
-
-            // Actualizar usuario si es diferente
+          
             if (!pedidoBD.getUsuario().getId().equals(pedidoPostDTO.getUsuario().getId())) {
                 Usuario cliente = usuarioService.obtener(pedidoPostDTO.getUsuario().getId()).orElse(null);
                 if (cliente == null) {
@@ -201,40 +200,6 @@ public class PedidoController {
             PedidoGetDTO dto = PedidoMapper.toDTO(pedidoActualizado);
 
             return new ResponseEntity<>(new ApiRespo<>("Pedido actualizado exitosamente", dto, true), HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(new ApiRespo<>("Error interno del servidor: " + e.getMessage(), null, false), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @Operation(summary = "Cancelar un pedido", description = "Cancela el pedido indicado por ID, actualizando el estado y devolviendo el stock.")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Pedido cancelado exitosamente"),
-        @ApiResponse(responseCode = "400", description = "El pedido ya estaba cancelado"),
-        @ApiResponse(responseCode = "404", description = "Pedido no encontrado"),
-        @ApiResponse(responseCode = "500", description = "Error interno del servidor")
-    })
-    @PutMapping("/cancelar/{id}")
-    public ResponseEntity<ApiRespo<PedidoGetDTO>> cancelar(@PathVariable Integer id) {
-        try {
-            Pedido pedidoBD = pedidoService.obtener(id).orElse(null);
-            if (pedidoBD == null) {
-                return new ResponseEntity<>(new ApiRespo<>("Pedido no encontrado", null, false), HttpStatus.NOT_FOUND);
-            }
-
-            if (pedidoBD.getEstado() == EstadoPedido.CANCELADO) {
-                return new ResponseEntity<>(new ApiRespo<>("El pedido ya está cancelado", null, false), HttpStatus.BAD_REQUEST);
-            }
-
-            for (PedidoDetalle detalle : pedidoBD.getDetalle()) {
-                Producto producto = detalle.getProducto();
-                producto.setStock(producto.getStock() + detalle.getCantidad());
-            }
-
-            pedidoBD.setEstado(EstadoPedido.CANCELADO);
-            Pedido pedidoActualizado = pedidoService.guardar(pedidoBD);
-            PedidoGetDTO dto = PedidoMapper.toDTO(pedidoActualizado);
-
-            return new ResponseEntity<>(new ApiRespo<>("Pedido cancelado exitosamente", dto, true), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(new ApiRespo<>("Error interno del servidor: " + e.getMessage(), null, false), HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -308,7 +273,7 @@ public class PedidoController {
             tarjetaCreditoService.guardar(tarjeta);
 
             pedido.setFechaPedido(LocalDateTime.now());
-            pedido.setEstado(EstadoPedido.PENDIENTE);
+            pedido.setEstado(EstadoPedido.FACTURADO);
             Pedido pedidoFinalizado = pedidoService.guardar(pedido);
 
             String rutaPDF = PdfGenerator.generarFacturaPDF(pedidoFinalizado);

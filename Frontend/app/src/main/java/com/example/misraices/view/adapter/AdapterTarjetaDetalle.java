@@ -39,10 +39,10 @@ public class AdapterTarjetaDetalle extends RecyclerView.Adapter<AdapterTarjetaDe
     public void onBindViewHolder(@NonNull AdapterTarjetaDetalle.ViewHolder holder, int position) {
         TarjetaCredito tarjeta = listaTarjetas.get(position);
 
-        // Mostrar datos
-        holder.binding.NumeroTxt.setText("Número: " + tarjeta.getNumero());
+
+        holder.binding.NumeroTxt.setText("N°: " + tarjeta.getNumero());
         holder.binding.TitularTxt.setText("Titular: " + tarjeta.getTitular());
-        holder.binding.VencimientoTxt.setText("Vencimiento: " + tarjeta.getFechaVencimiento());
+        holder.binding.VencimientoTxt.setText("Venc: " + tarjeta.getFechaVencimiento());
         holder.binding.TipoTxt.setText("Tipo: " + tarjeta.getTipo());
         holder.binding.CodigoTxt.setText("Codigo: " + tarjeta.getCodigoSeguridad());
         holder.itemView.setOnClickListener(v -> {

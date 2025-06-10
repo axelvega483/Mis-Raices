@@ -6,9 +6,11 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter
-@Setter 
+@Setter
 public class UsuarioActivacionDTO {
-     @NotNull @Email
+
+    @NotNull
+    @Email
     private String correo;
     @NotNull
     private String codigo;

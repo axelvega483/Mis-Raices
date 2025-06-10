@@ -1,12 +1,10 @@
 package com.example.misraices.data.repository;
 
-import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.misraices.data.api.ApiRetrofit;
 import com.example.misraices.data.model.ApiRespo;
-import com.example.misraices.data.model.Categoria;
 import com.example.misraices.data.model.Direccion;
 import com.example.misraices.data.model.Result;
 import com.example.misraices.data.model.Usuario;
@@ -71,9 +69,7 @@ public class UsuarioRepository {
         return mdl;
     }
 
-    public MutableLiveData<List<Usuario>>obtenerUsuario(){
-        return ejecutarPeticionLista(usuarioService.obtenerUsuario());
-    }
+
     public MutableLiveData<Result<Usuario>> crearUsuario(Usuario usuario) {
         return ejecutarPeticion(usuarioService.crearUsuario(usuario));
     }

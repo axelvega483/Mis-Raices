@@ -49,7 +49,7 @@ public class AdapterPedidoDetalle extends RecyclerView.Adapter<AdapterPedidoDeta
                 .load(pedidoDetalle.getProducto().getImg())
                 .into(holder.binding.imgProducto);
 
-        // Aumentar cantidad
+
         holder.binding.btnSumar.setOnClickListener(v -> {
             int cantidadActual = pedidoDetalle.getCantidad();
             int stockDisponible = pedidoDetalle.getProducto().getStock();
@@ -65,7 +65,7 @@ public class AdapterPedidoDetalle extends RecyclerView.Adapter<AdapterPedidoDeta
             }
         });
 
-        // Disminuir cantidad
+
         holder.binding.btnRestar.setOnClickListener(v -> {
             if (pedidoDetalle.getCantidad() > 1) {
                 pedidoDetalle.setCantidad(pedidoDetalle.getCantidad() - 1);

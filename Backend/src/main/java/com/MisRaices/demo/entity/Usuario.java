@@ -36,10 +36,10 @@ public class Usuario implements Serializable {
     private String codigo;//codigo de activacion de cuenta
     private String token;//token para restablecer contraceña
     private LocalDateTime tokenLimite; //tiempo de token
-    
+
     @Embedded
     private Direccion direccion;
-    
+
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Pedido> pedidos;

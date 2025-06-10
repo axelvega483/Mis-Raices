@@ -8,7 +8,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +17,6 @@ import com.example.misraices.R;
 import com.example.misraices.data.model.Pedido;
 import com.example.misraices.data.model.PedidoDetalle;
 import com.example.misraices.data.model.TarjetaCredito;
-import com.example.misraices.data.util.EstadoPedido;
 import com.example.misraices.databinding.FragmentFinalizarCompraBinding;
 import com.example.misraices.view.adapter.AdapterTarjetaCompra;
 import com.example.misraices.viewModel.PedidoViewModel;
@@ -117,7 +115,6 @@ public class FinalizarCompraFragment extends Fragment {
             Toast.makeText(getContext(), "El carrito está vacío", Toast.LENGTH_SHORT).show();
             return false;
         }
-
         return true;
     }
 
@@ -151,7 +148,6 @@ public class FinalizarCompraFragment extends Fragment {
             Pedido pedido = new Pedido();
             pedido.setDetalle(detalles);
             pedido.setUsuario(usuario.getData());
-            pedido.setEstado(EstadoPedido.PENDIENTE);
 
             pedidoViewModel.crearPedido(pedido).observe(getViewLifecycleOwner(), resultado -> {
                 if (resultado == null || resultado.getData() == null || resultado.getData().getData() == null) {

@@ -11,12 +11,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Toast;
 
-import com.example.misraices.R;
 import com.example.misraices.data.model.TarjetaCredito;
 import com.example.misraices.databinding.FragmentNewTarjetaBinding;
 import com.example.misraices.viewModel.TarjetaViewModel;
 import com.example.misraices.viewModel.UsuarioViewModel;
+
+import java.util.Calendar;
 
 
 public class NewTarjetaFragment extends Fragment {
@@ -44,8 +47,7 @@ public class NewTarjetaFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentNewTarjetaBinding.inflate(inflater, container, false);
         init();
         initListener();
@@ -58,27 +60,74 @@ public class NewTarjetaFragment extends Fragment {
 
         SharedPreferences prefs = requireActivity().getSharedPreferences("MiAppPrefs", Context.MODE_PRIVATE);
         usuarioId = prefs.getInt("usuarioId", -1);
+
+        String[] tiposTarjeta = {"Visa", "MasterCard", "Naranja"};
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                requireContext(),
+                android.R.layout.simple_dropdown_item_1line,
+                tiposTarjeta
+        );
+        binding.TipoEditText.setAdapter(adapter);
     }
 
     private void initListener() {
         binding.btnNuevaTarjeta.setOnClickListener(view -> {
             usuarioViewModel.obtenerId(usuarioId).observe(getViewLifecycleOwner(), usuario -> {
-                Log.e("usuario", usuario.toString());
+                String numero = binding.numeroEditText.getText().toString().trim();
+                String titular = binding.titularEditText.getText().toString().trim();
+                String fecha = binding.fechaEditText.getText().toString().trim();
+                String tipo = binding.TipoEditText.getText().toString().trim();
+                String codigo = binding.codigoEditText.getText().toString().trim();
+
+                if (numero.isEmpty() || !numero.matches("\\d{13,19}")) {
+                    Toast.makeText(getContext(), "Número de tarjeta inválido", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (titular.isEmpty() || !titular.matches("[a-zA-Z ]+")) {
+                    Toast.makeText(getContext(), "Titular inválido", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (!fecha.matches("(0[1-9]|1[0-2])/\\d{2}")) {
+                    Toast.makeText(getContext(), "Fecha inválida. Usa formato MM/YY", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                String[] partes = fecha.split("/");
+                int mes = Integer.parseInt(partes[0]);
+                int anio = Integer.parseInt("20" + partes[1]);
+                Calendar hoy = Calendar.getInstance();
+                int mesActual = hoy.get(Calendar.MONTH) + 1;
+                int anioActual = hoy.get(Calendar.YEAR);
+                if (anio < anioActual || (anio == anioActual && mes < mesActual)) {
+                    Toast.makeText(getContext(), "La tarjeta está vencida", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (codigo.isEmpty() || !codigo.matches("\\d{3,4}")) {
+                    Toast.makeText(getContext(), "Código de seguridad inválido", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (tipo.isEmpty()) {
+                    Toast.makeText(getContext(), "Debe ingresar el tipo de tarjeta", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 TarjetaCredito tarjeta = new TarjetaCredito();
                 tarjeta.setUsuario(usuario.getData());
-                tarjeta.setNumero(binding.numeroEditText.getText().toString());
-                tarjeta.setTitular(binding.titularEditText.getText().toString());
-                tarjeta.setFechaVencimiento(binding.fechaEditText.getText().toString());
-                tarjeta.setTipo(binding.TipoEditText.getText().toString());
-                tarjeta.setCodigoSeguridad(binding.codigoEditText.getText().toString());
+                tarjeta.setNumero(numero);
+                tarjeta.setTitular(titular);
+                tarjeta.setFechaVencimiento(fecha);
+                tarjeta.setTipo(tipo);
+                tarjeta.setCodigoSeguridad(codigo);
+
                 tarjetaViewModel.crearTarjeta(tarjeta);
-                Log.e("tarjeta creada", tarjeta.toString());
                 tarjetaViewModel.setTarjetaLiveData(tarjeta);
+                Log.e("Tarjeta creada", tarjeta.toString());
 
                 requireActivity().getSupportFragmentManager().popBackStack();
             });
-
         });
-
     }
+
 }

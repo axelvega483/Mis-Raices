@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import com.google.android.gms.common.api.Api;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -36,7 +35,7 @@ public class PedidoViewModel extends ViewModel {
 
 
     public void init(Context context) {
-        this.context = context.getApplicationContext(); // para evitar perdida de memoria
+        this.context = context.getApplicationContext();
         cargarCarritoDesdePrefs();
     }
 
@@ -79,10 +78,6 @@ public class PedidoViewModel extends ViewModel {
 
     public MutableLiveData<List<PedidoDetalle>> getDetallesLiveData() {
         return detallesLiveData;
-    }
-
-    public MutableLiveData<Result<ApiRespo<Pedido>>> cancelarPedido(int id) {
-        return repo.cancelar(id);
     }
 
     public MutableLiveData<Result<ApiRespo<Pedido>>> obtenerPedidoPorId(int id) {

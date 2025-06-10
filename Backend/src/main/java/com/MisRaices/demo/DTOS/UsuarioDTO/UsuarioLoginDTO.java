@@ -8,9 +8,10 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UsuarioLoginDTO {
-     @NotNull
+
+    @NotNull
     @Email
     private String correo;
-      @NotNull
+    @NotNull
     private String password;
 }

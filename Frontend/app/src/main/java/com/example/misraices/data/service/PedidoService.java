@@ -9,7 +9,6 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
-import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
 public interface PedidoService {
@@ -22,9 +21,6 @@ public interface PedidoService {
 
     @GET("/pedido")
     Call<ApiRespo<List<Pedido>>> obtener();
-
-    @PUT("/pedido/cancelar/{id}")
-    Call<ApiRespo<Pedido>> cancelar(@Path("id") int id);
 
     @POST("/pedido/finalizarCompra/{pedidoId}/{tarjetaId}")
     Call<ApiRespo<Pedido>> finalizarCompra(@Path("pedidoId") int pedidoId, @Path("tarjetaId") int tarjetaId);

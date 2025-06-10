@@ -81,7 +81,6 @@ public class RestablecerPasswordFragment extends Fragment {
 
             });
 
-
             LoginFragment fragment = new LoginFragment();
             getActivity().getSupportFragmentManager()
                     .beginTransaction()

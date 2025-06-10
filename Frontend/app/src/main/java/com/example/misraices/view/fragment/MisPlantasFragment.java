@@ -8,30 +8,15 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.misraices.R;
-import com.example.misraices.data.SQLite.Data.AppDatabase;
-import com.example.misraices.data.SQLite.Model.Planta;
 import com.example.misraices.data.SQLite.ViewModel.MisPlantasViewModel;
-import com.example.misraices.data.model.Pedido;
-import com.example.misraices.data.model.PedidoDetalle;
-import com.example.misraices.data.model.Producto;
-import com.example.misraices.data.model.Usuario;
-import com.example.misraices.data.util.EstadoPedido;
 import com.example.misraices.databinding.FragmentMisPlantasBinding;
 import com.example.misraices.view.adapter.AdapterMisPlantas;
-import com.example.misraices.view.adapter.AdapterPedido;
 import com.example.misraices.viewModel.PedidoViewModel;
 import com.example.misraices.viewModel.UsuarioViewModel;
-import com.google.gson.Gson;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.Executors;
 
 
 public class MisPlantasFragment extends Fragment {

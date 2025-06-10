@@ -4,10 +4,10 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.misraices.R;
+import com.example.misraices.data.SQLite.Data.AppDatabase;
 import com.example.misraices.databinding.ActivityPrincipalBinding;
 import com.example.misraices.view.fragment.CarritoFragment;
 import com.example.misraices.view.fragment.HomeFragment;
@@ -17,6 +17,7 @@ import com.google.android.material.navigation.NavigationBarView;
 
 public class PrincipalActivity extends AppCompatActivity {
     private ActivityPrincipalBinding binding;
+    private AppDatabase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +29,7 @@ public class PrincipalActivity extends AppCompatActivity {
     public void init() {
         binding = ActivityPrincipalBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        db = AppDatabase.getInstancia(this);
         openFragment(HomeFragment.newInstance());
     }
 
@@ -45,7 +47,7 @@ public class PrincipalActivity extends AppCompatActivity {
 
                 } else if (itemId == R.id.nav_pedido) {
                     openFragment(PedidoRealizadoFragment.newInstance());
-                } else if (itemId==R.id.nav_perfil) {
+                } else if (itemId == R.id.nav_perfil) {
                     openFragment(PerfilFragment.newInstance());
                 }
                 return true;
@@ -59,7 +61,6 @@ public class PrincipalActivity extends AppCompatActivity {
                     .replace(R.id.frameContainer, fragment)
                     .commit();
         } else {
-            // Otros fragments pueden ser agregados al BackStack
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.frameContainer, fragment)
                     .addToBackStack(null)

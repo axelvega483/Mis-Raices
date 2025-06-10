@@ -10,7 +10,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UsuarioTarjetas {
-     private Integer id;
+
+    private Integer id;
     private String titular;
     private String numero;
     private String fechaVencimiento;

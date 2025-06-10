@@ -73,9 +73,6 @@ public class PedidoRepository {
     public MutableLiveData<Result<ApiRespo<Pedido>>> obtenerPorId(int id) {
         return ejecutarPeticion(pedidoService.obtenerPorId(id));
     }
-    public MutableLiveData<Result<ApiRespo<Pedido>>> cancelar(int id) {
-        return ejecutarPeticion(pedidoService.cancelar(id));
-    }
 
     public MutableLiveData<List<Pedido>> obtener() {
         return ejecutarPeticionLista(pedidoService.obtener());

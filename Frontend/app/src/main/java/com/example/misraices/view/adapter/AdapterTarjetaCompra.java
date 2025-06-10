@@ -41,14 +41,13 @@ public class AdapterTarjetaCompra extends RecyclerView.Adapter<AdapterTarjetaCom
     public void onBindViewHolder(@NonNull AdapterTarjetaCompra.ViewHolder holder, int position) {
         TarjetaCredito tarjeta = listaTarjetas.get(position);
 
-        // Mostrar datos
-        holder.binding.NumeroTxt.setText("Número: " + tarjeta.getNumero());
+
+        holder.binding.NumeroTxt.setText("N°: " + tarjeta.getNumero());
         holder.binding.TitularTxt.setText("Titular: " + tarjeta.getTitular());
-        holder.binding.VencimientoTxt.setText("Vencimiento: " + tarjeta.getFechaVencimiento());
+        holder.binding.VencimientoTxt.setText("Venc: " + tarjeta.getFechaVencimiento());
         holder.binding.TipoTxt.setText("Tipo: " + tarjeta.getTipo());
         holder.binding.CodigoTxt.setText("Codigo: " + tarjeta.getCodigoSeguridad());
 
-        // Fondo visual si está seleccionada
         if (position == tarjetaSeleccionadaPos) {
             holder.binding.getRoot().findViewById(R.id.constraintLayoutTarjeta).setBackgroundResource(R.drawable.bg_tarjeta_seleccionada);
 
@@ -60,7 +59,7 @@ public class AdapterTarjetaCompra extends RecyclerView.Adapter<AdapterTarjetaCom
         holder.itemView.setOnClickListener(v -> {
             tarjetaSeleccionadaPos = position;
             listener.onTarjetaSeleccionada(tarjeta);
-            notifyDataSetChanged(); // actualiza la vista
+            notifyDataSetChanged();
         });
     }
 

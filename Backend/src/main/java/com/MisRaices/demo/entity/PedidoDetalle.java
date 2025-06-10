@@ -17,6 +17,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Getter
@@ -25,7 +26,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Table(name = "pedidoDetalle")
-public class PedidoDetalle implements Serializable{
+public class PedidoDetalle implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,14 +36,12 @@ public class PedidoDetalle implements Serializable{
     @Column(name = "cantidad")
     private Integer cantidad;
 
-    // Relación con Producto
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "producto_id")
     private Producto producto;
 
-    // Relación inversa con Pedido
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pedido_id")
-    @JsonBackReference // Evita la serialización infinita
+    @JsonBackReference
     private Pedido pedido;
 }

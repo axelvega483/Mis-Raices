@@ -1,21 +1,18 @@
 package com.example.misraices.view.fragment;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.util.Log;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.misraices.R;
-import com.example.misraices.data.api.ApiRetrofit;
 import com.example.misraices.data.model.Usuario;
 import com.example.misraices.databinding.FragmentRegistrarBinding;
 import com.example.misraices.viewModel.UsuarioViewModel;
@@ -65,17 +62,32 @@ public class RegistrarFragment extends Fragment {
                 Usuario usuario = new Usuario();
                 usuario.setNombre(binding.nombreEditText.getText().toString());
                 usuario.setApellido(binding.apellidoEditText.getText().toString());
-                usuario.setTelefono(Long.valueOf(binding.telefonoEditText.getText().toString()));
+                String telefonoStr = binding.telefonoEditText.getText().toString();
                 usuario.setCorreo(binding.CorreoEditText.getText().toString());
                 String password = binding.passwordEditText.getText().toString();
                 String confirPass = binding.confirPassEditText.getText().toString();
+
+                if(usuario.getNombre().isEmpty() || usuario.getApellido().isEmpty() || telefonoStr.isEmpty() || usuario.getCorreo().isEmpty()|| password.isEmpty() || confirPass.isEmpty()){
+                    Toast.makeText(getContext(), "Todos los campos son obligatorios", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (!Patterns.EMAIL_ADDRESS.matcher(usuario.getCorreo()).matches()) {
+                    Toast.makeText(getContext(), "El correo no es válido", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                try {
+                    usuario.setTelefono(Long.valueOf(telefonoStr));
+                } catch (NumberFormatException e) {
+                    Toast.makeText(getContext(), "Teléfono inválido", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 if (!password.equals(confirPass)) {
                     Toast.makeText(getContext(), "Las contraseñas no coinciden", Toast.LENGTH_SHORT).show();
                     return;
                 }
+
                 usuario.setPassword(password);
-
-
 
                 usuarioViewModel.crearUsuario(usuario);
                 usuarioViewModel.setUsuarioLiveData(usuario);

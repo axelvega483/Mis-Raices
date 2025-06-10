@@ -110,18 +110,17 @@
             android:layout_marginEnd="32dp"
             android:hint="Tipo"
             android:textColor="@color/black"
-            app:endIconDrawable="@drawable/ic_check"
-            app:endIconMode="custom"
+            app:endIconMode="dropdown_menu"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/fechaTextInputLayout">
 
-            <com.google.android.material.textfield.TextInputEditText
+            <AutoCompleteTextView
                 android:id="@+id/TipoEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/radius_txt"
-                android:inputType="text"
+                android:inputType="none"
                 android:padding="16dp"
                 android:textColor="@color/black" />
         </com.google.android.material.textfield.TextInputLayout>

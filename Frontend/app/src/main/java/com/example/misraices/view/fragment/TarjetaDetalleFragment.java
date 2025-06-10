@@ -9,17 +9,19 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
-import com.example.misraices.R;
 import com.example.misraices.data.model.TarjetaCredito;
 import com.example.misraices.databinding.FragmentTarjetaDetalleBinding;
 import com.example.misraices.viewModel.TarjetaViewModel;
 
+import java.util.Calendar;
+
 public class TarjetaDetalleFragment extends Fragment {
-private FragmentTarjetaDetalleBinding binding;
-private TarjetaViewModel tarjetaViewModel;
-private TarjetaCredito tarjetaActual;
+    private FragmentTarjetaDetalleBinding binding;
+    private TarjetaViewModel tarjetaViewModel;
+    private TarjetaCredito tarjetaActual;
 
     public TarjetaDetalleFragment() {
         // Required empty public constructor
@@ -42,11 +44,19 @@ private TarjetaCredito tarjetaActual;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-      binding = FragmentTarjetaDetalleBinding.inflate(inflater, container, false);
-      init();
-      initListener();
-      return binding.getRoot();
+        binding = FragmentTarjetaDetalleBinding.inflate(inflater, container, false);
+        init();
+        initListener();
+        String[] tiposTarjeta = {"Visa", "MasterCard", "Naranja"};
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                requireContext(),
+                android.R.layout.simple_dropdown_item_1line,
+                tiposTarjeta
+        );
+        binding.TipoEditText.setAdapter(adapter);
+        return binding.getRoot();
     }
+
     private void init() {
         tarjetaViewModel = new ViewModelProvider(requireActivity()).get(TarjetaViewModel.class);
         Bundle args = getArguments();
@@ -60,14 +70,50 @@ private TarjetaCredito tarjetaActual;
             binding.codigoEditText.setText(tarjetaActual.getCodigoSeguridad());
         }
     }
+
     private void initListener() {
         binding.btnTarjetaEditar.setOnClickListener(view -> {
-            if(tarjetaActual != null){
+            if (tarjetaActual != null) {
                 String numero = binding.numeroEditText.getText().toString().trim();
                 String titular = binding.titularEditText.getText().toString().trim();
                 String fecha = binding.fechaEditText.getText().toString().trim();
                 String tipo = binding.TipoEditText.getText().toString().trim();
                 String codigo = binding.codigoEditText.getText().toString().trim();
+
+                if (numero.isEmpty() || !numero.matches("\\d{13,19}")) {
+                    Toast.makeText(getContext(), "Número de tarjeta inválido", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (titular.isEmpty() || !titular.matches("[a-zA-Z ]+")) {
+                    Toast.makeText(getContext(), "Titular inválido", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (!fecha.matches("(0[1-9]|1[0-2])/\\d{2}")) {
+                    Toast.makeText(getContext(), "Fecha inválida. Usa formato MM/YY", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                String[] partes = fecha.split("/");
+                int mes = Integer.parseInt(partes[0]);
+                int anio = Integer.parseInt("20" + partes[1]);
+                Calendar hoy = Calendar.getInstance();
+                int mesActual = hoy.get(Calendar.MONTH) + 1;
+                int anioActual = hoy.get(Calendar.YEAR);
+                if (anio < anioActual || (anio == anioActual && mes < mesActual)) {
+                    Toast.makeText(getContext(), "La tarjeta está vencida", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (codigo.isEmpty() || !codigo.matches("\\d{3,4}")) {
+                    Toast.makeText(getContext(), "Código de seguridad inválido", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (tipo.isEmpty()) {
+                    Toast.makeText(getContext(), "Debe ingresar el tipo de tarjeta", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 tarjetaActual.setNumero(numero);
                 tarjetaActual.setTitular(titular);
                 tarjetaActual.setFechaVencimiento(fecha);
@@ -89,7 +135,7 @@ private TarjetaCredito tarjetaActual;
         binding.btnDeleteTarjeta.setOnClickListener(view -> {
             tarjetaViewModel.eliminarTarjeta(tarjetaActual.getId()).observe(getViewLifecycleOwner(), result -> {
                 Toast.makeText(getContext(), "Tarjeta eliminada correctamente", Toast.LENGTH_SHORT).show();
-               requireActivity().getSupportFragmentManager().popBackStack();
+                requireActivity().getSupportFragmentManager().popBackStack();
             });
         });
     }

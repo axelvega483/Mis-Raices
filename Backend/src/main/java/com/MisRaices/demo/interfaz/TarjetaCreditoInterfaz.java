@@ -4,9 +4,9 @@ import com.MisRaices.demo.entity.TarjetaCredito;
 import java.util.List;
 import java.util.Optional;
 
-
 public interface TarjetaCreditoInterfaz {
-      public TarjetaCredito guardar(TarjetaCredito tarjetaCredito);
+
+    public TarjetaCredito guardar(TarjetaCredito tarjetaCredito);
 
     public void eliminar(Integer id);
 

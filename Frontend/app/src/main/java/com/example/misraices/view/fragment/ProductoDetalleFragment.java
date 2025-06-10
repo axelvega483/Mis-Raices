@@ -16,10 +16,6 @@ import com.example.misraices.data.model.PedidoDetalle;
 import com.example.misraices.data.model.Producto;
 import com.example.misraices.databinding.FragmentProductoDetalleBinding;
 import com.example.misraices.viewModel.PedidoViewModel;
-import com.example.misraices.viewModel.UsuarioViewModel;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class ProductoDetalleFragment extends Fragment {
     private FragmentProductoDetalleBinding binding;
@@ -63,10 +59,7 @@ public class ProductoDetalleFragment extends Fragment {
             Glide.with(this)
                     .load(args.getString("imagen"))
                     .into(binding.imgProductoDetalle);
-
         }
-
-
     }
 
     private void initListener() {

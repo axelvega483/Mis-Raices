@@ -1,15 +1,11 @@
 package com.example.misraices.data.repository;
 
-import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.misraices.data.api.ApiRetrofit;
 import com.example.misraices.data.model.ApiRespo;
-import com.example.misraices.data.model.Categoria;
-import com.example.misraices.data.model.Result;
 import com.example.misraices.data.model.TarjetaCredito;
-import com.example.misraices.data.model.Usuario;
 import com.example.misraices.data.service.TarjetaService;
 
 import java.util.ArrayList;

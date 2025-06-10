@@ -19,6 +19,4 @@ public interface PlantaDAO {
     @Query("SELECT * FROM plantas where usuarioId=:usuarioId")
     LiveData<List<Planta>> obtenerTodas(int usuarioId);
 
-    @Query("DELETE FROM plantas WHERE pedidoId = :pedidoId")
-    void eliminarPlantasPorPedidoId(int pedidoId);
 }

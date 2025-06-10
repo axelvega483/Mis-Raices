@@ -43,10 +43,6 @@ public class UsuarioViewModel extends ViewModel {
         return usuarioMutableLiveData;
     }
 
-    public MutableLiveData<List<Usuario>> obtenerUsuario() {
-        return repo.obtenerUsuario();
-    }
-
     public MutableLiveData<Result<Usuario>> crearUsuario(Usuario usuario) {
         return repo.crearUsuario(usuario);
     }
@@ -73,9 +69,11 @@ public class UsuarioViewModel extends ViewModel {
     public MutableLiveData<Result<Usuario>> editarUsuario(Integer id, Usuario usuario) {
         return repo.editarUsuario(id, usuario);
     }
+
     public MutableLiveData<Result<Usuario>> obtenerId(Integer id) {
         return repo.obtenerId(id);
     }
+
     public MutableLiveData<Result<Usuario>> actualizarDireccion(Integer id, Direccion direccion) {
         return repo.actualizarDireccion(id, direccion);
     }

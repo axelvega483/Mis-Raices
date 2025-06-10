@@ -4,7 +4,6 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.misraices.data.model.ApiRespo;
-import com.example.misraices.data.model.Result;
 import com.example.misraices.data.model.TarjetaCredito;
 import com.example.misraices.data.repository.TarjetaRepository;
 

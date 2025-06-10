@@ -18,7 +18,6 @@ public class Planta {
     String img;
     String cuidados;
     String video;
-    private int pedidoId;
     private int usuarioId;
 
     public Planta() {
@@ -30,14 +29,6 @@ public class Planta {
 
     public void setUsuarioId(int usuarioId) {
         this.usuarioId = usuarioId;
-    }
-
-    public int getPedidoId() {
-        return pedidoId;
-    }
-
-    public void setPedidoId(int pedidoId) {
-        this.pedidoId = pedidoId;
     }
 
     public String getVideo() {
