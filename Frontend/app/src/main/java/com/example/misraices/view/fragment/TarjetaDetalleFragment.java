@@ -82,10 +82,12 @@ public class TarjetaDetalleFragment extends Fragment {
 
                 if (numero.isEmpty() || !numero.matches("\\d{13,19}")) {
                     Toast.makeText(getContext(), "Número de tarjeta inválido", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(),"El número de tarjeta debe tener entre 13 y 19 dígitos.", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if (titular.isEmpty() || !titular.matches("[a-zA-Z ]+")) {
                     Toast.makeText(getContext(), "Titular inválido", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(),"El titular debe contener solo letras y espacios.", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if (!fecha.matches("(0[1-9]|1[0-2])/\\d{2}")) {
@@ -101,16 +103,19 @@ public class TarjetaDetalleFragment extends Fragment {
                 int anioActual = hoy.get(Calendar.YEAR);
                 if (anio < anioActual || (anio == anioActual && mes < mesActual)) {
                     Toast.makeText(getContext(), "La tarjeta está vencida", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(),"La tarjeta debe tener una fecha de vencimiento posterior a la fecha actual.", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 if (codigo.isEmpty() || !codigo.matches("\\d{3,4}")) {
                     Toast.makeText(getContext(), "Código de seguridad inválido", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(),"El código de seguridad debe tener entre 3 y 4 dígitos.", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 if (tipo.isEmpty()) {
                     Toast.makeText(getContext(), "Debe ingresar el tipo de tarjeta", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(),"Debe seleccionar el tipo de tarjeta.", Toast.LENGTH_SHORT).show();
                     return;
                 }
 

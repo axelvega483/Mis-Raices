@@ -66,9 +66,28 @@ public class RegistrarFragment extends Fragment {
                 usuario.setCorreo(binding.CorreoEditText.getText().toString());
                 String password = binding.passwordEditText.getText().toString();
                 String confirPass = binding.confirPassEditText.getText().toString();
-
-                if(usuario.getNombre().isEmpty() || usuario.getApellido().isEmpty() || telefonoStr.isEmpty() || usuario.getCorreo().isEmpty()|| password.isEmpty() || confirPass.isEmpty()){
-                    Toast.makeText(getContext(), "Todos los campos son obligatorios", Toast.LENGTH_SHORT).show();
+                if (usuario.getNombre().isEmpty()) {
+                    Toast.makeText(getContext(), "El nombre es obligatorio", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (usuario.getApellido().isEmpty()) {
+                    Toast.makeText(getContext(), "El apellido es obligatorio", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (telefonoStr.isEmpty()) {
+                    Toast.makeText(getContext(), "El teléfono es obligatorio", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (password.isEmpty()) {
+                    Toast.makeText(getContext(), "La contraseña es obligatoria", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (confirPass.isEmpty()) {
+                    Toast.makeText(getContext(), "La confirmación de contraseña es obligatoria", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (usuario.getCorreo().isEmpty()) {
+                    Toast.makeText(getContext(), "El correo es obligatorio", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if (!Patterns.EMAIL_ADDRESS.matcher(usuario.getCorreo()).matches()) {
