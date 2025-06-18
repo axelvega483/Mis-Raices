@@ -3,6 +3,7 @@ package com.example.misraices.view.activity;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -11,7 +12,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.example.misraices.R;
 
 public class MainActivity extends AppCompatActivity {
-
+    public static final String EXTRA_BACKEND_ERROR = "extra_backend_error";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,5 +23,15 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        boolean backendError = getIntent().getBooleanExtra(EXTRA_BACKEND_ERROR, false);
+
+        if (backendError) {
+            new AlertDialog.Builder(this)
+                    .setTitle("Servidor inactivo")
+                    .setMessage("No se pudo conectar con el servidor. Por favor, intente más tarde.")
+                    .setPositiveButton("Cerrar", (dialog, which) -> finish())
+                    .setCancelable(false)
+                    .show();
+        }
     }
 }

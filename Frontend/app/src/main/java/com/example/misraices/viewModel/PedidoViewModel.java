@@ -9,7 +9,6 @@ import androidx.lifecycle.ViewModel;
 import com.example.misraices.data.model.ApiRespo;
 import com.example.misraices.data.model.Pedido;
 import com.example.misraices.data.model.PedidoDetalle;
-import com.example.misraices.data.model.Result;
 import com.example.misraices.data.repository.PedidoRepository;
 
 import java.util.ArrayList;
@@ -80,15 +79,15 @@ public class PedidoViewModel extends ViewModel {
         return detallesLiveData;
     }
 
-    public MutableLiveData<Result<ApiRespo<Pedido>>> obtenerPedidoPorId(int id) {
+    public MutableLiveData<ApiRespo<Pedido>> obtenerPedidoPorId(int id) {
         return repo.obtenerPorId(id);
     }
 
-    public MutableLiveData<Result<ApiRespo<Pedido>>> crearPedido(Pedido pedido) {
+    public MutableLiveData<ApiRespo<Pedido>> crearPedido(Pedido pedido) {
         return repo.crear(pedido);
     }
 
-    public MutableLiveData<Result<ApiRespo<Pedido>>> finalizarCompra(int pedidoId, int tarjetaId) {
+    public MutableLiveData<ApiRespo<Pedido>> finalizarCompra(int pedidoId, int tarjetaId) {
         return repo.finalizarCompra(pedidoId, tarjetaId);
     }
 

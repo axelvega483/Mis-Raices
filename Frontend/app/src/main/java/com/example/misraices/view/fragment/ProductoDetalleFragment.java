@@ -9,9 +9,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.misraices.R;
 import com.example.misraices.data.model.PedidoDetalle;
 import com.example.misraices.data.model.Producto;
 import com.example.misraices.databinding.FragmentProductoDetalleBinding;
@@ -20,6 +23,12 @@ import com.example.misraices.viewModel.PedidoViewModel;
 public class ProductoDetalleFragment extends Fragment {
     private FragmentProductoDetalleBinding binding;
     private PedidoViewModel pedidoViewModel;
+    private boolean isImageExpanded = false;
+    private boolean isInitialized = false;
+    private int originalWidth;
+    private int originalHeight;
+    private float originalRadius;
+    private float originalElevation;
 
     public ProductoDetalleFragment() {
         // Required empty public constructor
@@ -53,13 +62,26 @@ public class ProductoDetalleFragment extends Fragment {
         Bundle args = getArguments();
         if (args != null) {
             binding.TituloDetalleTxt.setText(args.getString("nombre"));
-            binding.descrDetalleTxt.setText("Descripcíon: " + args.getString("descripcion"));
+            binding.descrDetalleTxt.setText("" + args.getString("descripcion"));
             binding.precioDetalleTxt.setText("Precio: " + String.format("$ %.2f", args.getDouble("precio")));
             binding.stockDetalleTxt.setText("Stock: " + args.getInt("stock"));
             Glide.with(this)
                     .load(args.getString("imagen"))
                     .into(binding.imgProductoDetalle);
         }
+        binding.cardView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                originalWidth = binding.cardView.getWidth();
+                originalHeight = binding.cardView.getHeight();
+                originalRadius = binding.cardView.getRadius();
+                originalElevation = binding.cardView.getCardElevation();
+                isInitialized = true;
+
+                // Remover listener
+                binding.cardView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+            }
+        });
     }
 
     private void initListener() {
@@ -77,6 +99,39 @@ public class ProductoDetalleFragment extends Fragment {
                 }
             }
         });
-    }
 
+        binding.imgProductoDetalle.setOnClickListener(v -> {
+            if (!isInitialized) return;
+            ViewGroup.LayoutParams imgParams = binding.imgProductoDetalle.getLayoutParams();
+            ViewGroup.LayoutParams cardParams = binding.cardView.getLayoutParams();
+
+            if (isImageExpanded) {
+                imgParams.width = originalWidth;
+                imgParams.height = originalHeight;
+                cardParams.width = originalWidth;
+                cardParams.height = originalHeight;
+
+                binding.imgProductoDetalle.setLayoutParams(imgParams);
+                binding.cardView.setLayoutParams(cardParams);
+                binding.cardView.setRadius(originalRadius);
+                binding.cardView.setCardElevation(originalElevation);
+                binding.imgProductoDetalle.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                isImageExpanded = false;
+
+            } else {
+                imgParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
+                imgParams.height = ViewGroup.LayoutParams.MATCH_PARENT;
+                cardParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
+                cardParams.height = ViewGroup.LayoutParams.MATCH_PARENT;
+
+                binding.imgProductoDetalle.setLayoutParams(imgParams);
+                binding.cardView.setLayoutParams(cardParams);
+                binding.cardView.setRadius(0f);
+                binding.cardView.setCardElevation(0f);
+                binding.cardView.setCardBackgroundColor(getResources().getColor(R.color.greenligth));
+                binding.imgProductoDetalle.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                isImageExpanded = true;
+            }
+        });
+    }
 }

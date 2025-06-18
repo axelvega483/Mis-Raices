@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/orden_alfabetico"
+        android:title="Ordenar A-Z" />
+    <item
+        android:id="@+id/orden_precio_menor_mayor"
+        android:title="Precio: menor a mayor" />
+    <item
+        android:id="@+id/orden_precio_mayor_menor"
+        android:title="Precio: mayor a menor" />
+
+</menu>

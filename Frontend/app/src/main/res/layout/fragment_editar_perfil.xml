@@ -16,7 +16,7 @@
             android:id="@+id/textView10"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="16dp"
             android:text="Perfil"
             android:textColor="@color/green"
             android:textSize="30sp"
@@ -30,7 +30,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="32dp"
             android:hint="Nombre"
             android:textColor="@color/black"
@@ -55,7 +55,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="32dp"
             android:hint="Apellido"
             android:textColor="@color/black"
@@ -81,7 +81,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="32dp"
             android:hint="Telefono"
             android:textColor="@color/black"
@@ -102,17 +102,67 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/calleTextInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="32dp"
+            android:hint="Calle"
+            android:textColor="@color/black"
+            app:endIconDrawable="@drawable/ic_check"
+            app:endIconMode="custom"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/telefonoTextInputLayout">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/calleEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/radius_txt"
+                android:inputType="text"
+                android:padding="16dp"
+                android:textColor="@color/black" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/numeroTextInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="32dp"
+            android:hint="Numeración"
+            android:textColor="@color/black"
+            app:endIconDrawable="@drawable/ic_check"
+            app:endIconMode="custom"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/calleTextInputLayout">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/numeroEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/radius_txt"
+                android:inputType="number"
+                android:padding="16dp"
+                android:textColor="@color/black" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/passwordBDTextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="32dp"
             android:hint="Contraseña Actual"
             android:textColor="@color/black"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/telefonoTextInputLayout"
+            app:layout_constraintTop_toBottomOf="@+id/numeroTextInputLayout"
             app:passwordToggleEnabled="true"
             app:passwordToggleTint="@color/black">
 
@@ -131,7 +181,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="32dp"
             android:hint="Nueva contraseña"
             android:textColor="@color/black"
@@ -156,7 +206,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="32dp"
             android:hint="Confirmar contraseña"
             android:textColor="@color/black"

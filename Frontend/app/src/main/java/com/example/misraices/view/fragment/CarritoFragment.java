@@ -16,10 +16,13 @@ import com.example.misraices.databinding.FragmentCarritoBinding;
 import com.example.misraices.view.adapter.AdapterPedidoDetalle;
 import com.example.misraices.viewModel.PedidoViewModel;
 
+import java.util.ArrayList;
+
 
 public class CarritoFragment extends Fragment {
     private FragmentCarritoBinding binding;
     private PedidoViewModel pedidoViewModel;
+    private AdapterPedidoDetalle adapter;
 
     public CarritoFragment() {
         // Required empty public constructor
@@ -51,33 +54,45 @@ public class CarritoFragment extends Fragment {
     private void init() {
         pedidoViewModel = new ViewModelProvider(requireActivity()).get(PedidoViewModel.class);
         pedidoViewModel.init(requireContext());
+        binding.recyclerViewProducto.setLayoutManager(new LinearLayoutManager(requireActivity()));
+        adapter = new AdapterPedidoDetalle(new ArrayList<>(), getContext(), pedidoViewModel);
+        binding.recyclerViewProducto.setAdapter(adapter);
     }
 
     private void initListener() {
         pedidoViewModel.getDetallesLiveData().observe(getViewLifecycleOwner(), detalles -> {
             if (detalles != null && !detalles.isEmpty()) {
-                binding.recyclerViewProducto.setLayoutManager(new LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false));
-                binding.recyclerViewProducto.setAdapter(new AdapterPedidoDetalle(detalles, getContext(), pedidoViewModel));
+                adapter.setPedidoDetalles(detalles); // Actualizo datos en el adaptador
+                adapter.notifyDataSetChanged();
                 binding.totalTxt.setText(String.format("Total $ %.2f", pedidoViewModel.calcularTotal()));
-
             } else {
+                adapter.setPedidoDetalles(new ArrayList<>());
+                adapter.notifyDataSetChanged();
                 binding.totalTxt.setText("Total $ 0.00");
             }
         });
 
         binding.btnCompra.setOnClickListener(view -> {
-            pedidoViewModel.getDetallesLiveData().observe(getViewLifecycleOwner(), detalles -> {
-                if (detalles != null && !detalles.isEmpty()) {
-                    requireActivity().getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.frameContainer, FinalizarCompraFragment.newInstance())
-                            .addToBackStack(null)
-                            .commit();
-                }else{
-                    Toast.makeText(getContext(), "No hay productos en el carrito", Toast.LENGTH_SHORT).show();
-                }
-            });
-
+            requireActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.frameContainer, HomeFragment.newInstance())
+                    .addToBackStack(null)
+                    .commit();
         });
 
+        binding.btnComprafinalizar.setOnClickListener(view -> {
+            if (pedidoViewModel.getDetallesLiveData().getValue() != null &&
+                    !pedidoViewModel.getDetallesLiveData().getValue().isEmpty()) {
+                requireActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.frameContainer, FinalizarCompraFragment.newInstance())
+                        .addToBackStack(null)
+                        .commit();
+            } else {
+                Toast.makeText(getContext(), "No hay productos en el carrito", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        binding.vaciarCarrito.setOnClickListener(view -> {
+            pedidoViewModel.limpiarCarrito();
+        });
     }
 }

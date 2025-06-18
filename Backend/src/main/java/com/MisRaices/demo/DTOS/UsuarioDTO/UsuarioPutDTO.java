@@ -15,4 +15,5 @@ public class UsuarioPutDTO {
     private String apellido;
     private Long telefono;
     private String password;
+    private DireccionDTO direccion;
 }

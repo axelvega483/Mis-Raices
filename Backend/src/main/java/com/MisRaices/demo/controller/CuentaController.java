@@ -157,6 +157,8 @@ public class CuentaController {
             existeUser.setPassword(restablecerDTO.getPassword());
             existeUser.setToken(null);
             existeUser.setTokenLimite(null);
+            existeUser.setCodigo(null);
+            existeUser.setActivo(true);
 
             Usuario savedUser = usuarioService.guardar(existeUser);
             UsuarioGetDTO dto = UsuarioMapper.toDTO(savedUser);

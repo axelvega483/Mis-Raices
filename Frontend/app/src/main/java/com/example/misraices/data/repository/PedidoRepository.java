@@ -7,7 +7,6 @@ import androidx.lifecycle.MutableLiveData;
 import com.example.misraices.data.api.ApiRetrofit;
 import com.example.misraices.data.model.ApiRespo;
 import com.example.misraices.data.model.Pedido;
-import com.example.misraices.data.model.Result;
 import com.example.misraices.data.service.PedidoService;
 
 import java.util.ArrayList;
@@ -24,22 +23,22 @@ public class PedidoRepository {
         this.pedidoService = ApiRetrofit.getRetrofitInstance().create(PedidoService.class);
     }
 
-    public MutableLiveData<Result<ApiRespo<Pedido>>> ejecutarPeticion(Call<ApiRespo<Pedido>> call) {
-        final MutableLiveData<Result<ApiRespo<Pedido>>> mdl = new MutableLiveData<>();
+    public MutableLiveData<ApiRespo<Pedido>> ejecutarPeticion(Call<ApiRespo<Pedido>> call) {
+        final MutableLiveData<ApiRespo<Pedido>> mdl = new MutableLiveData<>();
         call.enqueue(new Callback<ApiRespo<Pedido>>() {
             @Override
             public void onResponse(Call<ApiRespo<Pedido>> call, Response<ApiRespo<Pedido>> response) {
                 Log.e("response", response.toString());
                 if (response.isSuccessful() && response.body() != null) {
-                    mdl.setValue(new Result<>(response.body()));
+                    mdl.setValue(response.body());
                 } else {
-                    mdl.setValue(new Result<>("Error en la respuesta del servidor"));
+                    mdl.setValue(new ApiRespo<>("Error en la respuesta del servidor"));
                 }
             }
 
             @Override
             public void onFailure(Call<ApiRespo<Pedido>> call, Throwable t) {
-                mdl.setValue(new Result<>(t.getMessage()));
+                mdl.setValue(new ApiRespo<>(t.getMessage()));
             }
         });
         return mdl;
@@ -66,11 +65,11 @@ public class PedidoRepository {
         return mdl;
     }
 
-    public MutableLiveData<Result<ApiRespo<Pedido>>> crear(Pedido pedido) {
+    public MutableLiveData<ApiRespo<Pedido>> crear(Pedido pedido) {
         return ejecutarPeticion(pedidoService.crear(pedido));
     }
 
-    public MutableLiveData<Result<ApiRespo<Pedido>>> obtenerPorId(int id) {
+    public MutableLiveData<ApiRespo<Pedido>> obtenerPorId(int id) {
         return ejecutarPeticion(pedidoService.obtenerPorId(id));
     }
 
@@ -78,7 +77,7 @@ public class PedidoRepository {
         return ejecutarPeticionLista(pedidoService.obtener());
     }
 
-    public MutableLiveData<Result<ApiRespo<Pedido>>> finalizarCompra(int pedidoId, int tarjetaId) {
+    public MutableLiveData<ApiRespo<Pedido>> finalizarCompra(int pedidoId, int tarjetaId) {
         return ejecutarPeticion(pedidoService.finalizarCompra(pedidoId, tarjetaId));
     }
 }

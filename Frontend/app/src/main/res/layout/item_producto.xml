@@ -27,7 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="28dp"
+            android:layout_marginTop="8dp"
             android:text="nombre"
             android:textColor="@color/black"
             android:textSize="16sp"
@@ -36,13 +36,15 @@
 
         <TextView
             android:id="@+id/DescripcionTxt"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="8dp"
+            android:ellipsize="end"
             android:text="Descripcion"
             android:textColor="@color/black"
             android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/imgProducto"
             app:layout_constraintTop_toBottomOf="@+id/NombreTxt" />
 

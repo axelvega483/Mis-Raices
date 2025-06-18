@@ -1,5 +1,6 @@
 package com.MisRaices.demo.controller;
 
+import com.MisRaices.demo.DTOS.UsuarioDTO.DireccionDTO;
 import com.MisRaices.demo.DTOS.UsuarioDTO.UsuarioGetDTO;
 import com.MisRaices.demo.DTOS.UsuarioDTO.UsuarioMapper;
 import com.MisRaices.demo.DTOS.UsuarioDTO.UsuarioPutDTO;
@@ -85,6 +86,18 @@ public class UsuarioController {
                 user.setApellido(usuarioPut.getApellido());
                 user.setNombre(usuarioPut.getNombre());
                 user.setPassword(usuarioPut.getPassword());
+                if (usuarioPut.getDireccion() != null) {
+                    if (user.getDireccion() != null) {
+                        DireccionDTO d = usuarioPut.getDireccion();
+                        user.getDireccion().setCalle(d.getCalle());
+                        user.getDireccion().setNumero(d.getNumero());
+                        user.getDireccion().setCiudad(d.getCiudad());
+                        user.getDireccion().setProvincia(d.getProvincia());
+                        user.getDireccion().setCodigoPostal(d.getCodigoPostal());
+                        user.getDireccion().setLatitud(d.getLatitud());
+                        user.getDireccion().setLongitud(d.getLongitud());
+                    }
+                }
                 UsuarioGetDTO dto = UsuarioMapper.toDTO(usuarioService.guardar(user));
                 return new ResponseEntity<>(new ApiRespo<>("Usuario actualizado", dto, true), HttpStatus.OK);
 
@@ -104,7 +117,8 @@ public class UsuarioController {
         @ApiResponse(responseCode = "500", description = "Error interno del servidor")
     })
     @PutMapping("/direccion/{id}")
-    public ResponseEntity<?> cargarDireccion(@PathVariable Integer id, @RequestBody Direccion direccion) {
+    public ResponseEntity<?> cargarDireccion(@PathVariable Integer id, @RequestBody Direccion direccion
+    ) {
         try {
             Usuario usuario = usuarioService.obtener(id).orElse(null);
             if (usuario != null) {
@@ -126,7 +140,8 @@ public class UsuarioController {
         @ApiResponse(responseCode = "500", description = "Error interno del servidor")
     })
     @DeleteMapping("{id}")
-    public ResponseEntity<?> eliminarUsuario(@PathVariable Integer id) {
+    public ResponseEntity<?> eliminarUsuario(@PathVariable Integer id
+    ) {
         try {
             Usuario usuario = usuarioService.obtener(id).orElse(null);
             if (usuario != null) {

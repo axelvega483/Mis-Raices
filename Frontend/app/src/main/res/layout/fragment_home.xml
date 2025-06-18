@@ -16,8 +16,8 @@
             android:id="@+id/mapDireccionUsuario"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
             android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:text="Dirección"
             android:textColor="@color/green"
@@ -44,12 +44,23 @@
             android:textColor="@color/green"
             android:textSize="22sp" />
 
+
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerViewCategoria"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp" />
-
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnFiltroOrden"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="filtros"
+            android:padding="1dp"
+            android:textColor="@color/green"
+            android:textSize="15sp"
+            app:backgroundTint="@color/white"
+            app:cornerRadius="50dp" />
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -72,8 +83,8 @@
                 android:layout_height="wrap_content"
                 android:text="Ver todo"
                 android:textAlignment="center"
-                android:textSize="18sp"
-                android:textColor="@color/green" />
+                android:textColor="@color/green"
+                android:textSize="18sp" />
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView

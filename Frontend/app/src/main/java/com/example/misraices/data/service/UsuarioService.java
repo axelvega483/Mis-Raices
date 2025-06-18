@@ -14,6 +14,9 @@ import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
 public interface UsuarioService {
+    @GET("/usuario")
+    Call<ApiRespo<List<Usuario>>> obtenerUsuarios();
+
     @POST("/autenticacion/registro")
     Call<ApiRespo<Usuario>> crearUsuario(@Body Usuario usuario);
 

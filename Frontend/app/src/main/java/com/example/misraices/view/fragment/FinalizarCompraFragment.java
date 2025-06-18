@@ -34,6 +34,7 @@ public class FinalizarCompraFragment extends Fragment {
     private UsuarioViewModel usuarioViewModel;
     private TarjetaCredito tarjetaSeleccionada;
     private int usuarioId;
+    private int idUltimaTarjetaUsada;
 
     public static FinalizarCompraFragment newInstance() {
         return new FinalizarCompraFragment();
@@ -64,6 +65,7 @@ public class FinalizarCompraFragment extends Fragment {
     }
 
     private void initListeners() {
+
         cargarTarjetasUsuario();
 
         binding.btnfinalizarCompra.setOnClickListener(view -> {
@@ -80,6 +82,7 @@ public class FinalizarCompraFragment extends Fragment {
     }
 
     private void cargarTarjetasUsuario() {
+
         usuarioViewModel.obtenerId(usuarioId).observe(getViewLifecycleOwner(), usuario -> {
             if (usuario.getData() == null) return;
 
@@ -95,11 +98,21 @@ public class FinalizarCompraFragment extends Fragment {
 
                 AdapterTarjetaCompra adapter = new AdapterTarjetaCompra(tarjetasUsuario, getContext(), tarjeta -> {
                     tarjetaSeleccionada = tarjeta;
+
+                    // Guardar la tarjeta seleccionada en SharedPreferences
+                    SharedPreferences prefs = requireActivity().getSharedPreferences("MiAppPrefs", Context.MODE_PRIVATE);
+                    prefs.edit().putInt("ultima_tarjeta_id", tarjeta.getId()).apply();
+
                     Toast.makeText(getContext(), "Seleccionaste la tarjeta: " + tarjeta.getNumero(), Toast.LENGTH_SHORT).show();
-                });
+                }, idUltimaTarjetaUsada);
 
                 binding.recyclerViewTarjetas.setLayoutManager(new LinearLayoutManager(getContext()));
                 binding.recyclerViewTarjetas.setAdapter(adapter);
+                if (tarjetasUsuario.isEmpty()) {
+                    binding.btnfinalizarCompra.setVisibility(View.GONE);
+                } else {
+                    binding.btnfinalizarCompra.setVisibility(View.VISIBLE);
+                }
             });
         });
     }
@@ -150,12 +163,12 @@ public class FinalizarCompraFragment extends Fragment {
             pedido.setUsuario(usuario.getData());
 
             pedidoViewModel.crearPedido(pedido).observe(getViewLifecycleOwner(), resultado -> {
-                if (resultado == null || resultado.getData() == null || resultado.getData().getData() == null) {
+                if (resultado == null || resultado.getData() == null || resultado.getData() == null) {
                     Toast.makeText(getContext(), "Error al crear el pedido", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                Pedido pedidoCreado = resultado.getData().getData();
+                Pedido pedidoCreado = resultado.getData();
                 pedidoViewModel.setPedidoMutableLiveData(pedidoCreado);
                 pedidoViewModel.limpiarCarrito();
 
@@ -166,7 +179,7 @@ public class FinalizarCompraFragment extends Fragment {
 
     private void finalizarCompra(int pedidoId) {
         pedidoViewModel.obtenerPedidoPorId(pedidoId).observe(getViewLifecycleOwner(), response -> {
-            Pedido pedido = response != null ? response.getData().getData() : null;
+            Pedido pedido = response != null ? response.getData(): null;
             if (pedido == null) {
                 Toast.makeText(getContext(), "No se pudo obtener el pedido", Toast.LENGTH_SHORT).show();
                 return;

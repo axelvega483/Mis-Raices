@@ -1,16 +1,11 @@
-package com.MisRaices.demo.entity;
+package com.MisRaices.demo.DTOS.UsuarioDTO;
 
-import jakarta.persistence.Embeddable;
-import java.io.Serializable;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-@Embeddable
-public class Direccion implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+public class DireccionDTO {
     private String calle;
     private Long numero;
     private String ciudad;

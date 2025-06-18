@@ -21,7 +21,6 @@ import android.widget.Toast;
 
 import com.example.misraices.R;
 import com.example.misraices.data.model.Direccion;
-import com.example.misraices.data.model.Usuario;
 import com.example.misraices.databinding.FragmentMapaBinding;
 import com.example.misraices.viewModel.UsuarioViewModel;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -36,7 +35,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
-
 
 public class MapaFragment extends Fragment implements OnMapReadyCallback {
     FragmentMapaBinding binding;
@@ -95,9 +93,12 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
                     if (direccion != null) {
                         usuarioViewModel.actualizarDireccion(usuarioId, direccion)
                                 .observe(getViewLifecycleOwner(), result -> {
-                                    if (result != null && result.isSuccess()) {
+                                    if (result != null && result.isExito()) {
                                         usuarioViewModel.setDireccionActualizada(true);
-                                        requireActivity().getSupportFragmentManager().popBackStack();
+                                        HomeFragment homeFragment =  HomeFragment.newInstance();
+                                        getParentFragmentManager().beginTransaction()
+                                                .replace(R.id.frameContainer, homeFragment)
+                                                .commit();
                                     } else {
                                         Toast.makeText(requireContext(), "Error al actualizar dirección", Toast.LENGTH_SHORT).show();
                                     }
@@ -121,7 +122,7 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
             Address address = direcciones.get(0);
             Direccion direccion = new Direccion();
             direccion.setCalle(address.getThoroughfare());
-            direccion.setNumero(address.getSubThoroughfare());
+            direccion.setNumero(Long.parseLong(address.getSubThoroughfare()));
             direccion.setCiudad(address.getLocality());
             direccion.setProvincia(address.getAdminArea());
             direccion.setCodigoPostal(address.getPostalCode());
@@ -192,4 +193,5 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
             }
         }
     }
+
 }

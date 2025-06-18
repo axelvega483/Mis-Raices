@@ -13,7 +13,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Direccion implements Serializable {
     private String calle;
-    private String numero;
+    private Long numero;
     private String ciudad;
     private String provincia;
     private String codigoPostal;

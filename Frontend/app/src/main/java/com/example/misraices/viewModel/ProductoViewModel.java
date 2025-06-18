@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.misraices.data.model.ApiRespo;
 import com.example.misraices.data.model.Producto;
 import com.example.misraices.data.repository.ProductoRepository;
 
@@ -25,17 +26,15 @@ public class ProductoViewModel extends ViewModel {
             }
         });
     }
-    public LiveData<List<Producto>> getProductoLiveData() {
-        return productoMutableLiveData;
-    }
 
-    public MutableLiveData<List<Producto>> obtenerProductos() {
+
+    public LiveData<ApiRespo<List<Producto>>> obtenerProductos() {
         return repo.obtenerProductos();
     }
-    public LiveData<List<Producto>> obtenerProductosPorCategoria(int Id) {
+    public LiveData<ApiRespo<List<Producto>>> obtenerProductosPorCategoria(int Id) {
         return repo.obtenerProductosPorCategoria(Id);
     }
-    public LiveData<List<Producto>> obtenerProductosPorNombre(String nombre) {
+    public LiveData<ApiRespo<List<Producto>>> obtenerProductosPorNombre(String nombre) {
         return repo.obtenerProductosPorNombre(nombre);
     }
 

@@ -39,7 +39,16 @@ public class AdaptadorProductos extends RecyclerView.Adapter<AdaptadorProductos.
     public void onBindViewHolder(ViewHolder holder, int position) {
         Producto producto = productos.get(position);
         holder.binding.NombreTxt.setText(producto.getNombre());
-        holder.binding.DescripcionTxt.setText(producto.getDescripcion());
+        String descripcionCompleta = producto.getDescripcion();
+        String descripcionParcial;
+
+        if (descripcionCompleta.length() > 70) {
+            descripcionParcial = descripcionCompleta.substring(0, 70) + "...";
+        } else {
+            descripcionParcial = descripcionCompleta;
+        }
+
+        holder.binding.DescripcionTxt.setText(descripcionParcial);
         holder.binding.PrecioTxt.setText(String.format("$ %.2f", producto.getPrecio()));
         Glide.with(context)
                 .load(producto.getImg())

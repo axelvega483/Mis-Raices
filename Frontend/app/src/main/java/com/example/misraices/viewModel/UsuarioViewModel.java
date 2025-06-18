@@ -6,14 +6,14 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.misraices.data.model.ApiRespo;
 import com.example.misraices.data.model.Direccion;
-import com.example.misraices.data.model.Result;
 import com.example.misraices.data.model.Usuario;
 import com.example.misraices.data.repository.UsuarioRepository;
 
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.function.Consumer;
 
 public class UsuarioViewModel extends ViewModel {
     private final UsuarioRepository repo = new UsuarioRepository();
@@ -38,43 +38,46 @@ public class UsuarioViewModel extends ViewModel {
         });
     }
 
+    public void verificarBackend(Consumer<Boolean> callback) {
+        repo.verificarBackend(callback);
+    }
 
     public LiveData<Usuario> getUsuarioLiveData() {
         return usuarioMutableLiveData;
     }
 
-    public MutableLiveData<Result<Usuario>> crearUsuario(Usuario usuario) {
+    public MutableLiveData<ApiRespo<Usuario>> crearUsuario(Usuario usuario) {
         return repo.crearUsuario(usuario);
     }
 
-    public MutableLiveData<Result<Usuario>> activarCuenta(Usuario usuario) {
+    public MutableLiveData<ApiRespo<Usuario>> activarCuenta(Usuario usuario) {
         return repo.activarCuenta(usuario);
     }
 
-    public MutableLiveData<Result<Usuario>> login(Usuario usuario) {
+    public MutableLiveData<ApiRespo<Usuario>> login(Usuario usuario) {
         Log.e("MutableLiveDatausuario", usuario.toString());
         return repo.login(usuario);
     }
 
-    public MutableLiveData<Result<Usuario>> solicitarToken(Usuario usuario) {
+    public MutableLiveData<ApiRespo<Usuario>> solicitarToken(Usuario usuario) {
         Log.e("MutableLiveDatausuarioToken", usuario.toString());
         return repo.solicitarToken(usuario);
     }
 
-    public MutableLiveData<Result<Usuario>> restablecerPassword(Usuario usuario) {
+    public MutableLiveData<ApiRespo<Usuario>> restablecerPassword(Usuario usuario) {
         Log.e("MutableLiveDatausuarioPassword", usuario.toString());
         return repo.restablecerPassword(usuario);
     }
 
-    public MutableLiveData<Result<Usuario>> editarUsuario(Integer id, Usuario usuario) {
+    public MutableLiveData<ApiRespo<Usuario>> editarUsuario(Integer id, Usuario usuario) {
         return repo.editarUsuario(id, usuario);
     }
 
-    public MutableLiveData<Result<Usuario>> obtenerId(Integer id) {
+    public MutableLiveData<ApiRespo<Usuario>> obtenerId(Integer id) {
         return repo.obtenerId(id);
     }
 
-    public MutableLiveData<Result<Usuario>> actualizarDireccion(Integer id, Direccion direccion) {
+    public MutableLiveData<ApiRespo<Usuario>> actualizarDireccion(Integer id, Direccion direccion) {
         return repo.actualizarDireccion(id, direccion);
     }
 }

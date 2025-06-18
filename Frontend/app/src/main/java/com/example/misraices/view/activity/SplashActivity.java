@@ -5,11 +5,15 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.misraices.R;
+import com.example.misraices.viewModel.UsuarioViewModel;
 import com.facebook.stetho.BuildConfig;
 
 public class SplashActivity extends AppCompatActivity {
@@ -19,7 +23,7 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_splash);
-
+        UsuarioViewModel usuarioViewModel = new ViewModelProvider(this).get(UsuarioViewModel.class);
 
         SharedPreferences prefs = getSharedPreferences("MiAppPrefs", MODE_PRIVATE);
         int ultimaVersionGuardada = prefs.getInt("ultimaVersion", -1);
@@ -32,17 +36,26 @@ public class SplashActivity extends AppCompatActivity {
             editor.putInt("ultimaVersion", versionActual);
             editor.apply();
         }
-        new Handler().postDelayed(() -> {
-            boolean logueado = prefs.getBoolean("logueado", false);
-
-            Intent intent;
-            if (logueado) {
-                intent = new Intent(SplashActivity.this, PrincipalActivity.class);
+        usuarioViewModel.verificarBackend(isBackendActivo -> {
+            Log.e("entra", "entra");
+            if (isBackendActivo) {
+                Log.e("Splash", "Backend OK");
+                boolean logueado = prefs.getBoolean("logueado", false);
+                Intent intent = new Intent(
+                        SplashActivity.this,
+                        logueado ? PrincipalActivity.class : MainActivity.class
+                );
+                startActivity(intent);
+                finish();
             } else {
-                intent = new Intent(SplashActivity.this, MainActivity.class);
+                Log.e("Splash", "Backend caído");
+                Toast.makeText(this, "Error al conectar con el servidor", Toast.LENGTH_LONG).show();
+
+                Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+                intent.putExtra(MainActivity.EXTRA_BACKEND_ERROR, true);
+                startActivity(intent);
+                finish();
             }
-            startActivity(intent);
-            finish();
-        }, 3000);
+        });
     }
 }

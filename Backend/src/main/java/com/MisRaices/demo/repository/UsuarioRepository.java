@@ -12,7 +12,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
     @Override
     public Optional<Usuario> findById(Integer id);
 
-    @Query("SELECT u FROM Usuario u WHERE u.correo=:correo AND u.password=:password AND u.activo=true")
+    @Query("SELECT u FROM Usuario u WHERE u.correo=:correo AND u.password=:password")
     Optional<Usuario> findByCorreoAndPassword(String correo, String password);
 
     @Query("SELECT u FROM Usuario u WHERE u.correo=:correo")

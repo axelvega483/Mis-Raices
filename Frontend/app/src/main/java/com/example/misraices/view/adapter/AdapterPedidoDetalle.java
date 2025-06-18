@@ -25,7 +25,9 @@ public class AdapterPedidoDetalle extends RecyclerView.Adapter<AdapterPedidoDeta
         this.context = context;
         this.pedidoViewModel = pedidoViewModel;
     }
-
+    public void setPedidoDetalles(List<PedidoDetalle> nuevosDetalles) {
+        this.pedidoDetalles = nuevosDetalles;
+    }
     @NonNull
     @Override
     public AdapterPedidoDetalle.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

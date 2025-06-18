@@ -24,7 +24,6 @@ import com.example.misraices.viewModel.UsuarioViewModel;
 public class LoginFragment extends Fragment {
     private FragmentLoginBinding binding;
     private UsuarioViewModel usuarioViewModel;
-    private Usuario usuario;
 
     public LoginFragment() {
         // Required empty public constructor
@@ -55,8 +54,6 @@ public class LoginFragment extends Fragment {
 
     public void init() {
         usuarioViewModel = new ViewModelProvider(requireActivity()).get(UsuarioViewModel.class);
-
-
     }
 
     public void initlistener() {
@@ -97,20 +94,25 @@ public class LoginFragment extends Fragment {
 
             usuarioViewModel.login(usuario).observe(getViewLifecycleOwner(), result -> {
                 if (result.getData() != null) {
-                    Log.e("result login", result.getData().toString());
-                    Toast.makeText(getContext(), "Inicio de sesión exitoso", Toast.LENGTH_SHORT).show();
-                    usuarioViewModel.setUsuarioLiveData(result.getData());
+                    if (result.getData().isActivo()) {
+                        Log.e("result login", result.getData().toString());
+                        Toast.makeText(getContext(), "Inicio de sesión exitoso", Toast.LENGTH_SHORT).show();
+                        usuarioViewModel.setUsuarioLiveData(result.getData());
 
-                    SharedPreferences prefs = requireActivity().getSharedPreferences("MiAppPrefs", Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = prefs.edit();
-                    editor.putBoolean("logueado", true);
-                    editor.putInt("usuarioId", result.getData().getId());
-                    editor.apply();
-                    Log.e("usuario login", result.getData().toString());
-                    Intent intent = new Intent(getContext(), PrincipalActivity.class);
-                    startActivity(intent);
+                        SharedPreferences prefs = requireActivity().getSharedPreferences("MiAppPrefs", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = prefs.edit();
+                        editor.putBoolean("logueado", true);
+                        editor.putInt("usuarioId", result.getData().getId());
+                        editor.apply();
+
+                        Intent intent = new Intent(getContext(), PrincipalActivity.class);
+                        startActivity(intent);
+                    } else {
+                        Toast.makeText(getContext(), "Usuario no activo", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "Restaure su contraseña para activar su cuenta", Toast.LENGTH_SHORT).show();
+                    }
                 } else {
-                    Toast.makeText(getContext(), "Error al iniciar sesión", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Usuario o contraseña inválidos", Toast.LENGTH_SHORT).show();
                 }
             });
 

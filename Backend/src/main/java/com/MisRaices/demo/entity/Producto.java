@@ -20,12 +20,15 @@ public class Producto implements Serializable {
     private Integer id;
 
     private String nombre;
-    private String descripcion;
-    private int stock;
     
     @Column(length = 1000)
-    private String cuidado;
+    private String descripcion;
     
+    private int stock;
+
+    @Column(length = 1000)
+    private String cuidado;
+
     private String video;
     private Double precio;
 

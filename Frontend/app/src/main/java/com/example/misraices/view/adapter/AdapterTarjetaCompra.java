@@ -23,10 +23,24 @@ public class AdapterTarjetaCompra extends RecyclerView.Adapter<AdapterTarjetaCom
         void onTarjetaSeleccionada(TarjetaCredito tarjeta);
     }
 
-    public AdapterTarjetaCompra(List<TarjetaCredito> listaTarjetas, Context context, OnTarjetaSeleccionadaListener listener) {
+    public AdapterTarjetaCompra(List<TarjetaCredito> listaTarjetas, Context context, OnTarjetaSeleccionadaListener listener,int idUltimaTarjetaUsada) {
         this.listaTarjetas = listaTarjetas;
         this.context = context;
         this.listener = listener;
+        // Buscar la posición de la última tarjeta usada
+        for (int i = 0; i < listaTarjetas.size(); i++) {
+            if (listaTarjetas.get(i).getId() == idUltimaTarjetaUsada) {
+                tarjetaSeleccionadaPos = i;
+                listener.onTarjetaSeleccionada(listaTarjetas.get(i));
+                break;
+            }
+        }
+
+        // Si no se encontró, seleccionar la primera
+        if (tarjetaSeleccionadaPos == -1 && !listaTarjetas.isEmpty()) {
+            tarjetaSeleccionadaPos = 0;
+            listener.onTarjetaSeleccionada(listaTarjetas.get(0));
+        }
     }
 
     @NonNull
@@ -47,14 +61,15 @@ public class AdapterTarjetaCompra extends RecyclerView.Adapter<AdapterTarjetaCom
         holder.binding.VencimientoTxt.setText("Venc: " + tarjeta.getFechaVencimiento());
         holder.binding.TipoTxt.setText("Tipo: " + tarjeta.getTipo());
         holder.binding.CodigoTxt.setText("Codigo: " + tarjeta.getCodigoSeguridad());
+        holder.binding.getRoot().findViewById(R.id.constraintLayoutTarjeta).setBackgroundResource(R.drawable.bg_tarjeta_seleccionada);
 
-        if (position == tarjetaSeleccionadaPos) {
-            holder.binding.getRoot().findViewById(R.id.constraintLayoutTarjeta).setBackgroundResource(R.drawable.bg_tarjeta_seleccionada);
+        // Fondo según selección
+        int fondo = (position == tarjetaSeleccionadaPos)
+                ? R.drawable.bg_tarjeta_seleccionada
+                : R.drawable.bg_tarjeta_normal;
+        holder.binding.getRoot().findViewById(R.id.constraintLayoutTarjeta).setBackgroundResource(fondo);
 
-        } else {
-            holder.binding.getRoot().findViewById(R.id.constraintLayoutTarjeta).setBackgroundResource(R.drawable.bg_tarjeta_normal);
 
-        }
 
         holder.itemView.setOnClickListener(v -> {
             tarjetaSeleccionadaPos = position;
