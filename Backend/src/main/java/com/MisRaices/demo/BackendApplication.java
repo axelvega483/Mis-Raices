@@ -4,6 +4,9 @@ import com.MisRaices.demo.entity.Categoria;
 import com.MisRaices.demo.entity.Producto;
 import com.MisRaices.demo.service.CategoriaService;
 import com.MisRaices.demo.service.ProductoService;
+import com.MisRaices.demo.util.ExposicionProducto;
+import com.MisRaices.demo.util.OrigenProducto;
+import com.MisRaices.demo.util.TamañoProducto;
 import java.util.Optional;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -70,6 +73,9 @@ public class BackendApplication {
                         + "☀️ Requiere sol directo y 💧 riego moderado. ❄️ Resistente a la sequía y a heladas débiles.\n"
                         + "🏡 Ideal para jardines y paseos.");
                 bracho.setPrecio(1000.0);
+                bracho.setExposicion(ExposicionProducto.sol_pleno);
+                bracho.setOrigen(OrigenProducto.exotica);
+                bracho.setTamano(TamañoProducto.grande);
                 bracho.setStock(8);
                 bracho.setCuidado("🌳 Árbol perenne de 8 a 10 m de altura con copa piramidal, ideal para plantar en jardines y paseos. ☀️ Requiere exposición a pleno sol y suelos bien drenados. ❄️ Es resistente a la sequía una vez establecido, pero se beneficia de 💧 riegos regulares durante períodos secos. Puede soportar heladas débiles siendo un árbol jóven.");
                 bracho.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743618906/bracho-40cm-bolsa_1l-_1000_tsglxb.jpg");
@@ -84,6 +90,9 @@ public class BackendApplication {
                         + "☀️ Requiere un clima cálido y soleado. ❄️ Sensible a heladas.\n"
                         + "🌿 Ideal para sitios amplios. ⚠️ Posee sistema radical agresivo.");
                 chivato.setPrecio(3000.0);
+                chivato.setExposicion(ExposicionProducto.sol_pleno);
+                chivato.setTamano(TamañoProducto.grande);
+                chivato.setOrigen(OrigenProducto.exotica);
                 chivato.setStock(7);
                 chivato.setCuidado("🌳 Árbol caducifolio de 6-8 m de altura, con la copa aparasolada. ☀️ Prefiere climas cálidos y soleados. Necesita suelos bien drenados y 💧 riegos moderados. 🌺 Planta muy apreciada en jardinería por su espectacular floración de color rojo intenso. Se debe plantar en sitios amplios, sin construcciones ya que posee un sistema radicular agresivo. ❄️ Sensible al frío, no soporta heladas intensas y prolongadas.");
                 chivato.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743618964/chivato-bolsa_5l-_3000_lyfoep.jpg");
@@ -98,6 +107,9 @@ public class BackendApplication {
                         + "☀️ Requiere sol directo y 💧 riego moderado. ❄️ Resistente a la sequía.\n"
                         + "🏡 Ideal para jardines y parquizados.");
                 guayacan.setPrecio(1800.0);
+                guayacan.setExposicion(ExposicionProducto.sol_pleno);
+                guayacan.setTamano(TamañoProducto.grande);
+                guayacan.setOrigen(OrigenProducto.nativa);
                 guayacan.setStock(5);
                 guayacan.setCuidado("🌳 Árbol caducifolio de copa aparasolada y porte grande, alcanza una altura de 20 m en condiciones favorables. 🌲 Se destaca por su corteza delgada constituida por escamas pardo-verdosas que se desprenden dejando parches de color verde-grisáceos. ☀️ Prospera en pleno sol y suelos bien drenados. ❄️ Tolera la sequía gracias a su sistema radicular profundo, pero se recomienda 💧 riego regular en su etapa de crecimiento. 🏡 Ideal para jardines amplios o parquizados.");
                 guayacan.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743619016/Guayac%C3%A1n-bolsa_5l-_80cm-_1800_os7byl.jpg");
@@ -112,6 +124,9 @@ public class BackendApplication {
                         + "☀️ Requiere sol directo. ❄️ Resistente a la sequía.\n"
                         + "🏡 Ideal para jardines y veredas pequeñas. ⚠️ Posee látex tóxico.");
                 thevetia.setPrecio(2800.0);
+                thevetia.setExposicion(ExposicionProducto.sol_pleno);
+                thevetia.setTamano(TamañoProducto.grande);
+                thevetia.setOrigen(OrigenProducto.nativa);
                 thevetia.setStock(9);
                 thevetia.setCuidado("🌳 Arbolito de 3 a 4 m de altura con copa frondosa, ideal para veredas o jardines pequeños. ☀️ Necesita exposición a pleno sol y suelos bien drenados. ❄️ Es resistente a la sequía y florece durante gran parte del año con flores amarillas llamativas. ⚠️ No soporta heladas intensas y prolongadas. Sus hojas, tallos, flores, frutos y semillas poseen un látex tóxico para personas y mascotas, se recomienda lavado con agua y jabón en caso de contacto con la piel.");
                 thevetia.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743619047/thevetia-_recipiente_descartable-_1m-_2800_oxevqi.jpg");
@@ -126,6 +141,9 @@ public class BackendApplication {
                         + "🌤️ Requiere media sombra y 💧 riego moderado.\n"
                         + "🏡 Ideal para macetas y canteros. ⚠️ Posee compuestos tóxicos.");
                 boldo.setPrecio(1200.0);
+                boldo.setExposicion(ExposicionProducto.sol_pleno);
+                boldo.setTamano(TamañoProducto.mediano);
+                boldo.setOrigen(OrigenProducto.exotica);
                 boldo.setStock(5);
                 boldo.setCuidado("🌿 Planta rastrera de follaje perenne y tupido, muy aromática. 🌤️ Prefiere sol suave o media sombra y suelos sueltos que drenen bien. 💧 No requiere riegos constantes; mantener el sustrato apenas húmedo es suficiente. 🏡 Puede cultivarse en maceta o jardín, y la poda ayuda a mantener su forma. ⚠️ No se recomienda su consumo ya que posee compuestos tóxicos.");
                 boldo.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743619143/boldo_paraguayo-_maceta_n12-_1200_w1ady2.jpg");
@@ -140,6 +158,9 @@ public class BackendApplication {
                         + "🌤️ Requiere media sombra y temperaturas moderadas. ⚠️ Sensible al exceso de riego.\n"
                         + "🏡 Ideal para macetas y canteros.");
                 incienso.setPrecio(1500.0);
+                incienso.setExposicion(ExposicionProducto.luz_indirecta);
+                incienso.setTamano(TamañoProducto.mediano);
+                incienso.setOrigen(OrigenProducto.nativa);
                 incienso.setStock(10);
                 incienso.setCuidado("🌿 Planta rastrera con follaje variegado, muy aromática. 🌤️ Requiere luz indirecta y suelos bien drenados. ⚠️ No soporta temperaturas demasiado altas o bajas, ideal para climas templados. 💧 Es sensible al exceso de riego, por lo que se debe permitir que el sustrato se seque entre riegos.");
                 incienso.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743619185/incienso-_maceta_n12-_1500_d2srrf.jpg");
@@ -154,6 +175,9 @@ public class BackendApplication {
                         + "☀️ Requiere luz solar directa. ⚠️ Es sensible al exceso de riego.\n"
                         + "🏡 Ideal para macetas pequeñas.");
                 mammillaria.setPrecio(500.0);
+                mammillaria.setExposicion(ExposicionProducto.sol_pleno);
+                mammillaria.setTamano(TamañoProducto.pequeno);
+                mammillaria.setOrigen(OrigenProducto.exotica);
                 mammillaria.setStock(15);
                 mammillaria.setCuidado("🌵 Cactus cilíndricos de porte rastrero de hasta 15 cm de longitud y flores blanco-amarillentas. 🌞 Necesita mucha luz solar directa y riegos muy espaciados, especialmente en invierno. Se recomienda utilizar sustrato bien drenado. 🏡 Ideal para macetas pequeñas.");
                 mammillaria.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743619340/mammillaria_elongata-_maceta_n6-_500_w3nj5f.jpg");
@@ -168,6 +192,9 @@ public class BackendApplication {
                         + "☀️ Requiere luz solar directa y altas temperaturas. ⚠️ Es sensible al exceso de riego.\n"
                         + "🏡 Ideal para macetas pequeñas.");
                 gracilis.setPrecio(700.0);
+                gracilis.setExposicion(ExposicionProducto.sol_pleno);
+                gracilis.setTamano(TamañoProducto.pequeno);
+                gracilis.setOrigen(OrigenProducto.exotica);
                 gracilis.setStock(13);
                 gracilis.setCuidado("🌵 Son cactus de porte cespitoso que no suelen superar 10 cm de altura. 🌼 Las flores son pequeñas y de color amarillo o crema. ☀️ Prefiere exposición solar directa y altas temperaturas. Necesita riegos moderados y suelos con buen drenaje. 💧 Dejar que el sustrato se seque completamente entre riegos para evitar pudrición de raíces.");
                 gracilis.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743619393/mammillaria_gracilis-_maceta_n8-_700_taopo0.jpg");
@@ -182,6 +209,9 @@ public class BackendApplication {
                         + "☀️ Requiere luz solar directa. ⚠️ Es sensible al exceso de riego.\n"
                         + "🏡 Ideal para macetas pequeñas.");
                 plumosa.setPrecio(500.0);
+                plumosa.setExposicion(ExposicionProducto.sol_pleno);
+                plumosa.setTamano(TamañoProducto.pequeno);
+                plumosa.setOrigen(OrigenProducto.exotica);
                 plumosa.setStock(8);
                 plumosa.setCuidado("🌵 Cactus globoso de aspecto llamativo y floración delicada. ☀️ Requiere sol pleno. 🌿 Prospera en suelos bien drenados con riegos escasos ya que es tolerante a la sequía y muy sensible al exceso de agua.");
                 plumosa.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743619439/mammillaria_plumosa-_maceta_n6-_500_lbgxtf.jpg");
@@ -196,6 +226,9 @@ public class BackendApplication {
                         + "☀️ Requiere luz solar directa. ⚠️ Es sensible al exceso de riego.\n"
                         + "🏡 Ideal para macetas pequeñas.");
                 prolifera.setPrecio(700.0);
+                prolifera.setExposicion(ExposicionProducto.sol_pleno);
+                prolifera.setTamano(TamañoProducto.pequeno);
+                prolifera.setOrigen(OrigenProducto.exotica);
                 prolifera.setStock(7);
                 prolifera.setCuidado("🌵 Cactus pequeño de 10 cm de alto con flores blanco-amarillentas. ☀️ Necesita exposición solar directa y riegos moderados a escasos. 💧 Es importante evitar el encharcamiento para prevenir enfermedades radiculares.");
                 prolifera.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743619494/mammillaria_prolifera-_maceta_n8-_700_cfke52.jpg");
@@ -210,6 +243,9 @@ public class BackendApplication {
                         + "☀️ Requiere luz solar directa. 🔥 Soporta altas temperaturas.\n"
                         + "🏡 Ideal para canteros y macetas.");
                 opuntia.setPrecio(700.0);
+                opuntia.setExposicion(ExposicionProducto.sol_pleno);
+                opuntia.setTamano(TamañoProducto.mediano);
+                opuntia.setOrigen(OrigenProducto.exotica);
                 opuntia.setStock(8);
                 opuntia.setCuidado("🌵 Cactus de tallo aplanado de 15 a 30 cm de alto. ☀️ Prefiere pleno sol y suelos con buen drenaje. 💧 Riegos esporádicos, permitiendo que el sustrato se seque completamente entre aplicaciones. 🔥 Soporta perfectamente altas temperaturas.");
                 opuntia.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743619530/opuntia_humifusa-_maceta_soplada_n12-_700_ylpa71.jpg");
@@ -225,6 +261,9 @@ public class BackendApplication {
                         + "🏡 Ideal para macetas y canteros.\n"
                         + "☠️ Su ingesta es tóxica.");
                 albuca.setPrecio(3500.0);
+                albuca.setExposicion(ExposicionProducto.sol_pleno);
+                albuca.setTamano(TamañoProducto.mediano);
+                albuca.setOrigen(OrigenProducto.exotica);
                 albuca.setStock(5);
                 albuca.setCuidado("🌿 Planta bulbosa, perenne. ☠️ Tóxica para mascotas y humanos, no se recomienda su ingesta. ☀️ Soporta sol directo pero no altas temperaturas para evitar quemaduras en hojas. 💧 Necesita suelo bien drenado y riegos moderados, evitando exceso de humedad que provoque pudrición del bulbo.");
                 albuca.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743619756/albuca_bracteata-_maceta_n18-_3500_d0udxv.jpg");
@@ -240,6 +279,9 @@ public class BackendApplication {
                         + "🏡 Ideal para jardines y canteros.\n"
                         + "☠️ Posee látex tóxico.");
                 euphorbia.setPrecio(2100.0);
+                euphorbia.setExposicion(ExposicionProducto.luz_indirecta);
+                euphorbia.setTamano(TamañoProducto.grande);
+                euphorbia.setOrigen(OrigenProducto.nativa);
                 euphorbia.setStock(4);
                 euphorbia.setCuidado("🌿 Arbusto perenne de 5 a 8 m de altura con follaje muy llamativo. ☀️ Prefiere luz indirecta brillante y suelos bien drenados. 💧 Riegos moderados, dejando que el sustrato se seque entre aplicaciones. ❄️ Muy sensible al frío, ideal para climas templados.");
                 euphorbia.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743619853/euphorbia_umbellata-_maceta_soplada_n16-_2100_gzwrte.jpg");
@@ -254,6 +296,9 @@ public class BackendApplication {
                         + "☀️ Requiere luz solar directa, al menos 6 h al día.\n"
                         + "🏡 Ideal para macetas colgantes.");
                 rayito.setPrecio(2800.0);
+                rayito.setExposicion(ExposicionProducto.sol_pleno);
+                rayito.setTamano(TamañoProducto.mediano);
+                rayito.setOrigen(OrigenProducto.exotica);
                 rayito.setStock(4);
                 rayito.setCuidado("🌿 Planta rastrera con hojas suculentas y floración abundante y llamativa. ☀️ Prefiere pleno sol con al menos 6 horas diarias de luz. 💧 Riegos moderados y sustrato liviano. 🌞 Sus flores se abren con la luz del día y se cierran al atardecer, creando un efecto visual encantador. 🌡️ Prefiere climas cálidos.");
                 rayito.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743619961/Rayito_de_sol-_maceta_bolsa_n18_colgante-_2800_j2nuky.jpg");
@@ -268,6 +313,9 @@ public class BackendApplication {
                         + "☀️ Requiere luz solar indirecta. 🌡️ Prefiere climas cálidos.\n"
                         + "🏡 Ideal para macetas y canteros.");
                 tradescantia.setPrecio(2300.0);
+                tradescantia.setExposicion(ExposicionProducto.luz_indirecta);
+                tradescantia.setTamano(TamañoProducto.mediano);
+                tradescantia.setOrigen(OrigenProducto.exotica);
                 tradescantia.setStock(6);
                 tradescantia.setCuidado("🌿 Planta rastrera con follaje muy llamativo de color púrpura intenso y floración delicada durante todo el año. 🚫 Evitar luz solar directa. 🌱 Prefiere suelos bien drenados y 💧 riegos moderados, permitiendo que el sustrato se seque entre aplicaciones. 🌡️ Prefiere climas cálidos.");
                 tradescantia.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743620079/tradescantia_pallida-bolsa_5l-_2300_yzytcp.jpg");
@@ -282,6 +330,9 @@ public class BackendApplication {
                         + "☀️ Requiere luz solar indirecta y ambientes húmedos.\n"
                         + "🏡 Ideal para macetas grandes.");
                 helecho.setPrecio(400.0);
+                helecho.setExposicion(ExposicionProducto.luz_indirecta);
+                helecho.setTamano(TamañoProducto.mediano);
+                helecho.setOrigen(OrigenProducto.nativa);
                 helecho.setStock(4);
                 helecho.setCuidado("🌿 Helecho robusto, ideal para principiantes. Prefiere luz solar indirecta y ambientes húmedos. 💧 Mantener el sustrato húmedo, pero sin encharcar. 🚫 Evitar exposición a aire acondicionado directo, calefacción u otros artefactos que resequen el ambiente.");
                 helecho.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743620139/helecho_serrucho-_maceta_n15-_4000_eol1jv.jpg");
@@ -297,6 +348,9 @@ public class BackendApplication {
                         + "🏡 Ideal para macetas colgantes.\n"
                         + "⚠️ Tóxica para mascotas.");
                 brasil.setPrecio(2000.0);
+                brasil.setExposicion(ExposicionProducto.luz_indirecta);
+                brasil.setTamano(TamañoProducto.pequeno);
+                brasil.setOrigen(OrigenProducto.nativa);
                 brasil.setStock(6);
                 brasil.setCuidado("🌿 Planta trepadora de fácil cuidado, con follaje muy llamativo por su patrón de colores. ⚠️ Tóxica para mascotas. 🌞 Crece bien con mucha luz indirecta y humedad ambiental media. 💧 Requiere riegos regulares, dejando secar la capa superior del sustrato entre cada uno. 🚫 Es importante no exponer la planta a aire acondicionado directo, calefacción u otro artefacto que pueda resecar demasiado el ambiente.");
                 brasil.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743620217/philodendron_brasil-_maceta_soplada_n12-_2000_jcmt0w.jpg");
@@ -311,6 +365,9 @@ public class BackendApplication {
                         + "☀️ Requiere luz solar indirecta y ambientes algo húmedos.\n"
                         + "🏡 Ideal para macetas colgantes.");
                 plateado.setPrecio(3000.0);
+                plateado.setExposicion(ExposicionProducto.luz_indirecta);
+                plateado.setTamano(TamañoProducto.pequeno);
+                plateado.setOrigen(OrigenProducto.exotica);
                 plateado.setStock(3);
                 plateado.setCuidado("🌿 Planta de hábito trepador con hojas muy llamativas de color verde con destellos plateados. ⚠️ Tóxica para mascotas. 🌞 Necesita luz solar indirecta y suelos bien drenados. 💧 Riegos moderados, evitando el encharcamiento. 🚫 Es importante no exponer la planta a aire acondicionado directo, calefacción u otro artefacto que pueda resecar demasiado el ambiente.");
                 plateado.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743620289/philodendron_plateado-maceta_n14-_3000_whoxet.jpg");
@@ -325,6 +382,9 @@ public class BackendApplication {
                         + "☀️ Requiere luz solar indirecta.\n"
                         + "🏡 Ideal para macetas medianas.");
                 sanseviera.setPrecio(2800.0);
+                sanseviera.setExposicion(ExposicionProducto.luz_indirecta);
+                sanseviera.setTamano(TamañoProducto.mediano);
+                sanseviera.setOrigen(OrigenProducto.exotica);
                 sanseviera.setStock(7);
                 sanseviera.setCuidado("🌿 Planta suculenta de interior, ideal para principiantes por su resistencia. 🌬️ Muy utilizada por su capacidad para purificar el aire. ☀️ Tolera una amplia gama de condiciones de luz, aunque la exposición directa al sol prolongada puede quemar sus hojas. 💧 Requiere riegos esporádicos y suelo bien drenado.");
                 sanseviera.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743620336/Sansevieria_enana-_maceta_n15-_2800_m7qdqi.jpg");
@@ -339,6 +399,9 @@ public class BackendApplication {
                         + "☀️ Requiere luz solar directa bajo temperaturas moderadas.\n"
                         + "🏡 Ideal para macetas medianas.");
                 crassula.setPrecio(1600.0);
+                crassula.setExposicion(ExposicionProducto.sol_pleno);
+                crassula.setTamano(TamañoProducto.pequeno);
+                crassula.setOrigen(OrigenProducto.exotica);
                 crassula.setStock(9);
                 crassula.setCuidado("🌿 Plantas suculentas con follaje llamativo de color verde y rojo brillante. 🌞 La coloración rojiza se obtiene gracias a la exposición prolongada al sol directo. ⚠️ Prefiere luz solar directa, pero bajo temperaturas muy altas sus hojas pueden sufrir quemaduras. 💧 Requiere suelos con buen drenaje y riegos moderados, dejando secar el sustrato entre riegos.");
                 crassula.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743620423/crassula_-_maceta_soplada_n12_-_1600_njcgd7.jpg");
@@ -353,6 +416,9 @@ public class BackendApplication {
                         + "☀️ Requiere luz solar indirecta y temperaturas moderadas.\n"
                         + "🏡 Ideal para macetas pequeñas.");
                 haworthia.setPrecio(2300.0);
+                haworthia.setExposicion(ExposicionProducto.luz_indirecta);
+                haworthia.setTamano(TamañoProducto.pequeno);
+                haworthia.setOrigen(OrigenProducto.exotica);
                 haworthia.setStock(5);
                 haworthia.setCuidado("🌿 Muy atractiva por sus hojas translúcidas dispuestas en forma de roseta. Es de fácil cuidado. Necesita luz indirecta y suelos bien drenados. 💧 Riegos moderados, dejando secar el sustrato entre aplicaciones.");
                 haworthia.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743620541/haworthia_cymbiformis-_maceta_n12-_2300_zmk42j.jpg");
@@ -368,6 +434,9 @@ public class BackendApplication {
                         + "🏡 Ideal para macetas medianas.\n"
                         + "⚠️ Tóxico para mascotas.");
                 kalanchoe.setPrecio(1500.0);
+                kalanchoe.setExposicion(ExposicionProducto.sol_pleno);
+                kalanchoe.setTamano(TamañoProducto.mediano);
+                kalanchoe.setOrigen(OrigenProducto.exotica);
                 kalanchoe.setStock(9);
                 kalanchoe.setCuidado("🌿 Destaca por su follaje atigrado en tonos verdes, grises y rojizos. ⚠️ Es tóxica para mascotas. ☀️ Prefiere luz solar plena y soporta elevadas temperaturas. 🌵 Prefiere suelos con buen drenaje pero no es exigente en nutrientes. 💧 Riegos moderados, evitando el exceso de humedad que puede causar pudrición. 🌞 Resiste muy bien la sequía.");
                 kalanchoe.setImg("https://res.cloudinary.com/dhaot8eju/image/upload/v1743620589/kalanchoe_humilis._maceta_soplada_n12-_1500_cnaz9d.jpg");

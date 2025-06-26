@@ -1,6 +1,9 @@
 package com.MisRaices.demo.DTOS.ProductoDTO;
 
 import com.MisRaices.demo.entity.Categoria;
+import com.MisRaices.demo.util.ExposicionProducto;
+import com.MisRaices.demo.util.OrigenProducto;
+import com.MisRaices.demo.util.TamañoProducto;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,5 +20,7 @@ public class ProductoGetDTO {
     private Double precio;
     private Categoria categoria;
     private String img;
-
+    private ExposicionProducto exposicion;
+    private TamañoProducto tamano;
+    private OrigenProducto origen;
 }

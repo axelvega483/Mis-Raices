@@ -62,7 +62,7 @@ public class CarritoFragment extends Fragment {
     private void initListener() {
         pedidoViewModel.getDetallesLiveData().observe(getViewLifecycleOwner(), detalles -> {
             if (detalles != null && !detalles.isEmpty()) {
-                adapter.setPedidoDetalles(detalles); // Actualizo datos en el adaptador
+                adapter.setPedidoDetalles(detalles);
                 adapter.notifyDataSetChanged();
                 binding.totalTxt.setText(String.format("Total $ %.2f", pedidoViewModel.calcularTotal()));
             } else {

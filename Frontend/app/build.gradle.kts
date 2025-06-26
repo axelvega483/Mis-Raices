@@ -69,4 +69,10 @@ dependencies {
     //SQLite
     implementation ("androidx.room:room-runtime:2.6.1")
     annotationProcessor ("androidx.room:room-compiler:2.6.1")
+
+    //Iconics
+    implementation ("androidx.emoji:emoji-bundled:1.1.0")
+    implementation ("androidx.emoji:emoji-appcompat:1.1.0")
+
+
 }

@@ -25,8 +25,8 @@
 
         <LinearLayout
             android:id="@+id/linearLayout2"
-            android:layout_width="420dp"
-            android:layout_height="350dp"
+            android:layout_width="403dp"
+            android:layout_height="417dp"
             android:layout_marginTop="30dp"
             android:gravity="center"
             android:orientation="vertical"
@@ -36,11 +36,9 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerViewTarjetas"
-                android:layout_width="369dp"
-                android:layout_height="350dp"
-                android:clipToPadding="false"
-                android:paddingTop="16dp"
-                android:paddingBottom="16dp" />
+                android:layout_width="410dp"
+                android:layout_height="420dp"
+                android:paddingStart="5dp"/>
 
         </LinearLayout>
 
@@ -69,7 +67,7 @@
             android:layout_marginStart="32dp"
             android:layout_marginEnd="32dp"
             android:layout_marginBottom="70dp"
-            android:text="Comprar"
+            android:text="Finalizar compra"
             android:textColor="@color/green"
             android:textSize="20sp"
             app:backgroundTint="@color/white"

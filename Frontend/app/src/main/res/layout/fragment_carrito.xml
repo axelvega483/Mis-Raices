@@ -80,7 +80,7 @@
             android:layout_marginStart="32dp"
             android:layout_marginEnd="32dp"
             android:layout_marginBottom="16dp"
-            android:text="Finalizar compra"
+            android:text="Pagar"
             android:textColor="@color/green"
             android:textSize="20sp"
             app:backgroundTint="@color/white"
@@ -92,16 +92,25 @@
             app:strokeColor="@color/green"
             app:strokeWidth="1dp" />
 
-        <TextView
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/vaciarCarrito"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="25dp"
-            android:layout_marginTop="21dp"
-            android:text="vaciar carrito"
-            android:textColor="@color/red"
-            android:textSize="18sp"
+            android:layout_height="49dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="115dp"
+            android:text="🗑️ Vaciar"
+            android:textColor="@color/green"
+            android:textSize="20sp"
+            app:backgroundTint="@color/white"
+            app:cornerRadius="50dp"
+            app:layout_constraintEnd_toStartOf="@+id/totalTxt"
+            app:layout_constraintHorizontal_bias="0.033"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+            app:strokeColor="@color/red"
+            app:strokeWidth="2dp" />
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

@@ -1,5 +1,8 @@
 package com.MisRaices.demo.entity;
 
+import com.MisRaices.demo.util.ExposicionProducto;
+import com.MisRaices.demo.util.OrigenProducto;
+import com.MisRaices.demo.util.TamañoProducto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
 import java.io.Serializable;
@@ -20,14 +23,23 @@ public class Producto implements Serializable {
     private Integer id;
 
     private String nombre;
-    
+
     @Column(length = 1000)
     private String descripcion;
-    
+
     private int stock;
 
     @Column(length = 1000)
     private String cuidado;
+
+    @Enumerated(EnumType.STRING)
+    private ExposicionProducto exposicion;
+
+    @Enumerated(EnumType.STRING)
+    private TamañoProducto tamano;
+
+    @Enumerated(EnumType.STRING)
+    private OrigenProducto origen;
 
     private String video;
     private Double precio;

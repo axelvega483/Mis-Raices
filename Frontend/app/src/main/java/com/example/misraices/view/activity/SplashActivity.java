@@ -3,18 +3,19 @@ package com.example.misraices.view.activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.misraices.R;
 import com.example.misraices.viewModel.UsuarioViewModel;
 import com.facebook.stetho.BuildConfig;
+
+import androidx.emoji.text.EmojiCompat;
+import androidx.emoji.bundled.BundledEmojiCompatConfig;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -23,6 +24,10 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_splash);
+
+        EmojiCompat.Config config = new BundledEmojiCompatConfig(this);
+        EmojiCompat.init(config);
+
         UsuarioViewModel usuarioViewModel = new ViewModelProvider(this).get(UsuarioViewModel.class);
 
         SharedPreferences prefs = getSharedPreferences("MiAppPrefs", MODE_PRIVATE);

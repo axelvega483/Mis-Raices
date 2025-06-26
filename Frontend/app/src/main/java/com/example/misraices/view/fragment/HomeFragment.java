@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.PopupMenu;
@@ -22,6 +23,9 @@ import com.example.misraices.data.model.Categoria;
 import com.example.misraices.data.model.Direccion;
 import com.example.misraices.data.model.Producto;
 import com.example.misraices.data.model.Usuario;
+import com.example.misraices.data.util.ExposicionProducto;
+import com.example.misraices.data.util.OrigenProducto;
+import com.example.misraices.data.util.TamañoProducto;
 import com.example.misraices.databinding.FragmentHomeBinding;
 import com.example.misraices.view.adapter.AdaptadorCategorias;
 import com.example.misraices.view.adapter.AdaptadorProductos;
@@ -30,9 +34,6 @@ import com.example.misraices.viewModel.ProductoViewModel;
 import com.example.misraices.viewModel.UsuarioViewModel;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
 
 
 public class HomeFragment extends Fragment {
@@ -43,36 +44,27 @@ public class HomeFragment extends Fragment {
     private Handler handler = new Handler();
     private Runnable searchRunnable;
     private int usuarioId;
-    private List<Producto> listaFiltrada = new ArrayList<>();
     private AdaptadorProductos adaptadorProductos;
 
     public HomeFragment() {
-        // Required empty public constructor
     }
 
     public static HomeFragment newInstance() {
-        HomeFragment fragment = new HomeFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
+        return new HomeFragment();
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
-        init();
-        initlistener();
+        initViewModels();
+        setupRecyclerView();
+        observeViewModels();
+        productoViewModel.cargarProductos();
+        setupListeners();
         return binding.getRoot();
     }
 
-    public void init() {
+    private void initViewModels() {
         productoViewModel = new ViewModelProvider(requireActivity()).get(ProductoViewModel.class);
         categoriaViewModel = new ViewModelProvider(requireActivity()).get(CategoriaViewModel.class);
         usuarioViewModel = new ViewModelProvider(requireActivity()).get(UsuarioViewModel.class);
@@ -80,72 +72,64 @@ public class HomeFragment extends Fragment {
         usuarioId = prefs.getInt("usuarioId", -1);
     }
 
-    private void initlistener() {
-        usuarioViewModel.getDireccionActualizada().observe(getViewLifecycleOwner(), actualizada -> {
-            if (actualizada != null && actualizada) {
-                usuarioViewModel.setDireccionActualizada(false);
-                Log.e("entra", "Actualizando dirección");
+    private void setupRecyclerView() {
+        adaptadorProductos = new AdaptadorProductos(new ArrayList<>(), requireContext(), this::abrirDetalleProducto);
+        binding.recyclerViewProducto.setLayoutManager(new LinearLayoutManager(requireContext()));
+        binding.recyclerViewProducto.setAdapter(adaptadorProductos);
+    }
 
-            }
-        });
-
-        usuarioViewModel.obtenerId(usuarioId).observe(getViewLifecycleOwner(), result -> {
-            if (result != null && result.getData() != null) {
-                Usuario usuario = result.getData();
-                Direccion direccion = usuario.getDireccion();
-                if (direccion != null) {
-                    String calle = direccion.getCalle() != null ? direccion.getCalle() : "";
-                    Long numero = direccion.getNumero() != null ? direccion.getNumero() : 0L;
-                    String direccionTexto = (calle + " " + numero).trim();
-                    if (direccionTexto.isEmpty()) {
-                        direccionTexto = "Dirección";
-                    }
-                    binding.mapDireccionUsuario.setText(direccionTexto);
-                } else {
-                    binding.mapDireccionUsuario.setText("Dirección");
-                }
-            } else {
-                binding.mapDireccionUsuario.setText("Dirección");
-            }
-        });
-        binding.mapDireccionUsuario.setOnClickListener(v -> {
-            MapaFragment mapaFragment = new MapaFragment();
-            getParentFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.frameContainer, mapaFragment)
-                    .addToBackStack(null)
-                    .commit();
-        });
-
-        productoViewModel.obtenerProductos().observe(getViewLifecycleOwner(), productos -> {
-            if (productos != null) {
-                productoViewModel.setProductoMutableLiveData(productos.getData());
-                mostrarProductos(productos.getData(), true);
-            }
+    private void observeViewModels() {
+        productoViewModel.getProductosLiveData().observe(getViewLifecycleOwner(), productos -> {
+            adaptadorProductos.updateData(productos);
         });
 
         categoriaViewModel.obtenerCategorias().observe(getViewLifecycleOwner(), categorias -> {
             if (categorias != null) {
-                categoriaViewModel.setCategoriaMutableLiveData(categorias);
                 binding.recyclerViewCategoria.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
                 binding.recyclerViewCategoria.setAdapter(new AdaptadorCategorias(categorias, requireContext(), this::mostrarProductosPorCategoria));
             }
         });
 
-        binding.verTodoTxt.setOnClickListener(v -> {
-            productoViewModel.obtenerProductos().observe(getViewLifecycleOwner(), productos -> {
-                if (productos != null) {
-                    productoViewModel.setProductoMutableLiveData(productos.getData());
-                    mostrarProductos(productos.getData(), true);
+        usuarioViewModel.obtenerId(usuarioId).observe(getViewLifecycleOwner(), result -> {
+            String direccionTexto = "Dirección";
+            if (result != null && result.getData() != null) {
+                Direccion direccion = result.getData().getDireccion();
+                if (direccion != null) {
+                    String calle = direccion.getCalle() != null ? direccion.getCalle() : "";
+                    Long numero = direccion.getNumero() != null ? direccion.getNumero() : 0L;
+                    direccionTexto = (calle + " " + numero).trim();
+                    if (direccionTexto.isEmpty()) direccionTexto = "Dirección";
                 }
-            });
+            }
+            binding.mapDireccionUsuario.setText(direccionTexto);
+        });
+    }
 
+    private void setupListeners() {
+        binding.mapDireccionUsuario.setOnClickListener(v -> {
+            getParentFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.frameContainer, new MapaFragment())
+                    .addToBackStack(null)
+                    .commit();
+        });
+
+        binding.verTodoTxt.setOnClickListener(v -> {
+            productoViewModel.cargarProductos();
+            productoViewModel.limpiarFiltros();
+            binding.btnFiltro.setText("Filtrar");
+            binding.btnFiltroOrden.setText("Ordenar");
         });
 
         binding.searchView.setOnQueryTextListener(new androidx.appcompat.widget.SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                filtrarProductos(query);
+                productoViewModel.obtenerProductosPorNombre(query).observe(getViewLifecycleOwner(), resp -> {
+                    if (resp != null && resp.isExito())
+                        adaptadorProductos.updateData(resp.getData());
+                    else
+                        Toast.makeText(requireContext(), "No se encontraron productos para: " + query, Toast.LENGTH_SHORT).show();
+                });
                 return true;
             }
 
@@ -153,113 +137,106 @@ public class HomeFragment extends Fragment {
             public boolean onQueryTextChange(String newText) {
                 handler.removeCallbacks(searchRunnable);
                 searchRunnable = () -> {
-                    if (newText.isEmpty()) {
-                        cargarTodosLosProductos();
-                    } else {
-                        filtrarProductos(newText);
-                    }
+                    if (newText.isEmpty()) productoViewModel.cargarProductos();
+                    else
+                        productoViewModel.obtenerProductosPorNombre(newText).observe(getViewLifecycleOwner(), resp -> {
+                            if (resp != null && resp.isExito())
+                                adaptadorProductos.updateData(resp.getData());
+                        });
                 };
                 handler.postDelayed(searchRunnable, 300);
                 return true;
             }
         });
+
         binding.btnFiltroOrden.setOnClickListener(v -> {
             PopupMenu popup = new PopupMenu(requireContext(), v);
             popup.getMenuInflater().inflate(R.menu.orden_menu, popup.getMenu());
-
             popup.setOnMenuItemClickListener(item -> {
-                int itemId = item.getItemId();
-                if (itemId == R.id.orden_alfabetico) {
-                    ordenarAlfabeticamente();
+
+                if (item.getItemId() == R.id.orden_alfabetico) {
+                    productoViewModel.ordenarAlfabeticamente();
                     binding.btnFiltroOrden.setText("A-Z");
-                } else if (itemId == R.id.orden_precio_menor_mayor) {
-                    ordenarPrecioMenorMayor();
+                } else if (item.getItemId() == R.id.orden_precio_menor_mayor) {
+                    productoViewModel.ordenarPrecioMenorMayor();
                     binding.btnFiltroOrden.setText("Precio ⬆");
 
-                } else if (itemId == R.id.orden_precio_mayor_menor) {
-                    ordenarPrecioMayorMenor();
+                } else if (item.getItemId() == R.id.orden_precio_mayor_menor) {
+                    productoViewModel.ordenarPrecioMayorMenor();
                     binding.btnFiltroOrden.setText("Precio ⬇");
                 }
+
+                return true;
+            });
+            popup.show();
+        });
+
+        binding.btnFiltro.setOnClickListener(v -> {
+            PopupMenu popup = new PopupMenu(requireContext(), v);
+            popup.getMenuInflater().inflate(R.menu.filtro_menu, popup.getMenu());
+            marcarFiltrosSeleccionados(popup.getMenu());
+
+            popup.setOnMenuItemClickListener(item -> {
+                if (item.getItemId() == R.id.sol_pleno_menu) {
+                    productoViewModel.toggleFiltroExposicion(ExposicionProducto.sol_pleno);
+                } else if (item.getItemId() == R.id.luz_indirecta_menu) {
+                    productoViewModel.toggleFiltroExposicion(ExposicionProducto.luz_indirecta);
+                } else if (item.getItemId() == R.id.pequenio_menu) {
+                    productoViewModel.toggleFiltroTamano(TamañoProducto.pequeno);
+                } else if (item.getItemId() == R.id.mediano_menu) {
+                    productoViewModel.toggleFiltroTamano(TamañoProducto.mediano);
+                } else if (item.getItemId() == R.id.grande_menu) {
+                    productoViewModel.toggleFiltroTamano(TamañoProducto.grande);
+                } else if (item.getItemId() == R.id.nativa_menu) {
+                    productoViewModel.toggleFiltroOrigen(OrigenProducto.nativa);
+                } else if (item.getItemId() == R.id.exotica_menu) {
+                    productoViewModel.toggleFiltroOrigen(OrigenProducto.exotica);
+                }
+                actualizarTextoFiltro();
                 return true;
             });
 
             popup.show();
         });
-
     }
 
-    private void mostrarProductos(List<Producto> productos, boolean filtrarStock) {
-        listaFiltrada.clear();
-        for (Producto p : productos) {
-            if (!filtrarStock || p.getStock() > 0) {
-                listaFiltrada.add(p);
-            }
-        }
-        if (adaptadorProductos == null) {
-            adaptadorProductos = new AdaptadorProductos(listaFiltrada, requireContext(), this::abrirDetalleProducto);
-            binding.recyclerViewProducto.setLayoutManager(new LinearLayoutManager(requireContext()));
-            binding.recyclerViewProducto.setAdapter(adaptadorProductos);
-        } else {
-            adaptadorProductos.notifyDataSetChanged();
-        }
+    private void marcarFiltrosSeleccionados(Menu menu) {
+        if (productoViewModel.getExposicionesSeleccionadas().contains(ExposicionProducto.sol_pleno))
+            menu.findItem(R.id.sol_pleno_menu).setChecked(true);
+        if (productoViewModel.getExposicionesSeleccionadas().contains(ExposicionProducto.luz_indirecta))
+            menu.findItem(R.id.luz_indirecta_menu).setChecked(true);
+        if (productoViewModel.getTamaniosSeleccionados().contains(TamañoProducto.pequeno))
+            menu.findItem(R.id.pequenio_menu).setChecked(true);
+        if (productoViewModel.getTamaniosSeleccionados().contains(TamañoProducto.mediano))
+            menu.findItem(R.id.mediano_menu).setChecked(true);
+        if (productoViewModel.getTamaniosSeleccionados().contains(TamañoProducto.grande))
+            menu.findItem(R.id.grande_menu).setChecked(true);
+        if (productoViewModel.getOrigenesSeleccionados().contains(OrigenProducto.nativa))
+            menu.findItem(R.id.nativa_menu).setChecked(true);
+        if (productoViewModel.getOrigenesSeleccionados().contains(OrigenProducto.exotica))
+            menu.findItem(R.id.exotica_menu).setChecked(true);
+    }
+
+    private void actualizarTextoFiltro() {
+        int totalFiltros = productoViewModel.cantidadTotalDeFiltros();
+        binding.btnFiltro.setText(totalFiltros > 0 ? "Filtrando (" + totalFiltros + ")" : "Filtrar");
     }
 
     private void mostrarProductosPorCategoria(Categoria categoria) {
-        productoViewModel.obtenerProductosPorCategoria(categoria.getId()).observe(getViewLifecycleOwner(), productos -> {
-            if (productos != null) mostrarProductos(productos.getData(), true);
+        productoViewModel.obtenerProductosPorCategoria(categoria.getId()).observe(getViewLifecycleOwner(), resp -> {
+            if (resp != null && resp.isExito())
+                adaptadorProductos.updateData(resp.getData());
         });
-    }
-
-    private void filtrarProductos(String query) {
-        productoViewModel.obtenerProductosPorNombre(query).observe(getViewLifecycleOwner(), productos -> {
-            if (productos != null && !productos.isExito()) {
-                mostrarProductos(productos.getData(), true);
-            } else {
-                Toast.makeText(requireContext(), "No se encontraron productos para: " + query, Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    private void cargarTodosLosProductos() {
-        ApiRespo<List<Producto>> respuesta = productoViewModel.obtenerProductos().getValue();
-        if (respuesta != null && respuesta.isExito() && respuesta.getData() != null) {
-            mostrarProductos(respuesta.getData(), true);
-        } else {
-            mostrarProductos(Collections.emptyList(), false);
-        }
     }
 
     private void abrirDetalleProducto(Producto producto) {
         ProductoDetalleFragment fragment = new ProductoDetalleFragment();
         Bundle bundle = new Bundle();
         bundle.putSerializable("producto", producto);
-        bundle.putString("nombre", producto.getNombre());
-        bundle.putString("descripcion", producto.getDescripcion());
-        bundle.putDouble("precio", producto.getPrecio());
-        bundle.putInt("stock", producto.getStock());
-        bundle.putString("imagen", producto.getImg());
         fragment.setArguments(bundle);
-
         getParentFragmentManager().beginTransaction()
                 .replace(R.id.frameContainer, fragment)
                 .addToBackStack(null)
                 .commit();
     }
-
-    private void ordenarAlfabeticamente() {
-        Collections.sort(listaFiltrada, (p1, p2) -> p1.getNombre().compareToIgnoreCase(p2.getNombre()));
-        adaptadorProductos.notifyDataSetChanged();
-    }
-
-    private void ordenarPrecioMenorMayor() {
-        Collections.sort(listaFiltrada, Comparator.comparingDouble(Producto::getPrecio));
-        adaptadorProductos.notifyDataSetChanged();
-    }
-
-    private void ordenarPrecioMayorMenor() {
-        Collections.sort(listaFiltrada, (p1, p2) -> Double.compare(p2.getPrecio(), p1.getPrecio()));
-        adaptadorProductos.notifyDataSetChanged();
-    }
-
-
 }

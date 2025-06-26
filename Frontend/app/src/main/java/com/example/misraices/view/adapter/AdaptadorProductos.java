@@ -5,11 +5,14 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.emoji.text.EmojiCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.misraices.data.model.Producto;
 import com.example.misraices.databinding.ItemProductoBinding;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class AdaptadorProductos extends RecyclerView.Adapter<AdaptadorProductos.ViewHolder> {
@@ -48,7 +51,7 @@ public class AdaptadorProductos extends RecyclerView.Adapter<AdaptadorProductos.
             descripcionParcial = descripcionCompleta;
         }
 
-        holder.binding.DescripcionTxt.setText(descripcionParcial);
+        holder.binding.DescripcionTxt.setText(EmojiCompat.get().process(descripcionParcial));
         holder.binding.PrecioTxt.setText(String.format("$ %.2f", producto.getPrecio()));
         Glide.with(context)
                 .load(producto.getImg())
@@ -65,11 +68,17 @@ public class AdaptadorProductos extends RecyclerView.Adapter<AdaptadorProductos.
     public int getItemCount() {
         return productos.size();
     }
-
+    public void updateData(List<Producto> nuevosProductos) {
+        if (nuevosProductos == null) {
+            this.productos = new ArrayList<>();
+        } else {
+            this.productos = nuevosProductos;
+        }
+        notifyDataSetChanged();
+    }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private final ItemProductoBinding binding;
-
 
 
         public ViewHolder(ItemProductoBinding binding) {

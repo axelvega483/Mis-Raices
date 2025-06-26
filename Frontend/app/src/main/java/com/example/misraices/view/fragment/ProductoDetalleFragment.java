@@ -61,13 +61,16 @@ public class ProductoDetalleFragment extends Fragment {
 
         Bundle args = getArguments();
         if (args != null) {
-            binding.TituloDetalleTxt.setText(args.getString("nombre"));
-            binding.descrDetalleTxt.setText("" + args.getString("descripcion"));
-            binding.precioDetalleTxt.setText("Precio: " + String.format("$ %.2f", args.getDouble("precio")));
-            binding.stockDetalleTxt.setText("Stock: " + args.getInt("stock"));
-            Glide.with(this)
-                    .load(args.getString("imagen"))
-                    .into(binding.imgProductoDetalle);
+            Producto producto = (Producto) getArguments().getSerializable("producto");
+            if (producto != null) {
+                binding.TituloDetalleTxt.setText(producto.getNombre());
+                binding.descrDetalleTxt.setText(producto.getDescripcion());
+                binding.precioDetalleTxt.setText(String.format("Precio: $ %.2f", producto.getPrecio()));
+                binding.stockDetalleTxt.setText("Stock: " + producto.getStock());
+                Glide.with(this).load(producto.getImg()).into(binding.imgProductoDetalle);
+            } else {
+                Log.e("DetalleProducto", "El producto recibido es null");
+            }
         }
         binding.cardView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
@@ -90,7 +93,7 @@ public class ProductoDetalleFragment extends Fragment {
             if (args != null) {
                 Producto producto = (Producto) args.getSerializable("producto");
                 Log.e("productoARGS", producto.toString());
-                PedidoDetalle detalle = new PedidoDetalle(producto, args.getString("nombre"), args.getDouble("precio"), args.getInt("stock"));
+                PedidoDetalle detalle = new PedidoDetalle(producto,producto.getNombre(),producto.getPrecio(),producto.getStock());
                 if (!pedidoViewModel.existeProductoEnCarrito(producto.getId())) {
                     pedidoViewModel.cargarPedidosDetalles(detalle);
                     Toast.makeText(getContext(), "Producto agregado al carrito", Toast.LENGTH_SHORT).show();

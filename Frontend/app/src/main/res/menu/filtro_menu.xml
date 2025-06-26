@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/sol_pleno_menu"
+        android:title="sol pleno"
+        android:checkable="true"/>
+    <item
+        android:id="@+id/luz_indirecta_menu"
+        android:title="Luz indirecta"
+        android:checkable="true"/>
+    <item
+        android:id="@+id/pequenio_menu"
+        android:title="Pequeño"
+        android:checkable="true"/>
+    <item
+        android:id="@+id/mediano_menu"
+        android:title="Mediano"
+        android:checkable="true"/>
+    <item
+        android:id="@+id/grande_menu"
+        android:title="Grande"
+        android:checkable="true"/>
+    <item
+        android:id="@+id/nativa_menu"
+        android:title="Nativa"
+        android:checkable="true"/>
+    <item
+        android:id="@+id/exotica_menu"
+        android:title="Exotica"
+        android:checkable="true"/>
+</menu>
