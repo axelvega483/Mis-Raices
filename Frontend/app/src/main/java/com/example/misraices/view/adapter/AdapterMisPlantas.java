@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.widget.MediaController;
 
 import androidx.annotation.NonNull;
+import androidx.emoji.text.EmojiCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -32,7 +33,7 @@ public class AdapterMisPlantas extends RecyclerView.Adapter<AdapterMisPlantas.Vi
     public void onBindViewHolder(@NonNull AdapterMisPlantas.ViewHolder holder, int position) {
         Planta planta = plantas.get(position);
         holder.binding.txtNombre.setText(planta.getNombre());
-        holder.binding.txtCuidadosPlantas.setText(planta.getCuidados());
+        holder.binding.txtCuidadosPlantas.setText(EmojiCompat.get().process(planta.getCuidados()));
         Glide.with(holder.binding.imgProductoDetalle.getContext())
                 .load(planta.getImg())
                 .centerCrop()
