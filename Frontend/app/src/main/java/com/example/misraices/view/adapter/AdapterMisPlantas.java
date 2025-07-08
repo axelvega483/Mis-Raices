@@ -1,6 +1,9 @@
 package com.example.misraices.view.adapter;
 
 import android.net.Uri;
+import android.os.Build;
+import android.text.Html;
+import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.MediaController;
@@ -33,7 +36,16 @@ public class AdapterMisPlantas extends RecyclerView.Adapter<AdapterMisPlantas.Vi
     public void onBindViewHolder(@NonNull AdapterMisPlantas.ViewHolder holder, int position) {
         Planta planta = plantas.get(position);
         holder.binding.txtNombre.setText(planta.getNombre());
-        holder.binding.txtCuidadosPlantas.setText(EmojiCompat.get().process(planta.getCuidados()));
+        String descripcionHtml =planta.getCuidados();
+        descripcionHtml = descripcionHtml.replace("\n", "<br>");
+
+        Spanned descripcionConFormato;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            descripcionConFormato = Html.fromHtml(descripcionHtml, Html.FROM_HTML_MODE_LEGACY);
+        } else {
+            descripcionConFormato = Html.fromHtml(descripcionHtml);
+        }
+        holder.binding.txtCuidadosPlantas.setText(EmojiCompat.get().process(descripcionConFormato));
         Glide.with(holder.binding.imgProductoDetalle.getContext())
                 .load(planta.getImg())
                 .centerCrop()

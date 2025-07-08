@@ -182,15 +182,15 @@ public class HomeFragment extends Fragment {
                 } else if (item.getItemId() == R.id.luz_indirecta_menu) {
                     productoViewModel.toggleFiltroExposicion(ExposicionProducto.luz_indirecta);
                 } else if (item.getItemId() == R.id.pequenio_menu) {
-                    productoViewModel.toggleFiltroTamano(TamañoProducto.pequeno);
+                    productoViewModel.toggleFiltroTamano(TamañoProducto.Pequenio);
                 } else if (item.getItemId() == R.id.mediano_menu) {
-                    productoViewModel.toggleFiltroTamano(TamañoProducto.mediano);
+                    productoViewModel.toggleFiltroTamano(TamañoProducto.Mediano);
                 } else if (item.getItemId() == R.id.grande_menu) {
-                    productoViewModel.toggleFiltroTamano(TamañoProducto.grande);
+                    productoViewModel.toggleFiltroTamano(TamañoProducto.Grande);
                 } else if (item.getItemId() == R.id.nativa_menu) {
-                    productoViewModel.toggleFiltroOrigen(OrigenProducto.nativa);
+                    productoViewModel.toggleFiltroOrigen(OrigenProducto.Nativa);
                 } else if (item.getItemId() == R.id.exotica_menu) {
-                    productoViewModel.toggleFiltroOrigen(OrigenProducto.exotica);
+                    productoViewModel.toggleFiltroOrigen(OrigenProducto.Exotica);
                 }
                 actualizarTextoFiltro();
                 return true;
@@ -205,15 +205,15 @@ public class HomeFragment extends Fragment {
             menu.findItem(R.id.sol_pleno_menu).setChecked(true);
         if (productoViewModel.getExposicionesSeleccionadas().contains(ExposicionProducto.luz_indirecta))
             menu.findItem(R.id.luz_indirecta_menu).setChecked(true);
-        if (productoViewModel.getTamaniosSeleccionados().contains(TamañoProducto.pequeno))
+        if (productoViewModel.getTamaniosSeleccionados().contains(TamañoProducto.Pequenio))
             menu.findItem(R.id.pequenio_menu).setChecked(true);
-        if (productoViewModel.getTamaniosSeleccionados().contains(TamañoProducto.mediano))
+        if (productoViewModel.getTamaniosSeleccionados().contains(TamañoProducto.Mediano))
             menu.findItem(R.id.mediano_menu).setChecked(true);
-        if (productoViewModel.getTamaniosSeleccionados().contains(TamañoProducto.grande))
+        if (productoViewModel.getTamaniosSeleccionados().contains(TamañoProducto.Grande))
             menu.findItem(R.id.grande_menu).setChecked(true);
-        if (productoViewModel.getOrigenesSeleccionados().contains(OrigenProducto.nativa))
+        if (productoViewModel.getOrigenesSeleccionados().contains(OrigenProducto.Nativa))
             menu.findItem(R.id.nativa_menu).setChecked(true);
-        if (productoViewModel.getOrigenesSeleccionados().contains(OrigenProducto.exotica))
+        if (productoViewModel.getOrigenesSeleccionados().contains(OrigenProducto.Exotica))
             menu.findItem(R.id.exotica_menu).setChecked(true);
     }
 

@@ -36,7 +36,7 @@ public class Producto implements Serializable {
     private ExposicionProducto exposicion;
 
     @Enumerated(EnumType.STRING)
-    private TamañoProducto tamano;
+    private TamañoProducto tamanio;
 
     @Enumerated(EnumType.STRING)
     private OrigenProducto origen;

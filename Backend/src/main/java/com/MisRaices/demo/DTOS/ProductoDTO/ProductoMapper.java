@@ -16,7 +16,7 @@ public class ProductoMapper {
         dto.setImg(producto.getImg());
         dto.setVideo(producto.getVideo());
         dto.setExposicion(producto.getExposicion());
-        dto.setTamano(producto.getTamano());
+        dto.setTamanio(producto.getTamanio());
         dto.setOrigen(producto.getOrigen());
         return dto;
     }

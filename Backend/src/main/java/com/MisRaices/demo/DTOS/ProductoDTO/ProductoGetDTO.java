@@ -21,6 +21,6 @@ public class ProductoGetDTO {
     private Categoria categoria;
     private String img;
     private ExposicionProducto exposicion;
-    private TamañoProducto tamano;
+    private TamañoProducto tamanio;
     private OrigenProducto origen;
 }

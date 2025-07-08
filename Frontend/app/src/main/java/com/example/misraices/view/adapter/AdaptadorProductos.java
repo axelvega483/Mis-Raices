@@ -1,6 +1,9 @@
 package com.example.misraices.view.adapter;
 
 import android.content.Context;
+import android.os.Build;
+import android.text.Html;
+import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -50,8 +53,15 @@ public class AdaptadorProductos extends RecyclerView.Adapter<AdaptadorProductos.
         } else {
             descripcionParcial = descripcionCompleta;
         }
+        String descripcionHtml = descripcionParcial;
 
-        holder.binding.DescripcionTxt.setText(EmojiCompat.get().process(descripcionParcial));
+        Spanned descripcionConFormato;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            descripcionConFormato = Html.fromHtml(descripcionHtml, Html.FROM_HTML_MODE_LEGACY);
+        } else {
+            descripcionConFormato = Html.fromHtml(descripcionHtml);
+        }
+        holder.binding.DescripcionTxt.setText(EmojiCompat.get().process(descripcionConFormato));
         holder.binding.PrecioTxt.setText(String.format("$ %.2f", producto.getPrecio()));
         Glide.with(context)
                 .load(producto.getImg())

@@ -22,7 +22,7 @@ public class Producto implements Serializable {
     private Double precio;
     private String cuidado;
     private ExposicionProducto exposicion;
-    private TamañoProducto tamano;
+    private TamañoProducto tamanio;
     private OrigenProducto origen;
     private String video;
     private Categoria categoria;
@@ -36,7 +36,10 @@ public class Producto implements Serializable {
                 ", descripcion='" + descripcion + '\'' +
                 ", stock=" + stock +
                 ", precio=" + precio +
-                ", cuidados='" + cuidado + '\'' +
+                ", cuidado='" + cuidado + '\'' +
+                ", exposicion=" + exposicion +
+                ", tamanio=" + tamanio +
+                ", origen=" + origen +
                 ", video='" + video + '\'' +
                 ", categoria=" + categoria +
                 ", img='" + img + '\'' +

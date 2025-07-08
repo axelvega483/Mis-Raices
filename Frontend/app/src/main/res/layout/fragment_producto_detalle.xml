@@ -55,21 +55,62 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/cardView">
 
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
                 android:padding="10dp">
-
 
                 <TextView
                     android:id="@+id/descrDetalleTxt"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:text="Descripción"
                     android:textColor="@color/black"
-                    android:textSize="17sp" />
+                    android:textSize="17sp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
 
+                <TextView
+                    android:id="@+id/luzDetalleTxt"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="Luz"
+                    android:textColor="@color/black"
+                    android:textSize="17sp"
+                    android:textStyle="italic"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/descrDetalleTxt" />
+
+                <TextView
+                    android:id="@+id/tamanioDetalleTxt"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="Tamaño"
+                    android:textColor="@color/black"
+                    android:textSize="17sp"
+                    android:textStyle="italic"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/luzDetalleTxt" />
+
+                <TextView
+                    android:id="@+id/origenDetalleTxt"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="Origen"
+                    android:textColor="@color/black"
+                    android:textSize="17sp"
+                    android:textStyle="italic"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tamanioDetalleTxt" />
 
                 <TextView
                     android:id="@+id/precioDetalleTxt"
@@ -77,18 +118,13 @@
                     android:layout_height="wrap_content"
                     android:text="Precio"
                     android:textColor="@color/black"
-                    android:textSize="16sp" />
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
 
-                <TextView
-                    android:id="@+id/stockDetalleTxt"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Stock"
-                    android:textColor="@color/black"
-                    android:textSize="16sp" />
-            </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
-
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnAgregarCarrito"
             android:layout_width="match_parent"

@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/sol_pleno_menu"
-        android:title="sol pleno"
+        android:title="Sol pleno"
         android:checkable="true"/>
     <item
         android:id="@+id/luz_indirecta_menu"

@@ -75,7 +75,7 @@ public class ProductoViewModel extends ViewModel {
     public void aplicarFiltrosYOrden() {
         listaFiltrada = listaOriginal.stream()
                 .filter(p -> exposicionesSeleccionadas.isEmpty() || exposicionesSeleccionadas.contains(p.getExposicion()))
-                .filter(p -> tamaniosSeleccionados.isEmpty() || tamaniosSeleccionados.contains(p.getTamano()))
+                .filter(p -> tamaniosSeleccionados.isEmpty() || tamaniosSeleccionados.contains(p.getTamanio()))
                 .filter(p -> origenesSeleccionados.isEmpty() || origenesSeleccionados.contains(p.getOrigen()))
                 .filter(p -> p.getStock() > 0)
                 .collect(Collectors.toList());

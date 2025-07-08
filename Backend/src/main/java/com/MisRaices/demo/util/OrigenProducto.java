@@ -1,5 +1,7 @@
 package com.MisRaices.demo.util;
 
-public enum OrigenProducto {
-    nativa, exotica
+import java.io.Serializable;
+
+public enum OrigenProducto implements Serializable{
+    Nativa, Exotica
 }

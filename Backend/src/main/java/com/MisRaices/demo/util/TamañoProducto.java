@@ -1,5 +1,7 @@
 package com.MisRaices.demo.util;
 
-public enum TamañoProducto {
-    pequeno, mediano, grande
+import java.io.Serializable;
+
+public enum TamañoProducto implements Serializable{
+    Pequenio, Mediano, Grande
 }

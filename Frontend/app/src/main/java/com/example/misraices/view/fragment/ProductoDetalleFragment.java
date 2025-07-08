@@ -1,10 +1,14 @@
 package com.example.misraices.view.fragment;
 
+import android.os.Build;
 import android.os.Bundle;
 
+import androidx.emoji.text.EmojiCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.text.Html;
+import android.text.Spanned;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +21,9 @@ import com.bumptech.glide.Glide;
 import com.example.misraices.R;
 import com.example.misraices.data.model.PedidoDetalle;
 import com.example.misraices.data.model.Producto;
+import com.example.misraices.data.util.ExposicionProducto;
+import com.example.misraices.data.util.OrigenProducto;
+import com.example.misraices.data.util.TamañoProducto;
 import com.example.misraices.databinding.FragmentProductoDetalleBinding;
 import com.example.misraices.viewModel.PedidoViewModel;
 
@@ -64,9 +71,34 @@ public class ProductoDetalleFragment extends Fragment {
             Producto producto = (Producto) getArguments().getSerializable("producto");
             if (producto != null) {
                 binding.TituloDetalleTxt.setText(producto.getNombre());
-                binding.descrDetalleTxt.setText(producto.getDescripcion());
-                binding.precioDetalleTxt.setText(String.format("Precio: $ %.2f", producto.getPrecio()));
-                binding.stockDetalleTxt.setText("Stock: " + producto.getStock());
+                String descripcionHtml = producto.getDescripcion();
+                descripcionHtml = descripcionHtml.replace("\n", "<br>");
+
+                Spanned descripcionConFormato;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    descripcionConFormato = Html.fromHtml(descripcionHtml, Html.FROM_HTML_MODE_LEGACY);
+                } else {
+                    descripcionConFormato = Html.fromHtml(descripcionHtml);
+                }
+
+                binding.descrDetalleTxt.setText(EmojiCompat.get().process(descripcionConFormato));
+                binding.precioDetalleTxt.setText(String.format("$ %.2f", producto.getPrecio()));
+                if(producto.getExposicion().equals(ExposicionProducto.sol_pleno)){
+                    binding.luzDetalleTxt.setText(EmojiCompat.get().process("☀ Sol directo"));
+                }else{
+                    binding.luzDetalleTxt.setText(EmojiCompat.get().process("\uD83C\uDF24Luz indirecta"));
+                }if(producto.getTamanio().equals(TamañoProducto.Pequenio)){
+                    binding.tamanioDetalleTxt.setText(EmojiCompat.get().process("\uD83E\uDEB4 Pequeño"));
+                } else if (producto.getTamanio().equals(TamañoProducto.Mediano)) {
+                    binding.tamanioDetalleTxt.setText(EmojiCompat.get().process("\uD83C\uDF31 Mediano"));
+                }else{
+                    binding.tamanioDetalleTxt.setText(EmojiCompat.get().process("\uD83C\uDF33 Grande"));
+                }
+                if(producto.getOrigen().equals(OrigenProducto.Nativa)){
+                    binding.origenDetalleTxt.setText(EmojiCompat.get().process("\uD83C\uDDE6\uD83C\uDDF7 Nativo"));
+                }else{
+                    binding.origenDetalleTxt.setText(EmojiCompat.get().process("\uD83C\uDF0E Exotico"));
+                }
                 Glide.with(this).load(producto.getImg()).into(binding.imgProductoDetalle);
             } else {
                 Log.e("DetalleProducto", "El producto recibido es null");

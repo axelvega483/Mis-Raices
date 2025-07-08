@@ -1,5 +1,7 @@
 package com.MisRaices.demo.util;
 
-public enum ExposicionProducto {
+import java.io.Serializable;
+
+public enum ExposicionProducto implements Serializable{
     sol_pleno, luz_indirecta
 }
