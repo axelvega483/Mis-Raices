@@ -19,10 +19,11 @@
             android:text="Nueva Tarjeta"
             android:textColor="@color/green"
             android:textSize="30sp"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent" />
 
+        <!-- Número -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/numeroTextInputLayout"
             android:layout_width="match_parent"
@@ -30,140 +31,131 @@
             android:layout_marginStart="32dp"
             android:layout_marginTop="40dp"
             android:layout_marginEnd="32dp"
-            android:hint="Numero"
-            android:textColor="@color/black"
-            app:endIconDrawable="@drawable/ic_check"
-            app:endIconMode="custom"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:hint="Número"
+            app:layout_constraintTop_toBottomOf="@+id/textView13"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView13">
+            app:layout_constraintEnd_toEndOf="parent">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/numeroEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/radius_txt"
                 android:inputType="number"
                 android:padding="16dp"
-                android:textColor="@color/black" />
+                android:textColor="@color/black"
+                android:background="@drawable/radius_txt" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <!-- Titular -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/titularTextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
             android:layout_marginTop="20dp"
+            android:layout_marginStart="32dp"
             android:layout_marginEnd="32dp"
             android:hint="Titular"
-            android:textColor="@color/black"
-            app:endIconDrawable="@drawable/ic_check"
-            app:endIconMode="custom"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintTop_toBottomOf="@+id/numeroTextInputLayout"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/numeroTextInputLayout">
+            app:layout_constraintEnd_toEndOf="parent">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/titularEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/radius_txt"
-                android:inputType="text"
+                android:inputType="textPersonName"
                 android:padding="16dp"
-                android:textColor="@color/black" />
+                android:textColor="@color/black"
+                android:background="@drawable/radius_txt" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <!-- Fecha -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/fechaTextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
             android:layout_marginTop="20dp"
+            android:layout_marginStart="32dp"
             android:layout_marginEnd="32dp"
-            android:hint="Fecha Vencimiento"
-            android:textColor="@color/black"
-            app:endIconDrawable="@drawable/ic_check"
-            app:endIconMode="custom"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:hint="Fecha Vencimiento (MM/YY)"
+            app:layout_constraintTop_toBottomOf="@+id/titularTextInputLayout"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/titularTextInputLayout">
+            app:layout_constraintEnd_toEndOf="parent">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/fechaEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/radius_txt"
                 android:inputType="text"
                 android:padding="16dp"
-                android:textColor="@color/black" />
+                android:textColor="@color/black"
+                android:background="@drawable/radius_txt" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <!-- Tipo -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tipoTextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
             android:layout_marginTop="20dp"
+            android:layout_marginStart="32dp"
             android:layout_marginEnd="32dp"
             android:hint="Tipo"
-            android:textColor="@color/black"
             app:endIconMode="dropdown_menu"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/fechaTextInputLayout"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/fechaTextInputLayout">
+            app:layout_constraintEnd_toEndOf="parent">
 
-            <AutoCompleteTextView
+            <com.google.android.material.textfield.MaterialAutoCompleteTextView
                 android:id="@+id/TipoEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/radius_txt"
                 android:inputType="none"
                 android:padding="16dp"
-                android:textColor="@color/black" />
+                android:textColor="@color/black"
+                android:background="@drawable/radius_txt" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <!-- Código -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/codigoTextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
             android:layout_marginTop="20dp"
+            android:layout_marginStart="32dp"
             android:layout_marginEnd="32dp"
-            android:hint="Codigo seguridad"
-            android:textColor="@color/black"
-            app:endIconDrawable="@drawable/ic_check"
-            app:endIconMode="custom"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:hint="Código Seguridad"
+            app:layout_constraintTop_toBottomOf="@+id/tipoTextInputLayout"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tipoTextInputLayout">
+            app:layout_constraintEnd_toEndOf="parent">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/codigoEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/radius_txt"
-                android:inputType="number"
+                android:inputType="numberPassword"
                 android:padding="16dp"
-                android:textColor="@color/black" />
+                android:textColor="@color/black"
+                android:background="@drawable/radius_txt" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <!-- Botón -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnNuevaTarjeta"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
             android:layout_marginEnd="32dp"
-            android:layout_marginBottom="119dp"
+            android:layout_marginBottom="40dp"
             android:text="Cargar"
             android:textColor="@color/green"
             android:textSize="20sp"
             app:backgroundTint="@color/white"
             app:cornerRadius="50dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             app:strokeColor="@color/green"
-            app:strokeWidth="1dp" />
+            app:strokeWidth="1dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

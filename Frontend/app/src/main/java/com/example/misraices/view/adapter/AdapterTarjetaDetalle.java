@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.misraices.R;
 import com.example.misraices.data.model.TarjetaCredito;
 import com.example.misraices.databinding.ItemTarjetaBinding;
 
@@ -43,8 +44,13 @@ public class AdapterTarjetaDetalle extends RecyclerView.Adapter<AdapterTarjetaDe
         holder.binding.NumeroTxt.setText("N°: " + tarjeta.getNumero());
         holder.binding.TitularTxt.setText("Titular: " + tarjeta.getTitular());
         holder.binding.VencimientoTxt.setText("Venc: " + tarjeta.getFechaVencimiento());
-        holder.binding.TipoTxt.setText("Tipo: " + tarjeta.getTipo());
         holder.binding.CodigoTxt.setText("Codigo: " + tarjeta.getCodigoSeguridad());
+        String tipo = tarjeta.getTipo();
+        if (tipo.equals("Visa")) {
+            holder.binding.logoCard.setImageResource(R.drawable.visa);
+        } else if (tipo.equals("MasterCard")) {
+            holder.binding.logoCard.setImageResource(R.drawable.mastercard);
+        }
         holder.itemView.setOnClickListener(v -> {
             listener.onProductoClick(tarjeta);
         });

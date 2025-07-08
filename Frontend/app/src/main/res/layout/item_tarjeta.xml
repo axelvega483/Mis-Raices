@@ -1,79 +1,104 @@
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/cardTarjeta"
     android:layout_width="380dp"
     android:layout_height="150dp"
     android:layout_margin="10dp"
-    android:backgroundTint="@color/greenligth">
+    android:backgroundTint="@color/gray"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="8dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayoutTarjeta"
-        android:layout_width="380dp"
-        android:layout_height="150dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:background="@drawable/bg_tarjeta_normal"
-        android:padding="5dp">
+        android:padding="12dp">
 
+
+        <!-- Número -->
+
+        <ImageView
+            android:id="@+id/logoCard"
+            android:layout_width="114dp"
+            android:layout_height="89dp"
+            android:scaleType="fitCenter"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/mastercard" />
 
         <TextView
             android:id="@+id/NumeroTxt"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="20dp"
-            android:text="Número"
-            android:textColor="@color/black"
-            android:textSize="16sp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:fontFamily="sans-serif-medium"
+            android:shadowColor="#AA000000"
+            android:shadowDx="1"
+            android:shadowDy="1"
+            android:shadowRadius="3"
+            android:text="N° 1234 5678 9012 3456"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/TitularTxt"
-            android:layout_width="wrap_content"
-            android:layout_height="22dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="20dp"
-            android:text="Titular"
-            android:textColor="@color/black"
-            android:textSize="16sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/VencimientoTxt" />
-
+        <!-- Vencimiento -->
         <TextView
             android:id="@+id/VencimientoTxt"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="20dp"
-            android:text="Vencimiento"
-            android:textColor="@color/black"
+            android:layout_marginTop="8dp"
+            android:fontFamily="sans-serif"
+            android:shadowColor="#AA000000"
+            android:shadowDx="1"
+            android:shadowDy="1"
+            android:shadowRadius="2"
+            android:text="Vencimiento: 12/25"
+            android:textColor="@android:color/white"
             android:textSize="16sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/NumeroTxt" />
+            app:layout_constraintStart_toStartOf="@id/NumeroTxt"
+            app:layout_constraintTop_toBottomOf="@id/NumeroTxt" />
 
+        <!-- Titular -->
         <TextView
-            android:id="@+id/TipoTxt"
-            android:layout_width="wrap_content"
+            android:id="@+id/TitularTxt"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="16dp"
-            android:text="Tipo"
-            android:textColor="@color/black"
+            android:layout_marginTop="8dp"
+            android:fontFamily="sans-serif"
+            android:shadowColor="#AA000000"
+            android:shadowDx="1"
+            android:shadowDy="1"
+            android:shadowRadius="2"
+            android:text="Titular: Axel"
+            android:textColor="@android:color/white"
             android:textSize="16sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintStart_toStartOf="@id/VencimientoTxt"
+            app:layout_constraintTop_toBottomOf="@id/VencimientoTxt" />
 
+        <!-- Tipo a la derecha arriba -->
+
+        <!-- Código a la derecha abajo -->
         <TextView
             android:id="@+id/CodigoTxt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
-            android:layout_marginBottom="24dp"
-            android:text="Codigo"
-            android:textColor="@color/black"
+            android:layout_marginBottom="16dp"
+            android:fontFamily="sans-serif-medium"
+            android:shadowColor="#AA000000"
+            android:shadowDx="1"
+            android:shadowDy="1"
+            android:shadowRadius="2"
+            android:text="Código: 123"
+            android:textColor="@android:color/white"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

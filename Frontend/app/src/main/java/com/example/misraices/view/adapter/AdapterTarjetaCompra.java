@@ -55,12 +55,16 @@ public class AdapterTarjetaCompra extends RecyclerView.Adapter<AdapterTarjetaCom
     public void onBindViewHolder(@NonNull AdapterTarjetaCompra.ViewHolder holder, int position) {
         TarjetaCredito tarjeta = listaTarjetas.get(position);
 
-
         holder.binding.NumeroTxt.setText("N°: " + tarjeta.getNumero());
         holder.binding.TitularTxt.setText("Titular: " + tarjeta.getTitular());
         holder.binding.VencimientoTxt.setText("Venc: " + tarjeta.getFechaVencimiento());
-        holder.binding.TipoTxt.setText("Tipo: " + tarjeta.getTipo());
         holder.binding.CodigoTxt.setText("Codigo: " + tarjeta.getCodigoSeguridad());
+        String tipo = tarjeta.getTipo();
+        if (tipo.equals("Visa")) {
+            holder.binding.logoCard.setImageResource(R.drawable.visa);
+        } else if (tipo.equals("MasterCard")) {
+            holder.binding.logoCard.setImageResource(R.drawable.mastercard);
+        }
         holder.binding.getRoot().findViewById(R.id.constraintLayoutTarjeta).setBackgroundResource(R.drawable.bg_tarjeta_seleccionada);
 
         // Fondo según selección
