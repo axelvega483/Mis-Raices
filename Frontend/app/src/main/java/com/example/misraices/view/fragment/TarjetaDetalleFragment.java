@@ -47,7 +47,7 @@ public class TarjetaDetalleFragment extends Fragment {
         binding = FragmentTarjetaDetalleBinding.inflate(inflater, container, false);
         init();
         initListener();
-        String[] tiposTarjeta = {"Visa", "MasterCard", "Naranja"};
+        String[] tiposTarjeta = {"Visa", "MasterCard"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 requireContext(),
                 android.R.layout.simple_dropdown_item_1line,
