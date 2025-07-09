@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
+import com.example.misraices.R;
 import com.example.misraices.data.model.TarjetaCredito;
 import com.example.misraices.databinding.FragmentNewTarjetaBinding;
 import com.example.misraices.viewModel.TarjetaViewModel;
@@ -76,7 +77,6 @@ public class NewTarjetaFragment extends Fragment {
         SharedPreferences prefs = requireActivity().getSharedPreferences("MiAppPrefs", Context.MODE_PRIVATE);
         usuarioId = prefs.getInt("usuarioId", -1);
 
-        // Sugerencias tipo tarjeta
         String[] tiposTarjeta = {"Visa", "MasterCard"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 requireContext(),
@@ -86,20 +86,23 @@ public class NewTarjetaFragment extends Fragment {
         binding.TipoEditText.setAdapter(adapter);
         binding.TipoEditText.setThreshold(1);
 
-        // Detectar BIN con debounce y cache
         binding.numeroEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
                 if (s.length() >= 6) {
                     final String bin = s.toString().substring(0, 6);
-                    Log.e("BIN", "Detectado BIN: " + bin);
-
+                    if (binLookupRunnable != null) {
+                        handler.removeCallbacks(binLookupRunnable);
+                    }
+                    binLookupRunnable = () -> detectarTipo(bin);
+                    handler.postDelayed(binLookupRunnable, 300);
+                } else {
                     if (binLookupRunnable != null) {
                         handler.removeCallbacks(binLookupRunnable);
                     }
 
-                    binLookupRunnable = () -> consultarBinRapidAPI(bin);
-                    handler.postDelayed(binLookupRunnable, 1500);
+                    binding.TipoEditText.setText("");
+                    binding.logoMarcaImageView.setVisibility(View.GONE);
                 }
             }
 
@@ -110,12 +113,6 @@ public class NewTarjetaFragment extends Fragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
             }
-        });
-
-        // Listener selección tipo tarjeta
-        binding.TipoEditText.setOnItemClickListener((parent, view, position, id) -> {
-            String seleccionado = parent.getItemAtPosition(position).toString();
-            Log.d("AUTOCOMPLETE", "Seleccionado: " + seleccionado);
         });
     }
 
@@ -186,70 +183,39 @@ public class NewTarjetaFragment extends Fragment {
         Toast.makeText(getContext(), mensaje, Toast.LENGTH_SHORT).show();
     }
 
-    private void consultarBinRapidAPI(String bin) {
-        new Thread(() -> {
-            HttpURLConnection conn = null;
-            try {
-                URL url = new URL("https://lookup.binlist.net/" + bin);
-                conn = (HttpURLConnection) url.openConnection();
-                conn.setRequestMethod("GET");
-                conn.setRequestProperty("User-Agent", "Mozilla/5.0");
-
-                int responseCode = conn.getResponseCode();
-                if (responseCode != 200) {
-                    Log.e("BIN_RAPID", "Error HTTP: " + responseCode);
-                    return;
-                }
-
-                BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                StringBuilder result = new StringBuilder();
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    result.append(line);
-                }
-                reader.close();
-
-                JSONObject json = new JSONObject(result.toString());
-                runOnUiThreadConBinRapid(json);
-
-            } catch (Exception e) {
-                Log.e("BIN_RAPID", "Excepción: " + e.getMessage());
-                e.printStackTrace();
-            } finally {
-                if (conn != null) conn.disconnect();
-            }
-        }).start();
-    }
-
-    private void runOnUiThreadConBinRapid(JSONObject json) {
+    private void detectarTipo(String bin) {
         requireActivity().runOnUiThread(() -> {
-            String tipo = json.optString("scheme");
-            Log.e("Binlist JSON completo", json.toString());
-            String scheme = json.optString("scheme");
-            String tipoDetectado = capitalize(scheme);
-            JSONObject issuer = json.optJSONObject("issuer");
-            String banco = issuer != null ? issuer.optString("name") : "Desconocido";
+            String tipoDetectado = detectarTipoPorBin(bin);
 
-            JSONObject pais = json.optJSONObject("country");
-            String nombrePais = pais != null ? pais.optString("name") : "Desconocido";
-            String bandera = pais != null ? pais.optString("flag") : "";
-            if (tipoDetectado.equalsIgnoreCase("Visa") || tipoDetectado.equalsIgnoreCase("MasterCard")) {
+            if (!tipoDetectado.equals("Desconocido")) {
                 binding.TipoEditText.setText(tipoDetectado);
-                binding.fechaEditText.setText("12/25");
-                binding.codigoEditText.setText("123");
+                switch (tipoDetectado) {
+                    case "Visa":
+                        binding.logoMarcaImageView.setImageResource(R.drawable.visa);
+                        binding.logoMarcaImageView.setVisibility(View.VISIBLE);
+                        break;
+                    case "MasterCard":
+                        binding.logoMarcaImageView.setImageResource(R.drawable.mastercard);
+                        binding.logoMarcaImageView.setVisibility(View.VISIBLE);
+                        break;
+                    default:
+                        binding.logoMarcaImageView.setVisibility(View.GONE);
+                        break;
+                }
+            } else {
+                Log.e("BIN", "Tipo de tarjeta no reconocido para BIN: " + bin);
             }
-            Log.e("BIN", "UI con tipo: " + tipo);
-            Toast.makeText(getContext(), "Marca: " + tipo + "\nBanco: " + banco + "\nPaís: " + bandera + " " + nombrePais, Toast.LENGTH_LONG).show();
-
-            binding.TipoEditText.setText(capitalize(tipo));
         });
     }
 
-
-    private String capitalize(String str) {
-        return str != null && !str.isEmpty()
-                ? str.substring(0, 1).toUpperCase() + str.substring(1).toLowerCase()
-                : "";
+    private String detectarTipoPorBin(String bin) {
+        if (bin.startsWith("457173") || bin.startsWith("411111") || bin.startsWith("4")) {
+            return "Visa";
+        } else if (bin.startsWith("520082") || bin.startsWith("510510") || bin.startsWith("5")) {
+            return "MasterCard";
+        } else {
+            return "Desconocido";
+        }
     }
 
 }

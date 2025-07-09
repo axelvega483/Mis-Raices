@@ -44,6 +44,15 @@
                 android:padding="16dp"
                 android:textColor="@color/black"
                 android:background="@drawable/radius_txt" />
+            <ImageView
+                android:id="@+id/logoMarcaImageView"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="end|center_vertical"
+                android:layout_marginEnd="8dp"
+                android:visibility="gone"
+                android:contentDescription="Logo tarjeta"
+                android:src="@drawable/visa" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Titular -->

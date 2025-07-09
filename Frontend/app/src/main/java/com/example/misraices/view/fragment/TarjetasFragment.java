@@ -27,7 +27,7 @@ import java.util.List;
 public class TarjetasFragment extends Fragment {
     private FragmentTarjetasBinding binding;
     private TarjetaViewModel tarjetaViewModel;
-    private UsuarioViewModel usuarioViewModel;
+    private int usuarioId;
 
     public TarjetasFragment() {
         // Required empty public constructor
@@ -57,32 +57,27 @@ public class TarjetasFragment extends Fragment {
 
     private void init() {
         tarjetaViewModel = new ViewModelProvider(requireActivity()).get(TarjetaViewModel.class);
-        usuarioViewModel = new ViewModelProvider(requireActivity()).get(UsuarioViewModel.class);
+        SharedPreferences prefs = requireActivity().getSharedPreferences("MiAppPrefs", Context.MODE_PRIVATE);
+        usuarioId = prefs.getInt("usuarioId", -1);
+        tarjetaViewModel.cargarTarjetas();
     }
 
     private void initListener() {
-        SharedPreferences prefs = requireActivity().getSharedPreferences("MiAppPrefs", Context.MODE_PRIVATE);
-        int usuarioId = prefs.getInt("usuarioId", -1);
-        usuarioViewModel.obtenerId(usuarioId).observe(getViewLifecycleOwner(), usuario -> {
-            tarjetaViewModel.obtenerTarjetas().observe(getViewLifecycleOwner(), tarjetas -> {
-                if (tarjetas != null) {
-                    Log.e("tarjetas", tarjetas.toString());
-                    Log.e("idUsuario", usuario.getData().toString());
-
-                    List<TarjetaCredito> tarjetasUsuario = new ArrayList<>();
-                    for (TarjetaCredito tarjeta : tarjetas) {
-                        Log.e("tarjeta", tarjeta.toString());
-                        if (tarjeta.getUsuario() != null && tarjeta.getUsuario().getId() == usuario.getData().getId()) {
-                            tarjetasUsuario.add(tarjeta);
-                        }
+        tarjetaViewModel.obtenerTarjetas().observe(getViewLifecycleOwner(), tarjetas -> {
+            if (tarjetas != null) {
+                List<TarjetaCredito> tarjetasUsuario = new ArrayList<>();
+                for (TarjetaCredito tarjeta : tarjetas) {
+                    if (tarjeta.getUsuario() != null && tarjeta.getUsuario().getId() == usuarioId) {
+                        tarjetasUsuario.add(tarjeta);
                     }
-                    binding.recyclerViewTarjetas.setLayoutManager(new LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false));
-                    binding.recyclerViewTarjetas.setAdapter(new AdapterTarjetaDetalle(tarjetasUsuario, getContext(), this::abrirtarjetaDetalle));
                 }
-            });
+                AdapterTarjetaDetalle adapter = new AdapterTarjetaDetalle(tarjetasUsuario, getContext(), this::abrirtarjetaDetalle);
+                binding.recyclerViewTarjetas.setLayoutManager(
+                        new LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false)
+                );
+                binding.recyclerViewTarjetas.setAdapter(adapter);
+            }
         });
-
-
         binding.btnAgregar.setOnClickListener(view -> {
             requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frameContainer, NewTarjetaFragment.newInstance()).addToBackStack(null).commit();
         });
