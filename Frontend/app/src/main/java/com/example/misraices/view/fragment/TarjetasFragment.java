@@ -36,7 +36,6 @@ public class TarjetasFragment extends Fragment {
     public static TarjetasFragment newInstance() {
         TarjetasFragment fragment = new TarjetasFragment();
         Bundle args = new Bundle();
-
         fragment.setArguments(args);
         return fragment;
     }
@@ -57,9 +56,12 @@ public class TarjetasFragment extends Fragment {
 
     private void init() {
         tarjetaViewModel = new ViewModelProvider(requireActivity()).get(TarjetaViewModel.class);
+        tarjetaViewModel.cargarTarjetas();
         SharedPreferences prefs = requireActivity().getSharedPreferences("MiAppPrefs", Context.MODE_PRIVATE);
         usuarioId = prefs.getInt("usuarioId", -1);
-        tarjetaViewModel.cargarTarjetas();
+        getParentFragmentManager().setFragmentResultListener("recargar_tarjetas", this, (key, bundle) -> {
+            tarjetaViewModel.cargarTarjetas();
+        });
     }
 
     private void initListener() {

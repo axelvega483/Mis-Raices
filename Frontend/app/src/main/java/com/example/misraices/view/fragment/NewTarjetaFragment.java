@@ -139,6 +139,9 @@ public class NewTarjetaFragment extends Fragment {
                 tarjetaViewModel.setTarjetaLiveData(tarjeta);
                 Log.e("Tarjeta creada", tarjeta.toString());
 
+                Bundle result = new Bundle();
+                result.putBoolean("forzar", true);
+                getParentFragmentManager().setFragmentResult("recargar_tarjetas", result);
                 requireActivity().getSupportFragmentManager().popBackStack();
             });
         });

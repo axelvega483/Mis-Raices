@@ -55,7 +55,10 @@ public class FinalizarCompraFragment extends Fragment {
 
         SharedPreferences prefs = requireActivity().getSharedPreferences("MiAppPrefs", Context.MODE_PRIVATE);
         usuarioId = prefs.getInt("usuarioId", -1);
+        idUltimaTarjetaUsada = prefs.getInt("ultima_tarjeta_id", -1);
 
+        tarjetaViewModel.cargarTarjetas();
+        
         usuarioViewModel.getDireccionActualizada().observe(getViewLifecycleOwner(), actualizada -> {
             if (Boolean.TRUE.equals(actualizada)) {
                 binding.btnfinalizarCompra.performClick();
@@ -179,7 +182,7 @@ public class FinalizarCompraFragment extends Fragment {
 
     private void finalizarCompra(int pedidoId) {
         pedidoViewModel.obtenerPedidoPorId(pedidoId).observe(getViewLifecycleOwner(), response -> {
-            Pedido pedido = response != null ? response.getData(): null;
+            Pedido pedido = response != null ? response.getData() : null;
             if (pedido == null) {
                 Toast.makeText(getContext(), "No se pudo obtener el pedido", Toast.LENGTH_SHORT).show();
                 return;
