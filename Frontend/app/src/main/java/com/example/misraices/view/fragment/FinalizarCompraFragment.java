@@ -26,15 +26,14 @@ import com.example.misraices.viewModel.UsuarioViewModel;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class FinalizarCompraFragment extends Fragment {
+
     private FragmentFinalizarCompraBinding binding;
     private PedidoViewModel pedidoViewModel;
     private TarjetaViewModel tarjetaViewModel;
     private UsuarioViewModel usuarioViewModel;
     private TarjetaCredito tarjetaSeleccionada;
     private int usuarioId;
-    private int idUltimaTarjetaUsada;
 
     public static FinalizarCompraFragment newInstance() {
         return new FinalizarCompraFragment();
@@ -43,27 +42,21 @@ public class FinalizarCompraFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentFinalizarCompraBinding.inflate(inflater, container, false);
-        init();
+        initViewModels();
         initListeners();
+        cargarDatosUsuario();
         return binding.getRoot();
     }
 
-    private void init() {
+    private void initViewModels() {
         pedidoViewModel = new ViewModelProvider(requireActivity()).get(PedidoViewModel.class);
         tarjetaViewModel = new ViewModelProvider(requireActivity()).get(TarjetaViewModel.class);
         usuarioViewModel = new ViewModelProvider(requireActivity()).get(UsuarioViewModel.class);
 
-        SharedPreferences prefs = requireActivity().getSharedPreferences("MiAppPrefs", Context.MODE_PRIVATE);
-        usuarioId = prefs.getInt("usuarioId", -1);
-        idUltimaTarjetaUsada = prefs.getInt("ultima_tarjeta_id", -1);
-
         tarjetaViewModel.cargarTarjetas();
 
-        tarjetaViewModel.obtenerTarjetas().observe(getViewLifecycleOwner(), tarjetas -> cargarTarjetasUsuario());
+        getParentFragmentManager().setFragmentResultListener("recargar_tarjetas", this, (key, bundle) -> tarjetaViewModel.cargarTarjetas());
 
-        getParentFragmentManager().setFragmentResultListener("recargar_tarjetas", this, (key, bundle) -> {
-            tarjetaViewModel.cargarTarjetas();
-        });
         usuarioViewModel.getDireccionActualizada().observe(getViewLifecycleOwner(), actualizada -> {
             if (Boolean.TRUE.equals(actualizada)) {
                 binding.btnfinalizarCompra.performClick();
@@ -87,7 +80,9 @@ public class FinalizarCompraFragment extends Fragment {
         });
     }
 
-    private void cargarTarjetasUsuario() {
+    private void cargarDatosUsuario() {
+        SharedPreferences prefs = requireActivity().getSharedPreferences("MiAppPrefs", Context.MODE_PRIVATE);
+        usuarioId = prefs.getInt("usuarioId", -1);
 
         usuarioViewModel.obtenerId(usuarioId).observe(getViewLifecycleOwner(), usuario -> {
             if (usuario.getData() == null) return;
@@ -97,23 +92,38 @@ public class FinalizarCompraFragment extends Fragment {
 
                 List<TarjetaCredito> tarjetasUsuario = new ArrayList<>();
                 for (TarjetaCredito tarjeta : tarjetas) {
-                    if (tarjeta.getUsuario() != null && tarjeta.getUsuario().getId() == usuario.getData().getId()) {
+                    if (tarjeta.getUsuario() != null
+                            && tarjeta.getUsuario().getId() == usuario.getData().getId()
+                            && tarjeta.getId() != null) {
                         tarjetasUsuario.add(tarjeta);
                     }
                 }
 
-                AdapterTarjetaCompra adapter = new AdapterTarjetaCompra(tarjetasUsuario, getContext(), tarjeta -> {
+                final int idUltimaTarjetaUsada = prefs.getInt("ultima_tarjeta_id", -1);
+
+                boolean idValido = tarjetasUsuario.stream()
+                        .anyMatch(t -> t.getId() != null && t.getId() == idUltimaTarjetaUsada);
+
+                if (!idValido) {
+                    tarjetaSeleccionada = null;
+                } else {
+                    for (TarjetaCredito t : tarjetasUsuario) {
+                        if (t.getId() != null && t.getId() == idUltimaTarjetaUsada) {
+                            tarjetaSeleccionada = t;
+                            break;
+                        }
+                    }
+                }
+
+                AdapterTarjetaCompra adapter = new AdapterTarjetaCompra(
+                        tarjetasUsuario, getContext(), tarjeta -> {
                     tarjetaSeleccionada = tarjeta;
-
-                    SharedPreferences prefs = requireActivity().getSharedPreferences("MiAppPrefs", Context.MODE_PRIVATE);
                     prefs.edit().putInt("ultima_tarjeta_id", tarjeta.getId()).apply();
-
                     Toast.makeText(getContext(), "Seleccionaste la tarjeta: " + tarjeta.getNumero(), Toast.LENGTH_SHORT).show();
                 }, idUltimaTarjetaUsada);
 
                 binding.recyclerViewTarjetas.setLayoutManager(new LinearLayoutManager(getContext()));
                 binding.recyclerViewTarjetas.setAdapter(adapter);
-
                 binding.btnfinalizarCompra.setVisibility(tarjetasUsuario.isEmpty() ? View.GONE : View.VISIBLE);
             });
         });
@@ -150,10 +160,7 @@ public class FinalizarCompraFragment extends Fragment {
             }
 
             List<PedidoDetalle> detalles = pedidoViewModel.getDetallesLiveData().getValue();
-            double total = 0.0;
-            for (PedidoDetalle d : detalles) {
-                total += d.getSubtotal();
-            }
+            double total = detalles.stream().mapToDouble(PedidoDetalle::getSubtotal).sum();
 
             if (tarjetaSeleccionada.getSaldo() < total) {
                 Toast.makeText(getContext(), "Saldo insuficiente", Toast.LENGTH_SHORT).show();
@@ -165,7 +172,7 @@ public class FinalizarCompraFragment extends Fragment {
             pedido.setUsuario(usuario.getData());
 
             pedidoViewModel.crearPedido(pedido).observe(getViewLifecycleOwner(), resultado -> {
-                if (resultado == null || resultado.getData() == null || resultado.getData() == null) {
+                if (resultado == null || resultado.getData() == null) {
                     Toast.makeText(getContext(), "Error al crear el pedido", Toast.LENGTH_SHORT).show();
                     return;
                 }

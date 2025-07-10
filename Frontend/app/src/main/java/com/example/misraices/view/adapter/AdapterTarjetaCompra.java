@@ -14,29 +14,32 @@ import com.example.misraices.databinding.ItemTarjetaBinding;
 import java.util.List;
 
 public class AdapterTarjetaCompra extends RecyclerView.Adapter<AdapterTarjetaCompra.ViewHolder> {
-    private List<TarjetaCredito> listaTarjetas;
-    private Context context;
+
+    private final List<TarjetaCredito> listaTarjetas;
+    private final Context context;
     private int tarjetaSeleccionadaPos = -1;
-    private OnTarjetaSeleccionadaListener listener;
+    private final OnTarjetaSeleccionadaListener listener;
 
     public interface OnTarjetaSeleccionadaListener {
         void onTarjetaSeleccionada(TarjetaCredito tarjeta);
     }
 
-    public AdapterTarjetaCompra(List<TarjetaCredito> listaTarjetas, Context context, OnTarjetaSeleccionadaListener listener,int idUltimaTarjetaUsada) {
+    public AdapterTarjetaCompra(List<TarjetaCredito> listaTarjetas, Context context, OnTarjetaSeleccionadaListener listener, int idUltimaTarjetaUsada) {
         this.listaTarjetas = listaTarjetas;
         this.context = context;
         this.listener = listener;
-        // Buscar la posición de la última tarjeta usada
-        for (int i = 0; i < listaTarjetas.size(); i++) {
-            if (listaTarjetas.get(i).getId() == idUltimaTarjetaUsada) {
-                tarjetaSeleccionadaPos = i;
-                listener.onTarjetaSeleccionada(listaTarjetas.get(i));
-                break;
+
+        if (idUltimaTarjetaUsada != -1) {
+            for (int i = 0; i < listaTarjetas.size(); i++) {
+                Integer idTarjeta = listaTarjetas.get(i).getId();
+                if (idTarjeta != null && idTarjeta == idUltimaTarjetaUsada) {
+                    tarjetaSeleccionadaPos = i;
+                    listener.onTarjetaSeleccionada(listaTarjetas.get(i));
+                    break;
+                }
             }
         }
 
-        // Si no se encontró, seleccionar la primera
         if (tarjetaSeleccionadaPos == -1 && !listaTarjetas.isEmpty()) {
             tarjetaSeleccionadaPos = 0;
             listener.onTarjetaSeleccionada(listaTarjetas.get(0));
@@ -46,8 +49,7 @@ public class AdapterTarjetaCompra extends RecyclerView.Adapter<AdapterTarjetaCom
     @NonNull
     @Override
     public AdapterTarjetaCompra.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        context = parent.getContext();
-        ItemTarjetaBinding binding = ItemTarjetaBinding.inflate(LayoutInflater.from(context), parent, false);
+        ItemTarjetaBinding binding = ItemTarjetaBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
         return new ViewHolder(binding);
     }
 
@@ -58,22 +60,19 @@ public class AdapterTarjetaCompra extends RecyclerView.Adapter<AdapterTarjetaCom
         holder.binding.NumeroTxt.setText("N°: " + tarjeta.getNumero());
         holder.binding.TitularTxt.setText("Titular: " + tarjeta.getTitular());
         holder.binding.VencimientoTxt.setText("Venc: " + tarjeta.getFechaVencimiento());
-        holder.binding.CodigoTxt.setText("Codigo: " + tarjeta.getCodigoSeguridad());
+        holder.binding.CodigoTxt.setText("Código: " + tarjeta.getCodigoSeguridad());
+
         String tipo = tarjeta.getTipo();
-        if (tipo.equals("Visa")) {
+        if ("Visa".equals(tipo)) {
             holder.binding.logoCard.setImageResource(R.drawable.visa);
-        } else if (tipo.equals("MasterCard")) {
+        } else if ("MasterCard".equals(tipo)) {
             holder.binding.logoCard.setImageResource(R.drawable.mastercard);
+        } else {
+            holder.binding.logoCard.setImageResource(0); // Sin logo o logo genérico
         }
-        holder.binding.getRoot().findViewById(R.id.constraintLayoutTarjeta).setBackgroundResource(R.drawable.bg_tarjeta_seleccionada);
 
-        // Fondo según selección
-        int fondo = (position == tarjetaSeleccionadaPos)
-                ? R.drawable.bg_tarjeta_seleccionada
-                : R.drawable.bg_tarjeta_normal;
-        holder.binding.getRoot().findViewById(R.id.constraintLayoutTarjeta).setBackgroundResource(fondo);
-
-
+        int fondo = (position == tarjetaSeleccionadaPos) ? R.drawable.bg_tarjeta_seleccionada : R.drawable.bg_tarjeta_normal;
+        holder.binding.constraintLayoutTarjeta.setBackgroundResource(fondo);
 
         holder.itemView.setOnClickListener(v -> {
             tarjetaSeleccionadaPos = position;
@@ -87,8 +86,8 @@ public class AdapterTarjetaCompra extends RecyclerView.Adapter<AdapterTarjetaCom
         return listaTarjetas.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        private ItemTarjetaBinding binding;
+    static class ViewHolder extends RecyclerView.ViewHolder {
+        private final ItemTarjetaBinding binding;
 
         public ViewHolder(ItemTarjetaBinding binding) {
             super(binding.getRoot());
