@@ -3,8 +3,10 @@ package com.MisRaices.demo.PDF;
 import com.MisRaices.demo.entity.Pedido;
 import com.MisRaices.demo.entity.PedidoDetalle;
 import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.PageSize;
@@ -18,6 +20,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
+import java.util.stream.Stream;
 
 public class PdfGenerator {
 
@@ -25,7 +28,6 @@ public class PdfGenerator {
 
     public static String generarFacturaPDF(Pedido pedido) {
         try {
-
             File directory = new File(RUTA_PDF);
             if (!directory.exists()) {
                 directory.mkdirs();
@@ -33,67 +35,75 @@ public class PdfGenerator {
 
             String pathArchivo = directory + File.separator + "factura-compra-" + pedido.getId() + ".pdf";
 
-            Document document = new Document(PageSize.A4);
+            Document document = new Document(PageSize.A4, 36, 36, 54, 36); // márgenes: izq, der, sup, inf
             PdfWriter.getInstance(document, new FileOutputStream(pathArchivo));
-
             document.open();
 
-            Image logo = Image.getInstance("https://drive.google.com/uc?export=view&id=1AfkG0j2lL95vKQcxQUPK1knaxnfpVT8q");  // Reemplaza con la ruta de tu logo
-            logo.scaleToFit(100, 100);  // Ajusta el tamaño del logo
+            Font fontTitulo = new Font(Font.FontFamily.HELVETICA, 16, Font.BOLD, BaseColor.DARK_GRAY);
+            Font fontSubtitulo = new Font(Font.FontFamily.HELVETICA, 12, Font.NORMAL, BaseColor.BLACK);
+            Font fontTablaHeader = new Font(Font.FontFamily.HELVETICA, 11, Font.BOLD, BaseColor.WHITE);
+            Font fontTablaCuerpo = new Font(Font.FontFamily.HELVETICA, 10, Font.NORMAL, BaseColor.BLACK);
+
+            Image logo = Image.getInstance("https://drive.google.com/uc?export=view&id=1AfkG0j2lL95vKQcxQUPK1knaxnfpVT8q");
+            logo.scaleToFit(100, 100);
             logo.setAlignment(Image.ALIGN_CENTER);
             document.add(logo);
 
-            Font fontTitulo = new Font(Font.FontFamily.HELVETICA, 14, Font.BOLD, BaseColor.BLACK);
-            Font fontCuerpo = new Font(Font.FontFamily.HELVETICA, 10, Font.NORMAL, BaseColor.BLACK);
+            Paragraph titulo = new Paragraph("Factura de Compra - Vivero Mis Raíces", fontTitulo);
+            titulo.setAlignment(Paragraph.ALIGN_CENTER);
+            titulo.setSpacingAfter(10f);
+            document.add(titulo);
 
-            Paragraph encabezado = new Paragraph("Factura de Compra Vivero Mis Raices", fontTitulo);
-            encabezado.setAlignment(Paragraph.ALIGN_CENTER);
-            document.add(encabezado);
+            document.add(new Paragraph("Fecha: " + pedido.getFechaPedido().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")), fontSubtitulo));
+            document.add(new Paragraph("ID de Pedido: " + pedido.getId(), fontSubtitulo));
+            document.add(new Paragraph("Cliente: " + pedido.getUsuario().getNombre() + " " + pedido.getUsuario().getApellido(), fontSubtitulo));
+            document.add(new Paragraph("Dirección: " + pedido.getUsuario().getDireccion().getCalle() + " " + pedido.getUsuario().getDireccion().getNumero(), fontSubtitulo));
 
-            Paragraph fechaCompra = new Paragraph("Fecha: " + pedido.getFechaPedido().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")), fontCuerpo);
-            fechaCompra.setAlignment(Paragraph.ALIGN_CENTER);
-            document.add(fechaCompra);
-
-            Paragraph pedidoId = new Paragraph("ID Pedido: " + pedido.getId(), fontCuerpo);
-            pedidoId.setAlignment(Paragraph.ALIGN_LEFT);
-            document.add(pedidoId);
-
-            Paragraph cliente = new Paragraph("Cliente: " + pedido.getUsuario().getNombre() + " " + pedido.getUsuario().getApellido(), fontCuerpo);
-            cliente.setAlignment(Paragraph.ALIGN_LEFT);
-            document.add(cliente);
-
-            Paragraph direccion = new Paragraph("Direccíon: " + pedido.getUsuario().getDireccion().getCalle() + " " + pedido.getUsuario().getDireccion().getNumero(), fontCuerpo);
-            cliente.setAlignment(Paragraph.ALIGN_LEFT);
-            document.add(direccion);
-            document.add(new Paragraph(" "));
+            document.add(Chunk.NEWLINE);
 
             PdfPTable table = new PdfPTable(3);
             table.setWidthPercentage(100);
+            table.setWidths(new float[]{4f, 2f, 2f});
 
-            table.addCell(new PdfPCell(new Phrase("Producto", fontCuerpo)));
-            table.addCell(new PdfPCell(new Phrase("Cantidad", fontCuerpo)));
-            table.addCell(new PdfPCell(new Phrase("Precio", fontCuerpo)));
+            BaseColor headerColor = new BaseColor(0, 121, 107);
+            Stream.of("Producto", "Cantidad", "Precio")
+                    .forEach(columnTitle -> {
+                        PdfPCell header = new PdfPCell(new Phrase(columnTitle, fontTablaHeader));
+                        header.setBackgroundColor(headerColor);
+                        header.setHorizontalAlignment(Element.ALIGN_CENTER);
+                        header.setPadding(5);
+                        table.addCell(header);
+                    });
 
             for (PedidoDetalle detalle : pedido.getDetalle()) {
-                table.addCell(new PdfPCell(new Phrase(detalle.getProducto().getNombre(), fontCuerpo)));
-                table.addCell(new PdfPCell(new Phrase(String.valueOf(detalle.getCantidad()), fontCuerpo)));
-                table.addCell(new PdfPCell(new Phrase("$" + detalle.getProducto().getPrecio(), fontCuerpo)));
+                PdfPCell productoCell = new PdfPCell(new Phrase(detalle.getProducto().getNombre(), fontTablaCuerpo));
+                productoCell.setHorizontalAlignment(Element.ALIGN_LEFT);
+                table.addCell(productoCell);
+
+                PdfPCell cantidadCell = new PdfPCell(new Phrase(String.valueOf(detalle.getCantidad()), fontTablaCuerpo));
+                cantidadCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                table.addCell(cantidadCell);
+
+                PdfPCell precioCell = new PdfPCell(new Phrase(String.format("$%.2f", detalle.getProducto().getPrecio()), fontTablaCuerpo));
+                precioCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                table.addCell(precioCell);
             }
 
             document.add(table);
+            document.add(Chunk.NEWLINE);
 
-            Paragraph total = new Paragraph("Total: $" + pedido.getTotal(), fontCuerpo);
-            total.setAlignment(Paragraph.ALIGN_LEFT);
+            Paragraph total = new Paragraph("Total: $" + String.format("%.2f", pedido.getTotal()), fontSubtitulo);
+            total.setAlignment(Paragraph.ALIGN_RIGHT);
             document.add(total);
 
             document.close();
-
             return pathArchivo;
 
         } catch (DocumentException | IOException e) {
-            System.out.println(e.getMessage());
+            System.err.println("Error al generar el PDF: " + e.getMessage());
             return null;
         }
+
     }
 
 }

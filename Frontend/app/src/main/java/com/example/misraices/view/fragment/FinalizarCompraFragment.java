@@ -58,7 +58,12 @@ public class FinalizarCompraFragment extends Fragment {
         idUltimaTarjetaUsada = prefs.getInt("ultima_tarjeta_id", -1);
 
         tarjetaViewModel.cargarTarjetas();
-        
+
+        tarjetaViewModel.obtenerTarjetas().observe(getViewLifecycleOwner(), tarjetas -> cargarTarjetasUsuario());
+
+        getParentFragmentManager().setFragmentResultListener("recargar_tarjetas", this, (key, bundle) -> {
+            tarjetaViewModel.cargarTarjetas();
+        });
         usuarioViewModel.getDireccionActualizada().observe(getViewLifecycleOwner(), actualizada -> {
             if (Boolean.TRUE.equals(actualizada)) {
                 binding.btnfinalizarCompra.performClick();
@@ -68,20 +73,18 @@ public class FinalizarCompraFragment extends Fragment {
     }
 
     private void initListeners() {
-
-        cargarTarjetasUsuario();
-
         binding.btnfinalizarCompra.setOnClickListener(view -> {
             if (validarDatosIniciales()) {
                 procesarPedido();
             }
         });
 
-        binding.btnAgregarTarjeta.setOnClickListener(view ->
-                requireActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.frameContainer, NewTarjetaFragment.newInstance())
-                        .addToBackStack(null)
-                        .commit());
+        binding.btnAgregarTarjeta.setOnClickListener(view -> {
+            requireActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.frameContainer, NewTarjetaFragment.newInstance())
+                    .addToBackStack(null)
+                    .commit();
+        });
     }
 
     private void cargarTarjetasUsuario() {
@@ -102,7 +105,6 @@ public class FinalizarCompraFragment extends Fragment {
                 AdapterTarjetaCompra adapter = new AdapterTarjetaCompra(tarjetasUsuario, getContext(), tarjeta -> {
                     tarjetaSeleccionada = tarjeta;
 
-                    // Guardar la tarjeta seleccionada en SharedPreferences
                     SharedPreferences prefs = requireActivity().getSharedPreferences("MiAppPrefs", Context.MODE_PRIVATE);
                     prefs.edit().putInt("ultima_tarjeta_id", tarjeta.getId()).apply();
 
@@ -111,11 +113,8 @@ public class FinalizarCompraFragment extends Fragment {
 
                 binding.recyclerViewTarjetas.setLayoutManager(new LinearLayoutManager(getContext()));
                 binding.recyclerViewTarjetas.setAdapter(adapter);
-                if (tarjetasUsuario.isEmpty()) {
-                    binding.btnfinalizarCompra.setVisibility(View.GONE);
-                } else {
-                    binding.btnfinalizarCompra.setVisibility(View.VISIBLE);
-                }
+
+                binding.btnfinalizarCompra.setVisibility(tarjetasUsuario.isEmpty() ? View.GONE : View.VISIBLE);
             });
         });
     }
