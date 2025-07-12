@@ -60,7 +60,6 @@ public class FinalizarCompraFragment extends Fragment {
         usuarioViewModel.getDireccionActualizada().observe(getViewLifecycleOwner(), actualizada -> {
             if (Boolean.TRUE.equals(actualizada)) {
                 binding.btnfinalizarCompra.performClick();
-                usuarioViewModel.setDireccionActualizada(false);
             }
         });
     }
@@ -84,6 +83,7 @@ public class FinalizarCompraFragment extends Fragment {
         SharedPreferences prefs = requireActivity().getSharedPreferences("MiAppPrefs", Context.MODE_PRIVATE);
         usuarioId = prefs.getInt("usuarioId", -1);
 
+        tarjetaViewModel.cargarTarjetas();
         usuarioViewModel.obtenerId(usuarioId).observe(getViewLifecycleOwner(), usuario -> {
             if (usuario.getData() == null) return;
 
@@ -114,7 +114,6 @@ public class FinalizarCompraFragment extends Fragment {
                         }
                     }
                 }
-
                 AdapterTarjetaCompra adapter = new AdapterTarjetaCompra(
                         tarjetasUsuario, getContext(), tarjeta -> {
                     tarjetaSeleccionada = tarjeta;

@@ -95,10 +95,8 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
                                 .observe(getViewLifecycleOwner(), result -> {
                                     if (result != null && result.isExito()) {
                                         usuarioViewModel.setDireccionActualizada(true);
-                                        HomeFragment homeFragment =  HomeFragment.newInstance();
-                                        getParentFragmentManager().beginTransaction()
-                                                .replace(R.id.frameContainer, homeFragment)
-                                                .commit();
+                                        getActivity().getSupportFragmentManager().popBackStack();
+                                        Toast.makeText(requireContext(), "Dirección actualizada", Toast.LENGTH_SHORT).show();
                                     } else {
                                         Toast.makeText(requireContext(), "Error al actualizar dirección", Toast.LENGTH_SHORT).show();
                                     }
