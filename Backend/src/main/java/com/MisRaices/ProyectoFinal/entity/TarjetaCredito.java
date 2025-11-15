@@ -1,0 +1,43 @@
+package com.MisRaices.ProyectoFinal.entity;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import java.io.Serializable;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Entity
+@Table(name = "tarjetaCredito")
+public class TarjetaCredito implements Serializable {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+    private String titular;
+    private String numero;
+    private String fechaVencimiento;
+    private String codigoSeguridad;
+    private String tipo;
+    private Double saldo;
+
+    @ManyToOne
+    @JoinColumn(name = "usuario_id")
+    @JsonIgnoreProperties("tarjetas")
+    private Usuario usuario;
+
+}
